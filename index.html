@@ -765,18 +765,33 @@
                     }
                     DB[type] = {...DB[type], ...data};
                 } else {
-                    // สำหรับรายชื่อนักเรียน ชั้นเรียน รายวิชา: ล้างข้อมูลเก่าแล้วใส่ข้อมูลใหม่เพื่อให้ตรงกับหน้าเว็บ 100%
-                    await supabaseClient.from(type).delete().neq('id', 'dummy_value'); // ลบข้อมูลทั้งหมด
-                    if (data && data.length > 0) {
-                        const { error } = await supabaseClient.from(type).insert(data); // บันทึกชุดใหม่
-                        if (error) throw error;
+                    // ปรับปรุงระบบบันทึกแบบใหม่ (ใช้ Upsert และลบเฉพาะตัวที่หายไป) แก้ปัญหา Failed to fetch
+                    const existingIds = DB[type].map(item => String(item.id));
+                    const incomingIds = data.map(item => String(item.id));
+                    const idsToDelete = existingIds.filter(id => !incomingIds.includes(id));
+
+                    // 1. ถ้ามีการกดลบข้อมูล ให้สั่งลบจากฐานข้อมูลเฉพาะ ID นั้นๆ
+                    if (idsToDelete.length > 0) {
+                        const { error: delErr } = await supabaseClient.from(type).delete().in('id', idsToDelete);
+                        if (delErr) throw delErr;
                     }
+
+                    // 2. ข้อมูลที่เพิ่มมาใหม่ หรืออัปเดตให้ใช้คำสั่ง upsert
+                    if (data && data.length > 0) {
+                        const { error: upsertErr } = await supabaseClient.from(type).upsert(data);
+                        if (upsertErr) throw upsertErr;
+                    }
+                    
                     DB[type] = data;
                 }
                 renderAll();
             } catch(e) { 
                 console.error(e);
-                Swal.fire('Error','บันทึกข้อมูลล้มเหลว: '+e.message,'error'); 
+                let errMsg = e.message;
+                if(errMsg === 'Failed to fetch') {
+                    errMsg = 'การเชื่อมต่อถูกบล็อก! (กรุณาเช็คอินเทอร์เน็ต หรือตั้งค่า URL/Key ของ Supabase ให้ถูกต้อง ไม่ให้มีเว้นวรรค)';
+                }
+                Swal.fire('Error','บันทึกข้อมูลล้มเหลว: ' + errMsg,'error'); 
             } finally { 
                 showLoad(false); 
             }
