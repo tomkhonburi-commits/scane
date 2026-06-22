@@ -630,7 +630,7 @@
         const SUPABASE_URL = 'https://apwaoxlzeheqmaiecqwz.supabase.co/rest/v1/'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwd2FveGx6ZWhlcW1haWVjcXd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwMzkyMTIsImV4cCI6MjA5NzYxNTIxMn0.4yv3JfjS2WCPCEf-v4xqKFBEONWT8QxjMzv1uywHJxY';
         
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let DB = { students:[], classes:[], activities:[], attendance:{}, scores:{}, works:{} };
         let charts = { bar: null, pie: null };
@@ -686,12 +686,12 @@
             try {
                 // ดึงข้อมูลทั้งหมดจากตารางใน Supabase พร้อมๆ กัน
                 const [resStudents, resClasses, resActivities, resAtt, resScores, resWorks] = await Promise.all([
-                    supabase.from('students').select('*'),
-                    supabase.from('classes').select('*'),
-                    supabase.from('activities').select('*'),
-                    supabase.from('attendance').select('*'),
-                    supabase.from('scores').select('*'),
-                    supabase.from('works').select('*')
+                    supabaseClient.from('students').select('*'),
+                    supabaseClient.from('classes').select('*'),
+                    supabaseClient.from('activities').select('*'),
+                    supabaseClient.from('attendance').select('*'),
+                    supabaseClient.from('scores').select('*'),
+                    supabaseClient.from('works').select('*')
                 ]);
 
                 if(resStudents.error) throw resStudents.error;
@@ -760,15 +760,15 @@
                     // แปลงรูปแบบ Object เป็น Array ให้ตรงกับโครงสร้างตาราง Supabase (key, data)
                     const updates = Object.keys(data).map(k => ({ key: k, data: data[k] }));
                     if (updates.length > 0) {
-                        const { error } = await supabase.from(type).upsert(updates);
+                        const { error } = await supabaseClient.from(type).upsert(updates);
                         if (error) throw error;
                     }
                     DB[type] = {...DB[type], ...data};
                 } else {
                     // สำหรับรายชื่อนักเรียน ชั้นเรียน รายวิชา: ล้างข้อมูลเก่าแล้วใส่ข้อมูลใหม่เพื่อให้ตรงกับหน้าเว็บ 100%
-                    await supabase.from(type).delete().neq('id', 'dummy_value'); // ลบข้อมูลทั้งหมด
+                    await supabaseClient.from(type).delete().neq('id', 'dummy_value'); // ลบข้อมูลทั้งหมด
                     if (data && data.length > 0) {
-                        const { error } = await supabase.from(type).insert(data); // บันทึกชุดใหม่
+                        const { error } = await supabaseClient.from(type).insert(data); // บันทึกชุดใหม่
                         if (error) throw error;
                     }
                     DB[type] = data;
