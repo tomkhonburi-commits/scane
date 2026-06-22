@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ระบบเช็คชื่อและส่งงาน Web App</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- HTML5 QR Code -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- XLSX & QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- แทรกไว้ใต้ Chart.js หรือ QRCode.js ก็ได้ครับ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        tailwind.config = {
+            theme: { 
+                extend: { 
+                    fontFamily: { sans: ['Kanit', 'sans-serif'] }, 
+                    colors: { primary: '#1e293b', secondary: '#0ea5e9', accent: '#38bdf8', background: '#f8fafc' } 
+                } 
+            }
+        }
+    </script>
+    <style>
+        body { background-color: theme('colors.background'); -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
+        .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        /* Layout Transitions */
+        .page-content { display: none; opacity: 0; transition: opacity 0.3s ease; }
+        .page-content.active { display: block; opacity: 1; animation: slideUp 0.3s ease-out forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Navigation Styles */
+        .nav-sidebar-item { transition: all 0.2s ease; border-left: 3px solid transparent; border-radius: 0 12px 12px 0; margin-right: 12px; }
+        .nav-sidebar-item:hover { background-color: #f1f5f9; color: theme('colors.secondary'); }
+        .nav-sidebar-item.active { background-color: #e0f2fe; color: theme('colors.secondary'); font-weight: 600; border-left-color: theme('colors.secondary'); }
+        
+        .nav-bottom-item { color: #64748b; transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 0; width: 20%;}
+        .nav-bottom-item.active { color: theme('colors.secondary'); }
+        .nav-bottom-item.active i { transform: scale(1.15); color: theme('colors.secondary'); }
+        .nav-bottom-item i { transition: transform 0.2s ease; margin-bottom: 4px; font-size: 1.25rem;}
+
+        /* Card Styles */
+        .glass-card { background: #ffffff; border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; }
+        
+        /* Table Styles */
+        .table-custom th { color: #475569; font-weight: 600; padding: 12px 10px; border-bottom: 2px solid #e2e8f0; background: #f8fafc; font-size: 0.85rem;}
+        .table-custom td { padding: 10px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; font-size: 0.85rem;}
+
+        /* ========================================================
+           CSS สำหรับบัตร QR (รูปแบบแนวตั้ง 3 คอลัมน์บน A4) 
+           ======================================================== */
+        .card-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 5mm; }
+        
+        .qr-maker-container .card { 
+            width: 54mm !important; 
+            height: 86mm !important; 
+            border: 1px solid #cbd5e1; 
+            border-radius: 6px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            background-color: #fff; 
+            box-sizing: border-box !important; 
+            position: relative; 
+            overflow: hidden; 
+            padding: 0 !important;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+        }
+
+        .qr-maker-container .card-header {
+            width: 100%;
+            padding: 4px 0;
+            text-align: center;
+            color: white;
+            font-size: 9pt;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .qr-maker-container .card-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .qr-maker-container .school-logo { 
+            width: 40px; 
+            height: auto; 
+            max-height: 40px;
+            object-fit: contain; 
+            margin-bottom: 3px; 
+            margin-top: 2px;
+            z-index: 10;
+        }
+
+        .qr-maker-container .school-name { 
+            font-size: 11px; 
+            font-weight: bold; 
+            line-height: 1.1; 
+            z-index: 10; 
+            color: #1e293b;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        /* ล็อกขนาด QR Code ป้องกันการยืดหดตอน Print */
+        .qr-maker-container .qr-code { 
+            margin: 2px 0 5px 0 !important; 
+            background: white; 
+            z-index: 10; 
+            display: flex !important; 
+            justify-content: center;
+            align-items: center;
+        }
+        .qr-maker-container .qr-code img, 
+        .qr-maker-container .qr-code canvas { 
+            width: 90px !important; 
+            height: 90px !important; 
+            object-fit: contain !important; 
+            aspect-ratio: 1/1 !important; /* บังคับสี่เหลี่ยมจัตุรัส */
+            display: block;
+        }
+        
+        .qr-maker-container .student-info { 
+            font-size: 11px; 
+            color: #475569; 
+            line-height: 1.2; 
+            z-index: 10;
+        }
+
+        .qr-maker-container .student-name { 
+            font-size: 14px; 
+            font-weight: bold; 
+            margin-top: auto; 
+            margin-bottom: 2px;
+            padding-top: 4px;
+            border-top: 1px dashed #cbd5e1;
+            width: 90%;
+            z-index: 10; 
+            line-height: 1.1;
+            color: #0f172a;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ========================================================
+           Print Style (แก้ไขใหม่ทั้งหมด บังคับ Grid 100%)
+           ======================================================== */
+        @media print {
+            @page { size: A4 portrait; margin: 10mm; }
+            body, html { background: white !important; display: block !important; height: auto !important; width: auto !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; }
+            aside, header, nav, .no-print, #mobileMenuOverlay { display: none !important; }
+            main { display: block !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; height: auto !important; width: 100% !important; max-width: none !important; }
+            .page-content { display: none !important; }
+
+            /* --- การพิมพ์ ปพ.5 --- */
+            body.printing-report #page-report { display: block !important; }
+            body.printing-report #repResult { display: block !important; position: relative !important; width: 100% !important; box-shadow: none !important; border: none !important; }
+            body.printing-report table { width: 100% !important; border-collapse: collapse !important; font-size: 10pt !important; }
+            body.printing-report th, body.printing-report td { border: 1px solid #cbd5e1 !important; padding: 4px !important; color: black !important; }
+
+            /* --- การพิมพ์ บัตร QR Code --- */
+            body.printing-qr-maker #page-qrmaker { display: block !important; margin: 0 !important; padding: 0 !important; }
+            body.printing-qr-maker #preview-container { display: block !important; position: relative !important; width: 100% !important; margin: 0 !important; padding: 0 !important; background: transparent !important; overflow: visible !important; }
+            body.printing-qr-maker #preview-container > div { max-width: none !important; width: 100% !important; min-height: auto !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; background: transparent !important; }
+
+            /* 🌟 บังคับใช้ Grid เรียง 3 คอลัมน์ ขนาด 54mm พอดีเป๊ะ */
+            body.printing-qr-maker .card-grid { display: grid !important; grid-template-columns: repeat(3, 54mm) !important; gap: 5mm !important; justify-content: center !important; align-content: flex-start !important; margin: 0 auto !important; width: 100% !important; }
+            body.printing-qr-maker .qr-maker-container .card { width: 54mm !important; height: 86mm !important; box-shadow: none !important; border-style: solid !important; border-width: 1px !important; page-break-inside: avoid !important; margin: 0 !important; }
+            body.printing-qr-maker .qr-maker-container .qr-code { display: flex !important; justify-content: center !important; align-items: center !important; width: 90px !important; height: 90px !important; margin: 5px auto !important; padding: 0 !important; border: none !important; }
+            body.printing-qr-maker .qr-maker-container .qr-code img, body.printing-qr-maker .qr-maker-container .qr-code canvas { width: 90px !important; height: 90px !important; max-width: 90px !important; max-height: 90px !important; object-fit: contain !important; }
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex bg-background text-slate-800">
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-white/90 z-[9999] hidden flex-col justify-center items-center">
+        <i class="fas fa-circle-notch fa-spin fa-3x text-secondary mb-4"></i>
+        <p class="font-bold text-slate-600 tracking-wide">กำลังซิงค์ข้อมูล...</p>
+    </div>
+
+    <!-- ==========================================
+         1. Sidebar (Desktop Only)
+         ========================================== -->
+    <aside class="hidden md:flex flex-col w-[280px] bg-white border-r border-slate-200 shadow-sm z-40 flex-shrink-0">
+        <div class="h-20 border-b border-slate-100 flex items-center px-6 gap-3">
+            <img id="appLogoDesktop" src="" class="w-10 h-10 object-contain rounded-xl shadow-sm" onerror="this.src='https://via.placeholder.com/40'">
+            <div class="overflow-hidden">
+                <h1 id="appTitleDesktop" class="font-bold text-[15px] text-primary truncate leading-tight">ระบบแอปพลิเคชัน</h1>
+                <p id="appSchoolDesktop" class="text-[11px] text-slate-500 truncate">สังกัด</p>
+            </div>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto custom-scroll py-6">
+            <div class="px-6 mb-2 text-[10px] font-bold text-slate-400 tracking-widest uppercase">เมนูหลัก</div>
+            <button onclick="navigate('dashboard')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item active" data-tab="dashboard"><i class="fas fa-home w-8 text-secondary"></i> สแกนเข้าเรียน</button>
+            <button onclick="navigate('manualcheck')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="manualcheck"><i class="fas fa-tasks w-8 text-orange-500"></i> เช็คชื่อด้วยมือ</button>
+            <button onclick="navigate('activities')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="activities"><i class="fas fa-book-open w-8 text-blue-500"></i> กิจกรรม / รายวิชา</button>
+            <button onclick="navigate('classes')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="classes"><i class="fas fa-layer-group w-8 text-purple-500"></i> การจัดการชั้นเรียน</button>
+            <button onclick="navigate('students')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="students"><i class="fas fa-users w-8 text-emerald-500"></i> ทะเบียนนักเรียน</button>
+            <button onclick="navigate('qrmaker')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="qrmaker"><i class="fas fa-id-badge w-8 text-rose-500"></i> สร้างบัตร QR Code ประจำตัว</button>
+            
+            <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 tracking-widest uppercase">ผลการเรียน</div>
+            <button onclick="navigate('scores')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="scores"><i class="fas fa-star w-8 text-amber-400"></i> บันทึกคะแนน</button>
+            <button onclick="navigate('grades')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="grades"><i class="fas fa-graduation-cap w-8 text-indigo-500"></i> คำนวณและตัดเกรด</button>
+            <button onclick="navigate('report')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="report"><i class="fas fa-file-invoice-dollar w-8 text-teal-500"></i> รายงานเวลาเรียน ปพ.5</button>
+
+            <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 tracking-widest uppercase">การตั้งค่า</div>
+            <button onclick="navigate('settings')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="settings"><i class="fas fa-cog w-8 text-slate-500"></i> ตั้งค่าแอปพลิเคชัน</button>
+        </div>
+    </aside>
+
+    <!-- ==========================================
+         2. Main Application Wrapper
+         ========================================== -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+        
+        <header class="md:hidden h-16 bg-white border-b border-slate-200 flex-shrink-0 flex justify-between items-center px-4 shadow-sm z-30">
+            <div class="flex items-center gap-3">
+                <img id="appLogoMobile" src="" class="w-8 h-8 object-contain rounded-lg" onerror="this.style.display='none'">
+                <h1 id="appTitleMobile" class="font-bold text-[15px] text-primary truncate max-w-[200px]">ระบบเช็คชื่อ</h1>
+            </div>
+            <button onclick="document.getElementById('mobileMenuOverlay').classList.remove('hidden')" class="w-10 h-10 flex justify-center items-center rounded-full bg-slate-50 text-slate-600 hover:bg-slate-100">
+                <i class="fas fa-bars text-lg"></i>
+            </button>
+        </header>
+
+        <main class="flex-1 overflow-y-auto custom-scroll p-4 md:p-8 relative z-10 w-full max-w-6xl mx-auto">
+            
+            <!-- --- PAGE: DASHBOARD (สแกนเวลาเรียน & ส่งงาน) --- -->
+            <div id="page-dashboard" class="page-content active">
+                <div class="glass-card mb-6 overflow-hidden relative">
+                    <!-- Tabs หัวข้อโหมดสแกน -->
+                    <div class="flex justify-center border-b border-slate-200 mb-6">
+                        <button id="tabAtt" onclick="switchScanMode('attendance')" class="px-6 py-3 font-bold text-sm text-secondary border-b-2 border-secondary transition-all w-1/2 md:w-auto">สแกนเข้าเรียน</button>
+                        <button id="tabWork" onclick="switchScanMode('submitwork')" class="px-6 py-3 font-bold text-sm text-slate-400 border-b-2 border-transparent hover:text-green-500 transition-all w-1/2 md:w-auto">สแกนส่งงาน</button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wide mb-1">รายวิชา / กิจกรรม</label>
+                            <select id="selMainAct" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-secondary transition-all font-medium" onchange="validateMainScanForm()"></select>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wide mb-1">ห้องเรียน</label>
+                            <select id="selMainClass" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-secondary transition-all font-medium" onchange="validateMainScanForm()"></select>
+                        </div>
+                        <div id="boxDate">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wide mb-1">วันที่สอน</label>
+                            <input type="date" id="inpMainDate" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-secondary transition-all font-medium text-slate-600" onchange="validateMainScanForm()">
+                        </div>
+                        <div id="boxWork" class="hidden">
+                            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wide mb-1">ชื่อชิ้นงาน / หัวข้อ</label>
+                            <input type="text" id="inpMainWork" placeholder="เช่น ใบงานที่ 1..." class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-green-500 transition-all font-medium text-slate-600" oninput="validateMainScanForm()">
+                        </div>
+                    </div>
+                    
+                    <div id="mainScanArea" class="flex flex-col lg:flex-row gap-6 pt-5 border-t border-slate-100 transition-all duration-300 opacity-50 pointer-events-none">
+                        <div class="flex-1 flex flex-col gap-4">
+                            <button id="btnMainScan" onclick="openScannerOverlay()" class="w-full bg-secondary hover:bg-slate-800 text-white py-4 rounded-2xl shadow-lg font-bold flex justify-center items-center gap-3 transition-transform active:scale-[0.98]">
+                                <i class="fas fa-qrcode text-2xl text-white opacity-80"></i>
+                                <span id="txtMainScan">เปิดกล้องสแกน QR Code</span>
+                            </button>
+                            
+                            <div class="flex items-center gap-4 py-2">
+                                <hr class="flex-1 border-slate-200"><span class="text-[11px] text-slate-400 font-bold uppercase tracking-widest">หรือพิมพ์รหัส</span><hr class="flex-1 border-slate-200">
+                            </div>
+                            
+                            <div class="flex gap-2">
+                                <div class="relative flex-1">
+                                    <i class="fas fa-keyboard absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                    <input type="text" id="inpMainManual" placeholder="รหัสนักเรียน..." class="w-full border border-slate-200 rounded-2xl py-4 pl-10 pr-4 text-center font-bold tracking-wider text-primary bg-slate-50 outline-none focus:bg-white focus:border-secondary transition-all" onkeypress="if(event.key==='Enter') processScan()">
+                                </div>
+                                <button id="btnMainManualSubmit" onclick="processScan()" class="bg-secondary hover:bg-teal-500 text-white w-16 rounded-2xl flex justify-center items-center shadow-md active:scale-95 transition-transform"><i class="fas fa-paper-plane text-lg"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col h-[260px] lg:h-auto">
+                            <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-200">
+                                <h3 id="txtLogHeader" class="font-bold text-slate-700 text-sm"><i class="fas fa-history text-slate-400 mr-1"></i> ประวัติล่าสุด</h3>
+                                <span id="badgeLogCount" class="text-[10px] bg-secondary/10 text-secondary border border-secondary/20 px-2.5 py-1 rounded-lg font-bold"><span id="txtMainCount">0</span> คน</span>
+                            </div>
+                            <div id="mainLogTable" class="flex-1 overflow-y-auto custom-scroll pr-1 space-y-2">
+                                <div class="h-full flex flex-col items-center justify-center text-slate-400 opacity-60">
+                                    <i class="fas fa-list-ul text-3xl mb-2"></i>
+                                    <span class="text-xs font-medium">รอการสแกน...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Stats -->
+                <h3 class="text-lg font-bold text-primary mb-4">ภาพรวมวันนี้</h3>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="glass-card !p-4 !rounded-2xl border-l-4 border-l-blue-500"><div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">นักเรียนทั้งหมด</div><div class="flex items-end gap-1"><h3 class="text-3xl font-black text-slate-800 leading-none" id="dashTotalStd">0</h3><span class="text-xs font-medium text-slate-500 mb-1">คน</span></div></div>
+                    <div class="glass-card !p-4 !rounded-2xl border-l-4 border-l-emerald-500"><div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">มาเรียน/สาย</div><div class="flex items-end gap-1"><h3 class="text-3xl font-black text-emerald-600 leading-none" id="dashPresent">0</h3><span class="text-xs font-medium text-slate-500 mb-1">คน</span></div><div class="text-[10px] font-bold text-emerald-500 mt-1 bg-emerald-50 inline-block px-2 py-0.5 rounded" id="dashPresentPct">0%</div></div>
+                    <div class="glass-card !p-4 !rounded-2xl border-l-4 border-l-rose-500"><div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">ขาด/ลา</div><div class="flex items-end gap-1"><h3 class="text-3xl font-black text-rose-600 leading-none" id="dashAbsent">0</h3><span class="text-xs font-medium text-slate-500 mb-1">คน</span></div></div>
+                    <div class="glass-card !p-4 !rounded-2xl border-l-4 border-l-purple-500"><div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">ชั้นเรียนทั้งหมด</div><div class="flex items-end gap-1"><h3 class="text-3xl font-black text-purple-600 leading-none" id="dashClasses">0</h3><span class="text-xs font-medium text-slate-500 mb-1">ห้อง</span></div></div>
+                </div>
+
+                <!-- Charts -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="glass-card"><h3 class="font-bold text-slate-700 text-sm mb-4"><i class="fas fa-chart-bar text-slate-400 mr-2"></i>นักเรียนแยกตามห้อง</h3><div class="h-60 w-full"><canvas id="barChart"></canvas></div></div>
+                    <div class="glass-card"><h3 class="font-bold text-slate-700 text-sm mb-4"><i class="fas fa-chart-pie text-slate-400 mr-2"></i>สัดส่วนการมาเรียนรวม</h3><div class="h-60 w-full flex justify-center"><canvas id="pieChart"></canvas></div></div>
+                </div>
+            </div>
+
+            <!-- --- PAGE: ACTIVITIES --- -->
+            <div id="page-activities" class="page-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-primary">กิจกรรม / รายวิชา</h2>
+                    <button onclick="addActivity()" class="bg-primary text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md hover:bg-slate-800 transition-colors"><i class="fas fa-plus mr-1"></i> เพิ่มวิชาใหม่</button>
+                </div>
+                <div id="activitiesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+
+            <!-- --- PAGE: STUDENTS --- -->
+            <div id="page-students" class="page-content">
+                <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+                    <h2 class="text-2xl font-bold text-primary">ทะเบียนนักเรียน</h2>
+                    <div class="flex gap-2 w-full md:w-auto">
+                        <select id="filterStudentClass" class="flex-1 md:w-48 bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm font-medium outline-none focus:border-secondary" onchange="renderStudents()"><option value="">-- ทุกชั้นเรียน --</option></select>
+                        <button onclick="addStudent()" class="bg-emerald-500 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md hover:bg-emerald-600 transition-colors whitespace-nowrap"><i class="fas fa-user-plus mr-1"></i> เพิ่มนักเรียน</button>
+                    </div>
+                </div>
+                <div id="tblStudents" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+            </div>
+
+            <!-- --- PAGE: MANUAL CHECK --- -->
+            <div id="page-manualcheck" class="page-content">
+                <h2 class="text-2xl font-bold text-primary mb-6">เช็คชื่อด้วยมือ <span class="text-sm font-normal text-slate-500 ml-2">(Manual Check)</span></h2>
+                
+                <div class="glass-card mb-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">รายวิชา</label><select id="selActManual" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-orange-400" onchange="loadManualCheckData()"></select></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">ห้องเรียน</label><select id="selClassManual" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-orange-400" onchange="loadManualCheckData()"></select></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">วันที่สอน</label><input type="date" id="inpDateManual" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-orange-400" onchange="loadManualCheckData()"></div>
+                    </div>
+                </div>
+
+                <div id="manualCheckArea" class="hidden">
+                    <div class="flex justify-between items-center mb-4 px-2">
+                        <h3 class="font-bold text-slate-700 text-lg">รายชื่อนักเรียน</h3>
+                        <button onclick="setAllManual('present')" class="bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2 rounded-xl text-xs font-bold transition-colors"><i class="fas fa-check-double mr-1"></i> เช็คมาทุกคน</button>
+                    </div>
+                    <div id="manualStudentsList" class="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-6"></div>
+                    
+                    <div class="sticky bottom-4 z-20 w-full flex justify-center">
+                        <button onclick="saveManualAttendance()" class="w-full md:max-w-md bg-primary hover:bg-slate-800 text-white py-4 rounded-2xl font-bold shadow-[0_8px_30px_rgba(15,23,42,0.3)] transition-transform active:scale-95 text-lg">
+                            <i class="fas fa-save mr-2"></i> บันทึกข้อมูลการเช็คชื่อ
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- --- PAGE: REPORT --- -->
+            <div id="page-report" class="page-content">
+                <h2 class="text-2xl font-bold text-primary mb-6">รายงานเวลาเรียน ปพ.5</h2>
+                
+                <div class="glass-card mb-6 no-print max-w-4xl">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">เลือกวิชา</label><select id="selActRep" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none"></select></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">เลือกชั้นเรียน</label><select id="selClassRep" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none"></select></div>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 mb-4">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase mb-2">รูปแบบรายงาน</label>
+                        <div class="flex flex-col md:flex-row gap-3">
+                            <select id="repType" class="flex-1 border border-slate-200 rounded-lg p-2.5 text-sm outline-none bg-white" onchange="toggleRepInputs()">
+                                <option value="weekly">รายสัปดาห์</option><option value="monthly">รายเดือน</option><option value="custom">กำหนดช่วงวันที่</option>
+                            </select>
+                            
+                            <div id="divRepWeekly" class="flex-1"><input type="date" id="inpRepStartWeek" class="w-full border border-slate-200 rounded-lg p-2.5 text-sm outline-none bg-white" title="เลือกวันเริ่มต้นสัปดาห์"></div>
+                            <div id="divRepMonthly" class="hidden flex-1"><input type="month" id="inpRepMonth" class="w-full border border-slate-200 rounded-lg p-2.5 text-sm outline-none bg-white"></div>
+                            <div id="divRepCustom" class="hidden flex-1 flex gap-2">
+                                <input type="date" id="repStart" class="w-full border border-slate-200 rounded-lg p-2.5 text-sm outline-none bg-white">
+                                <span class="self-center text-slate-400">-</span>
+                                <input type="date" id="repEnd" class="w-full border border-slate-200 rounded-lg p-2.5 text-sm outline-none bg-white">
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="genReport()" class="w-full bg-secondary hover:bg-teal-600 text-white rounded-xl py-3 text-sm font-bold shadow-md transition-colors"><i class="fas fa-search mr-2"></i> สร้างรายงานตาราง</button>
+                </div>
+
+                <div id="repResult" class="hidden">
+                    <div class="mb-4 no-print flex justify-end">
+                        <button onclick="document.body.classList.add('printing-report'); window.print(); document.body.classList.remove('printing-report');" class="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-print"></i> พิมพ์เอกสาร PDF</button>
+                    </div>
+                    <div class="glass-card !p-0 overflow-hidden shadow-lg border border-slate-200">
+                        <div class="p-6 text-center border-b-2 border-primary bg-white">
+                            <h1 class="text-xl font-bold text-primary mb-1">รายงานบันทึกเวลาเรียน</h1>
+                            <p id="printInfo" class="text-slate-600 text-sm font-medium"></p>
+                        </div>
+                        <div class="grid grid-cols-4 gap-0 text-center bg-slate-50 border-b border-slate-200 divide-x divide-slate-200">
+                            <div class="p-3"><p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">ทั้งหมด</p><span id="statTotal" class="text-lg font-black text-blue-600">0</span></div>
+                            <div class="p-3"><p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">มา/สาย</p><span id="statP" class="text-lg font-black text-green-600">0</span></div>
+                            <div class="p-3"><p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">ขาด</p><span id="statA" class="text-lg font-black text-red-600">0</span></div>
+                            <div class="p-3"><p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">เปอร์เซ็นต์</p><span id="statPct" class="text-lg font-black text-teal-600">0%</span></div>
+                        </div>
+                        <div class="overflow-x-auto bg-white p-4">
+                            <table class="w-full text-left table-custom whitespace-nowrap min-w-[600px]"><thead id="repHead"></thead><tbody id="repBody"></tbody></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- --- PAGE: SCORES --- -->
+            <div id="page-scores" class="page-content">
+                <h2 class="text-2xl font-bold text-primary mb-6">บันทึกคะแนน</h2>
+                <div class="glass-card mb-6 max-w-3xl">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">วิชา</label><select id="selActScore" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-amber-400" onchange="renderScoreTable()"></select></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">ชั้นเรียน</label><select id="selClassScore" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-amber-400" onchange="renderScoreTable()"></select></div>
+                    </div>
+                </div>
+                <div id="scoreTableArea" class="hidden max-w-4xl">
+                    <div id="scoreList" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"></div>
+                    <div class="sticky bottom-4 z-20 w-full flex justify-center">
+                        <button onclick="saveScores()" class="w-full md:max-w-md bg-amber-500 hover:bg-amber-600 text-white py-4 rounded-2xl font-bold shadow-[0_8px_30px_rgba(245,158,11,0.3)] transition-transform active:scale-95 text-lg">
+                            <i class="fas fa-save mr-2"></i> บันทึกคะแนนทั้งหมด
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- --- PAGE: GRADES --- -->
+            <div id="page-grades" class="page-content">
+                <h2 class="text-2xl font-bold text-primary mb-6">คำนวณและตัดเกรด</h2>
+                <div class="glass-card mb-6 no-print max-w-3xl">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">วิชา</label><select id="selActGrade" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-indigo-400" onchange="renderGradeTable()"></select></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">ชั้นเรียน</label><select id="selClassGrade" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-indigo-400" onchange="renderGradeTable()"></select></div>
+                    </div>
+                    <button onclick="renderGradeTable()" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl py-3 text-sm font-bold shadow-md transition-colors"><i class="fas fa-magic mr-2"></i> ประมวลผลเกรดอัตโนมัติ</button>
+                </div>
+                <div id="gradeTableArea" class="hidden max-w-5xl mx-auto">
+                    <div id="gradeList" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"></div>
+                </div>
+            </div>
+
+            <!-- --- PAGE: CLASSES --- -->
+            <div id="page-classes" class="page-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-primary">การจัดการชั้นเรียน</h2>
+                    <button onclick="addClass()" class="bg-purple-500 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md hover:bg-purple-600"><i class="fas fa-plus mr-1"></i> เพิ่มห้อง</button>
+                </div>
+                <div id="classesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+            </div>
+
+            <!-- --- PAGE: QR MAKER (แบบใหม่ตามดีไซน์ UI) --- -->
+            <div id="page-qrmaker" class="page-content qr-maker-container">
+                <div class="flex justify-between items-center mb-6 no-print">
+                    <h2 class="text-xl md:text-2xl font-bold text-primary flex items-center gap-2">
+                        <i class="fas fa-id-card text-blue-600"></i> พิมพ์บัตรนักเรียน
+                    </h2>
+                    <button onclick="printQRCards()" id="btnMakerPrint" class="hidden bg-slate-900 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-md hover:bg-slate-800 transition-colors">
+                        <i class="fas fa-print mr-1"></i> สั่งพิมพ์
+                    </button>
+                </div>
+
+                <div class="glass-card mb-6 no-print max-w-xl mx-auto">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-bold text-slate-600 mb-1"><i class="fas fa-edit text-slate-400 mr-1"></i> ข้อความหัวบัตร</label>
+                            <input type="text" id="qrHeaderText" value="บัตรประจำตัวนักเรียน" placeholder="เช่น บัตรประจำตัวนักเรียน" class="w-full border-2 border-slate-200 rounded-xl p-3 text-sm outline-none focus:border-blue-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-600 mb-1"><i class="fas fa-palette text-slate-400 mr-1"></i> สีหัวบัตร</label>
+                            <div class="w-full border-2 border-slate-200 rounded-xl p-1 bg-white flex items-center focus-within:border-blue-500 transition-colors h-12">
+                                <input type="color" id="qrHeaderColor" class="w-full h-full cursor-pointer rounded-lg border-none outline-none bg-transparent">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-600 mb-1"><i class="fas fa-users text-slate-400 mr-1"></i> เลือกห้องเรียน</label>
+                            <select id="selClassQRMaker" class="w-full border-2 border-slate-200 rounded-xl p-3 text-sm bg-white outline-none focus:border-blue-500 transition-colors cursor-pointer appearance-none">
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-600 mb-1"><i class="fas fa-qrcode text-slate-400 mr-1"></i> รูปแบบรหัส</label>
+                            <select id="qrCodeType" class="w-full border-2 border-slate-200 rounded-xl p-3 text-sm bg-white outline-none focus:border-blue-500 transition-colors cursor-pointer appearance-none">
+                                <option value="qr">สี่เหลี่ยม (QR Code)</option>
+                            </select>
+                        </div>
+
+                        <button onclick="generateQRFromDB()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl text-sm font-bold shadow-md transition-colors mt-4">
+                            สร้างตัวอย่างบัตร
+                        </button>
+                    </div>
+                    
+                    <div class="mt-6 pt-4 border-t border-slate-100">
+                        <p class="text-[10px] text-center text-slate-400 mb-2">หรือสร้างจากไฟล์ Excel นอกระบบ</p>
+                        <div class="flex gap-2">
+                            <button onclick="downloadExcelTemplate()" class="flex-1 bg-slate-100 text-slate-600 py-2.5 rounded-lg text-xs font-bold hover:bg-slate-200"><i class="fas fa-download mr-1"></i> โหลดเทมเพลต</button>
+                            <button onclick="document.getElementById('fileInputExcel').click()" class="flex-1 bg-emerald-50 text-emerald-600 py-2.5 rounded-lg text-xs font-bold hover:bg-emerald-100"><i class="fas fa-file-excel mr-1"></i> เลือกไฟล์ Excel</button>
+                            <input type="file" id="fileInputExcel" accept=".xlsx, .xls" class="hidden" onchange="handleExcelUpload(this)">
+                        </div>
+                        <div id="qrMakerStatus" class="hidden text-[11px] text-center font-medium mt-2"></div>
+                    </div>
+                </div>
+
+                <!-- Print Preview Area -->
+                <div id="preview-container" class="hidden bg-slate-200 p-4 md:p-8 rounded-2xl flex justify-center overflow-x-auto">
+                    <div class="bg-white p-8 rounded shadow-sm w-full max-w-[210mm] min-h-[297mm]">
+                        <div id="cardContainer" class="card-grid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- --- PAGE: SETTINGS --- -->
+            <div id="page-settings" class="page-content no-print">
+                <h2 class="text-2xl font-bold text-primary mb-6">ตั้งค่าแอปพลิเคชัน</h2>
+                <div class="glass-card max-w-xl">
+                    <div class="space-y-4">
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">ชื่อระบบ (หัวแอป)</label><input type="text" id="cfgSysName" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">ชื่อโรงเรียน (แสดงในบัตร/ปพ.5)</label><input type="text" id="cfgSchool1" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">สังกัด (แสดงในบัตร/ปพ.5)</label><input type="text" id="cfgSchool2" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">สีธีมบัตร QR Code</label><input type="color" id="cfgTheme" class="w-full h-12 border border-slate-200 rounded-xl p-1 bg-white cursor-pointer"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">URL โลโก้ (ไฟล์รูปภาพ)</label><input type="text" id="cfgLogo" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none mb-2" oninput="document.getElementById('logoPreview').src=this.value"><div class="bg-slate-100 p-4 rounded-xl border border-slate-200 flex justify-center items-center"><img id="logoPreview" src="" class="max-h-20 object-contain drop-shadow-sm" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span style="display:none" class="text-xs text-slate-400">รูปไม่ถูกต้อง</span></div></div>
+                        <div class="pt-4 border-t border-slate-100">
+                            <button onclick="saveConfig()" class="w-full bg-primary hover:bg-slate-800 text-white py-4 rounded-xl font-bold shadow-lg transition-transform active:scale-95 text-sm"><i class="fas fa-save mr-2"></i> บันทึกการตั้งค่า</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+        
+        <!-- ==========================================
+             3. Bottom Navigation (Mobile Only)
+             ========================================== -->
+        <nav class="md:hidden flex-none bg-white border-t border-slate-200 w-full flex justify-around pb-5 pt-2 z-40 relative px-1 shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
+            <button onclick="navigate('students')" class="nav-bottom-item" data-tab="students"><i class="fas fa-users"></i><span class="text-[9px] font-medium tracking-wide">นักเรียน</span></button>
+            <button onclick="navigate('classes')" class="nav-bottom-item" data-tab="classes"><i class="fas fa-layer-group"></i><span class="text-[9px] font-medium tracking-wide">ห้องเรียน</span></button>
+            
+            <!-- Scan Button Center (Floating) -->
+            <div class="nav-bottom-item relative w-[20%] flex justify-center">
+                <button onclick="navigate('dashboard')" class="absolute bottom-1 w-[56px] h-[56px] bg-secondary text-white rounded-2xl flex items-center justify-center shadow-lg shadow-secondary/40 border-[3px] border-background active:scale-95 transition-transform" data-tab="dashboard" style="border-radius: 20px;">
+                    <i class="fas fa-qrcode text-2xl !m-0 !text-white"></i>
+                </button>
+                <span class="text-[9px] font-medium tracking-wide mt-8 text-slate-400">สแกน</span>
+            </div>
+            
+            <button onclick="navigate('report')" class="nav-bottom-item" data-tab="report"><i class="fas fa-file-alt"></i><span class="text-[9px] font-medium tracking-wide">รายงาน</span></button>
+            <button onclick="document.getElementById('mobileMenuOverlay').classList.remove('hidden')" class="nav-bottom-item"><i class="fas fa-bars"></i><span class="text-[9px] font-medium tracking-wide">เมนู</span></button>
+        </nav>
+
+        <!-- ==========================================
+             4. Overlays & Modals (Z-index 50+)
+             ========================================== -->
+             
+        <!-- Mobile Full Screen Menu Drawer -->
+        <div id="mobileMenuOverlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden" onclick="if(event.target===this) this.classList.add('hidden')">
+            <div class="absolute bottom-0 left-0 w-full bg-white rounded-t-3xl p-6 shadow-2xl pb-10 animation-slide-up">
+                <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+                    <h3 class="font-bold text-primary text-lg">เมนูแอปพลิเคชัน</h3>
+                    <button onclick="document.getElementById('mobileMenuOverlay').classList.add('hidden')" class="w-8 h-8 bg-slate-100 text-slate-500 rounded-full"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="grid grid-cols-3 gap-y-6 gap-x-2">
+                    <button onclick="navigate('dashboard'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-sky-50 text-sky-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-home"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">สแกน/ส่งงาน</span></button>
+                    <button onclick="navigate('manualcheck'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-tasks"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">เช็คชื่อมือ</span></button>
+                    <button onclick="navigate('activities'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-book-open"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">กิจกรรม/วิชา</span></button>
+                    <button onclick="navigate('classes'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-purple-50 text-purple-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-layer-group"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">ชั้นเรียน</span></button>
+                    <button onclick="navigate('students'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-users"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">นักเรียน</span></button>
+                    <button onclick="navigate('qrmaker'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-id-badge"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">สร้างบัตร QR</span></button>
+                    <button onclick="navigate('scores'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-star"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">บันทึกคะแนน</span></button>
+                    <button onclick="navigate('grades'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-graduation-cap"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">ตัดเกรด</span></button>
+                    <button onclick="navigate('report'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-teal-50 text-teal-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-file-invoice-dollar"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">รายงาน ปพ.5</span></button>
+                    <button onclick="navigate('settings'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-slate-100 text-slate-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-cog"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">ตั้งค่าระบบ</span></button>
+                </div>
+            </div>
+        </div>
+        <style>.animation-slide-up { animation: menuSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; } @keyframes menuSlide { from { transform: translateY(100%); } to { transform: translateY(0); } }</style>
+
+        <!-- Camera Scanner Overlay (Z-index 100) -->
+        <div id="cameraOverlay" class="fixed inset-0 bg-slate-900 z-[100] hidden flex-col w-full h-full">
+            <div class="h-16 flex justify-between items-center px-4 bg-slate-900 text-white border-b border-white/10 z-10">
+                <div class="flex items-center gap-3">
+                    <h3 id="txtScannerOverlayTitle" class="font-bold text-sm tracking-wide">สแกนเข้าเรียน</h3>
+                    <span class="text-[9px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full border border-green-500/30 animate-pulse whitespace-nowrap">สแกนต่อเนื่องได้</span>
+                </div>
+                <button onclick="closeScannerOverlay()" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors"><i class="fas fa-times text-lg"></i></button>
+            </div>
+            <div class="flex-1 relative flex items-center justify-center bg-black overflow-hidden">
+                <div id="qr-reader" class="w-full max-w-md h-full object-cover"></div>
+                
+                <!-- Fallback (Camera Blocked) -->
+                <div id="qr-reader-fallback" class="hidden absolute inset-0 bg-slate-900 flex flex-col items-center justify-center text-white p-6 text-center z-20">
+                    <div class="w-20 h-20 bg-rose-500/20 rounded-full flex items-center justify-center mb-6"><i class="fas fa-camera-slash text-4xl text-rose-500"></i></div>
+                    <h4 class="font-bold text-xl text-white mb-3">กล้องถูกระงับการใช้งาน</h4>
+                    <p class="mb-8 text-sm text-slate-400 leading-relaxed max-w-xs">
+                        ระบบไม่สามารถเปิดกล้องได้ อาจถูกบล็อกโดยเบราว์เซอร์หรือแอปพลิเคชัน (เช่น LINE)
+                    </p>
+                    <div class="w-full max-w-xs space-y-3">
+                        <label class="block w-full bg-secondary text-white py-4 rounded-xl font-bold cursor-pointer text-sm shadow-lg hover:bg-teal-500 transition active:scale-95">
+                            <i class="fas fa-image mr-2 text-lg"></i> เลือกรูปภาพ QR แทน
+                            <input type="file" accept="image/*" class="hidden" onchange="handleFileScan(this)">
+                        </label>
+                        <button onclick="closeScannerOverlay()" class="w-full bg-slate-800 text-white py-4 rounded-xl font-bold text-sm hover:bg-slate-700 transition">กลับไปหน้าหลัก</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         JAVASCRIPT LOGIC
+         ========================================== -->
+    <script>
+        // --- Core Variables ---
+        
+// --- Core Variables ---
+// ลบตัวแปร IS_GAS ทิ้ง แล้วใส่ URL และ KEY ของ Supabase แทน
+const SUPABASE_URL = 'https://apwaoxlzeheqmaiecqwz.supabase.co/rest/v1/';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwd2FveGx6ZWhlcW1haWVjcXd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwMzkyMTIsImV4cCI6MjA5NzYxNTIxMn0.4yv3JfjS2WCPCEf-v4xqKFBEONWT8QxjMzv1uywHJxY';
+
+// สร้างตัวเชื่อมต่อ (Client)
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let DB = { students:[], classes:[], activities:[], attendance:{}, scores:{}, works:{} };
+// ... (ตัวแปรอื่นๆ เหมือนเดิม)
+
+
+        // --- Config ---
+        let appConfig = JSON.parse(localStorage.getItem('myAppCfgV2')) || 
+                        JSON.parse(localStorage.getItem('myAppCfg')) || 
+                        JSON.parse(localStorage.getItem('appConfig')) || 
+                        { sysName: 'ระบบจัดการเรียนการสอน', school1: 'โรงเรียนบ้านซับก้านเหลือง', school2: 'สพป.นครราชสีมา เขต 3', theme: '#0ea5e9', logo: 'https://img2.pic.in.th/pic/-161baf06cd7f44fd8.png' };
+        
+        function applyConfig() {
+            document.querySelectorAll('#appTitleDesktop, #appTitleMobile').forEach(e=>e.innerText=appConfig.sysName);
+            document.getElementById('appSchoolDesktop').innerText=appConfig.school1;
+            document.querySelectorAll('#appLogoDesktop, #appLogoMobile, #logoPreview').forEach(e=>{e.src=appConfig.logo; e.style.display='block';});
+            document.getElementById('cfgSysName').value=appConfig.sysName; document.getElementById('cfgSchool1').value=appConfig.school1; document.getElementById('cfgSchool2').value=appConfig.school2; document.getElementById('cfgTheme').value=appConfig.theme; document.getElementById('cfgLogo').value=appConfig.logo;
+            
+            const colorPicker = document.getElementById('qrHeaderColor');
+            if(colorPicker) colorPicker.value = appConfig.theme;
+        }
+        function saveConfig() {
+            appConfig.sysName=document.getElementById('cfgSysName').value; appConfig.school1=document.getElementById('cfgSchool1').value; appConfig.school2=document.getElementById('cfgSchool2').value; appConfig.theme=document.getElementById('cfgTheme').value; appConfig.logo=document.getElementById('cfgLogo').value; localStorage.setItem('myAppCfgV2', JSON.stringify(appConfig)); applyConfig(); Swal.fire({toast:true, position:'top', icon:'success', title:'บันทึกสำเร็จ', timer:1500, showConfirmButton:false});
+        }
+
+        // --- Navigation ---
+        function navigate(tabId) {
+            document.querySelectorAll('.page-content').forEach(el => { el.classList.remove('active'); });
+            const target = document.getElementById('page-' + tabId);
+            if(target) { target.classList.add('active'); }
+            
+            document.querySelectorAll('.nav-sidebar-item, .nav-bottom-item').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll(`[data-tab="${tabId}"]`).forEach(btn => btn.classList.add('active'));
+            
+            if(tabId === 'dashboard') { prepDashboardPage(); updateDashboard(); }
+            if(tabId === 'manualcheck') prepManualCheckPage();
+            if(tabId === 'summary') prepSummaryPage();
+            if(tabId === 'scores') prepScorePage();
+            if(tabId === 'grades') prepGradePage();
+            if(tabId === 'qrmaker') prepQRMakerPage();
+        }
+
+        // --- Data Layer ---
+        const showLoad = (b) => document.getElementById('loadingOverlay').style.display = b ? 'flex' : 'none';
+        
+       
+
+async function fetchAll() {
+    showLoad(true);
+    try {
+        // ดึงข้อมูลทั้งหมดจาก Supabase พร้อมๆ กัน
+        const [resStudents, resClasses, resActivities, resAtt, resScores, resWorks] = await Promise.all([
+            supabase.from('students').select('*'),
+            supabase.from('classes').select('*'),
+            supabase.from('activities').select('*'),
+            supabase.from('attendance').select('*'),
+            supabase.from('scores').select('*'),
+            supabase.from('works').select('*')
+        ]);
+
+        DB.students = resStudents.data || [];
+        DB.classes = resClasses.data || [];
+        DB.activities = resActivities.data || [];
+
+        // แปลงข้อมูลตาราง JSON ให้กลับมาเป็น Object แบบที่โค้ดเดิมใช้
+        DB.attendance = {};
+        if(resAtt.data) resAtt.data.forEach(item => DB.attendance[item.key] = item.data);
+        
+        DB.scores = {};
+        if(resScores.data) resScores.data.forEach(item => DB.scores[item.key] = item.data);
+        
+        DB.works = {};
+        if(resWorks.data) resWorks.data.forEach(item => DB.works[item.key] = item.data);
+
+        renderAll(); 
+        navigate('dashboard');
+    } catch(e) { 
+        console.error(e);
+        Swal.fire('Error','โหลดข้อมูลล้มเหลว','error'); 
+    } finally { 
+        showLoad(false); 
+    }
+}
+
+
+
+
+async function save(type, data) {
+    showLoad(true);
+    try {
+        if (type === 'attendance' || type === 'scores' || type === 'works') {
+            // โค้ดเดิมส่งมาเป็น Object เช่น {"key1": {ข้อมูล}, "key2": {ข้อมูล}}
+            // ต้องแปลงเป็น Array ก่อนส่งเข้า Supabase
+            const updates = Object.keys(data).map(k => ({
+                key: k,
+                data: data[k]
+            }));
+            const { error } = await supabase.from(type).upsert(updates);
+            if(error) throw error;
+            
+            DB[type] = {...DB[type], ...data};
+        } else {
+            // สำหรับ students, classes, activities ลบของเก่าและใส่ของใหม่เข้าไปเลย (เหมือน Google Sheets)
+            // เคลียร์ตารางเดิม
+            await supabase.from(type).delete().neq('id', 'dummy_value');
+            // ใส่ข้อมูลใหม่
+            if (data && data.length > 0) {
+                const { error } = await supabase.from(type).insert(data);
+                if(error) throw error;
+            }
+            DB[type] = data;
+        }
+        
+        renderAll();
+    } catch(e) { 
+        console.error(e);
+        Swal.fire('Error','บันทึกข้อมูลล้มเหลว','error'); 
+    } finally { 
+        showLoad(false); 
+    }
+}
+        
+
+
+
+
+
+
+
+        function renderAll() { prepDashboardPage(); updateDashboard(); renderActivities(); renderClassesGrid(); renderStudents(); prepQRMakerPage(); }
+
+        // --- Audio System ---
+        function playSuccessBeep() {
+            try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.1); } catch(e) {}
+        }
+        function playErrorBeep() {
+            try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'square'; osc.frequency.setValueAtTime(150, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.3); } catch(e) {}
+        }
+
+        // --- Dashboard & Stats ---
+        function updateDashboard() {
+            const today = new Date().toISOString().split('T')[0]; let pres = 0, abs = 0;
+            Object.keys(DB.attendance).forEach(k => {
+                const p = k.split('|'); if(p[1] === today) {
+                    const clsStds = DB.students.filter(s=>String(s.class||'').trim() === String(p[2]||'').trim()).length;
+                    const atts = Object.values(DB.attendance[k]).filter(r => r.status !== 'absent').length;
+                    pres += atts; abs += Math.max(0, clsStds - atts);
+                }
+            });
+            const pct = (pres+abs)>0 ? Math.round((pres/(pres+abs))*100) : 0;
+            document.getElementById('dashTotalStd').innerText = DB.students.length;
+            document.getElementById('dashPresent').innerText = pres; document.getElementById('dashAbsent').innerText = abs;
+            document.getElementById('dashClasses').innerText = DB.classes.length; document.getElementById('dashPresentPct').innerText = `คิดเป็น ${pct}%`;
+            
+            let cStats = {}; DB.classes.forEach(c=>cStats[String(c.name||'').trim()]=0); DB.students.forEach(s=>{ let cl = String(s.class||'').trim(); if(cStats[cl]!==undefined) cStats[cl]++;});
+            if(charts.bar) charts.bar.destroy();
+            charts.bar = new Chart(document.getElementById('barChart'), { type: 'bar', data: { labels: Object.keys(cStats), datasets: [{ label: 'จำนวนนักเรียน', data: Object.values(cStats), backgroundColor: '#0ea5e9', borderRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, plugins:{legend:{display:false}} } });
+            if(charts.pie) charts.pie.destroy();
+            charts.pie = new Chart(document.getElementById('pieChart'), { type: 'doughnut', data: { labels: ['มาเรียน', 'ขาด/ลา'], datasets: [{ data: [pct, 100-pct], backgroundColor: ['#10b981', '#f1f5f9'], borderWidth: 0, cutout: '75%' }] }, options: { responsive: true, maintainAspectRatio: false, plugins:{legend:{position:'right'}} } });
+        }
+
+        // --- Camera Scanner System (Dashboard: Combined) ---
+        function prepDashboardPage() {
+            const a = '<option value="">-- เลือกวิชา --</option>' + DB.activities.map(x=>`<option value="${x.id}">${x.name}</option>`).join('');
+            const c = '<option value="">-- เลือกห้อง --</option>' + DB.classes.map(x=>`<option value="${String(x.name||'').trim()}">${String(x.name||'').trim()}</option>`).join('');
+            document.getElementById('selMainAct').innerHTML = a; 
+            document.getElementById('selMainClass').innerHTML = c;
+            if(!document.getElementById('inpMainDate').value) document.getElementById('inpMainDate').value = new Date().toISOString().split('T')[0];
+            switchScanMode(currentScanMode); 
+        }
+
+        function switchScanMode(mode) {
+            currentScanMode = mode;
+            const tabAtt = document.getElementById('tabAtt');
+            const tabWork = document.getElementById('tabWork');
+            const boxDate = document.getElementById('boxDate');
+            const boxWork = document.getElementById('boxWork');
+            const btnScan = document.getElementById('btnMainScan');
+            const btnSubmit = document.getElementById('btnMainManualSubmit');
+            const txtScan = document.getElementById('txtMainScan');
+            const txtHeader = document.getElementById('txtLogHeader');
+            const badge = document.getElementById('badgeLogCount');
+            const inpMain = document.getElementById('inpMainManual');
+            const selAct = document.getElementById('selMainAct');
+            const selClass = document.getElementById('selMainClass');
+
+            if (mode === 'attendance') {
+                tabAtt.className = "px-6 py-3 font-bold text-sm text-secondary border-b-2 border-secondary transition-all w-1/2 md:w-auto";
+                tabWork.className = "px-6 py-3 font-bold text-sm text-slate-400 border-b-2 border-transparent hover:text-green-500 transition-all w-1/2 md:w-auto";
+                boxDate.classList.remove('hidden');
+                boxWork.classList.add('hidden');
+                
+                btnScan.className = "w-full bg-secondary hover:bg-slate-800 text-white py-4 rounded-2xl shadow-lg font-bold flex justify-center items-center gap-3 transition-transform active:scale-[0.98]";
+                btnSubmit.className = "bg-secondary hover:bg-teal-500 text-white w-16 rounded-2xl flex justify-center items-center shadow-md active:scale-95 transition-transform";
+                inpMain.className = "w-full border border-slate-200 rounded-2xl py-4 pl-10 pr-4 text-center font-bold tracking-wider text-primary bg-slate-50 outline-none focus:bg-white focus:border-secondary transition-all";
+                selAct.classList.remove('focus:border-green-500'); selAct.classList.add('focus:border-secondary');
+                selClass.classList.remove('focus:border-green-500'); selClass.classList.add('focus:border-secondary');
+                
+                txtScan.innerText = "เปิดกล้องสแกนเข้าเรียน";
+                txtHeader.innerHTML = '<i class="fas fa-history text-slate-400 mr-1"></i> ประวัติสแกนเข้าเรียน';
+                badge.className = "text-[10px] bg-secondary/10 text-secondary border border-secondary/20 px-2.5 py-1 rounded-lg font-bold";
+            } else {
+                tabAtt.className = "px-6 py-3 font-bold text-sm text-slate-400 border-b-2 border-transparent hover:text-green-500 transition-all w-1/2 md:w-auto";
+                tabWork.className = "px-6 py-3 font-bold text-sm text-green-500 border-b-2 border-green-500 transition-all w-1/2 md:w-auto";
+                boxDate.classList.add('hidden');
+                boxWork.classList.remove('hidden');
+                
+                btnScan.className = "w-full bg-green-500 hover:bg-slate-800 text-white py-4 rounded-2xl shadow-lg font-bold flex justify-center items-center gap-3 transition-transform active:scale-[0.98]";
+                btnSubmit.className = "bg-green-500 hover:bg-green-600 text-white w-16 rounded-2xl flex justify-center items-center shadow-md active:scale-95 transition-transform";
+                inpMain.className = "w-full border border-slate-200 rounded-2xl py-4 pl-10 pr-4 text-center font-bold tracking-wider text-primary bg-slate-50 outline-none focus:bg-white focus:border-green-500 transition-all";
+                selAct.classList.remove('focus:border-secondary'); selAct.classList.add('focus:border-green-500');
+                selClass.classList.remove('focus:border-secondary'); selClass.classList.add('focus:border-green-500');
+
+                txtScan.innerText = "เปิดกล้องสแกนส่งงาน";
+                txtHeader.innerHTML = '<i class="fas fa-check-circle text-slate-400 mr-1"></i> ประวัติสแกนส่งงาน';
+                badge.className = "text-[10px] bg-green-500/10 text-green-600 border border-green-500/20 px-2.5 py-1 rounded-lg font-bold";
+            }
+            validateMainScanForm();
+        }
+
+        function validateMainScanForm() {
+            const act = document.getElementById('selMainAct').value;
+            const cls = document.getElementById('selMainClass').value;
+            const area = document.getElementById('mainScanArea');
+            
+            if(currentScanMode === 'attendance') {
+                const dt = document.getElementById('inpMainDate').value;
+                if(act && cls && dt) { 
+                    area.classList.remove('opacity-50','pointer-events-none'); 
+                    checkKey = `${act}|${dt}|${cls}`; 
+                    currentSess = []; updateMainLogTable(); 
+                } else { area.classList.add('opacity-50','pointer-events-none'); checkKey = ''; }
+            } else {
+                const wName = document.getElementById('inpMainWork').value.trim();
+                if(act && cls && wName) { 
+                    area.classList.remove('opacity-50','pointer-events-none'); 
+                    submitWorkKey = `${act}|${wName}|${cls}`; 
+                    currentWorkSess = []; updateMainLogTable(); 
+                } else { area.classList.add('opacity-50','pointer-events-none'); submitWorkKey = ''; }
+            }
+        }
+
+        function openScannerOverlay() {
+            if(currentScanMode === 'attendance' && !checkKey) { Swal.fire('ข้อมูลไม่ครบ', 'กรุณาเลือกวิชาและห้องเรียนให้ครบก่อน', 'warning'); return; }
+            if(currentScanMode === 'submitwork' && !submitWorkKey) { Swal.fire('ข้อมูลไม่ครบ', 'กรุณาเลือกวิชา ห้องเรียน และใส่ชื่อชิ้นงานก่อน', 'warning'); return; }
+            
+            document.getElementById('txtScannerOverlayTitle').innerText = currentScanMode === 'attendance' ? 'สแกนเข้าเรียน' : 'สแกนส่งงาน';
+            const overlay = document.getElementById('cameraOverlay');
+            overlay.classList.remove('hidden'); overlay.style.display='flex';
+            document.getElementById('qr-reader-fallback').classList.add('hidden');
+            
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                document.getElementById('qr-reader-fallback').classList.remove('hidden'); return;
+            }
+
+            if(!scanner) scanner = new Html5Qrcode("qr-reader");
+            const config = { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 };
+            
+            window.lastScanCode = ''; window.lastScanTime = 0;
+
+            scanner.start({ facingMode: "environment" }, config, 
+                (decodedText) => { 
+                    if (decodedText === window.lastScanCode && (Date.now() - window.lastScanTime < 3000)) return; 
+                    window.lastScanCode = decodedText; window.lastScanTime = Date.now();
+                    processScan(decodedText); 
+                },
+                (errorMessage) => { }
+            ).catch(err => {
+                Html5Qrcode.getCameras().then(devices => {
+                    if (devices && devices.length > 0) {
+                        let cameraId = devices[0].id;
+                        for(let i=0; i<devices.length; i++){ if(devices[i].label.toLowerCase().includes('back')){ cameraId = devices[i].id; break; } }
+                        scanner.start(cameraId, config, 
+                            (txt) => { 
+                                if (txt === window.lastScanCode && (Date.now() - window.lastScanTime < 3000)) return; 
+                                window.lastScanCode = txt; window.lastScanTime = Date.now();
+                                processScan(txt); 
+                            }, 
+                            (e) => {}
+                        ).catch(e => { document.getElementById('qr-reader-fallback').classList.remove('hidden'); });
+                    } else { document.getElementById('qr-reader-fallback').classList.remove('hidden'); }
+                }).catch(e => { document.getElementById('qr-reader-fallback').classList.remove('hidden'); });
+            });
+        }
+
+        function closeScannerOverlay() {
+            const overlay = document.getElementById('cameraOverlay');
+            overlay.classList.add('hidden'); overlay.style.display='none';
+            if(scanner) scanner.stop().catch(e => console.log(e));
+        }
+
+        function handleFileScan(input) {
+            if(input.files.length === 0) return;
+            if(!scanner) scanner = new Html5Qrcode("qr-reader");
+            scanner.scanFile(input.files[0], true).then(txt => { closeScannerOverlay(); processScan(txt); input.value = ''; })
+            .catch(err => { Swal.fire('ไม่พบ QR Code', 'ภาพไม่ชัดเจน กรุณาลองใหม่', 'error'); input.value = ''; });
+        }
+
+        function processScan(qrTxt) {
+            const inp = document.getElementById('inpMainManual'); 
+            let raw = qrTxt || (inp ? inp.value.trim() : ''); if(!raw) return;
+            const id = raw.split(' ')[0]; 
+            const cls = document.getElementById('selMainClass').value;
+            const std = DB.students.find(s=>String(s.id) === String(id));
+            const Toast = Swal.mixin({ toast: true, position: 'top', showConfirmButton: false, timer: 2000 });
+
+            if(std) {
+                if (String(std.class||'').trim() !== String(cls||'').trim()) { 
+                    playErrorBeep(); Toast.fire({ icon: 'error', title: `ผิดห้อง! ${std.name} อยู่ชั้น ${std.class}`}); 
+                    if(inp)inp.value=''; return; 
+                }
+
+                const time = new Date().toLocaleTimeString('th-TH', { hour12: false });
+
+                if (currentScanMode === 'attendance') {
+                    let ex = DB.attendance[checkKey] || {}; 
+                    if(ex[std.id]) { 
+                        playErrorBeep(); Toast.fire({ icon: 'warning', title: `สแกนซ้ำ! ${std.name} เช็คไปแล้ว`}); 
+                        if(inp)inp.value=''; return; 
+                    }
+                    if (!DB.attendance[checkKey]) DB.attendance[checkKey] = {};
+                    DB.attendance[checkKey][std.id] = { status: 'present', time: time };
+                    let payload = {}; payload[checkKey] = DB.attendance[checkKey];
+                    
+                    playSuccessBeep(); Toast.fire({ icon: 'success', title: `${std.name}`, text: 'บันทึกเข้าเรียนเรียบร้อย' });
+                    if(inp)inp.value=''; currentSess.unshift({id:std.id, name:std.name, time:time}); updateMainLogTable(); updateDashboard();
+                    try{ if(IS_GAS) google.script.run.saveDataToSheet('attendance', payload); else save('attendance', payload); }catch(e){}
+                
+                } else {
+                    let ex = DB.works[submitWorkKey] || {}; 
+                    if(ex[std.id]) { 
+                        playErrorBeep(); Toast.fire({ icon: 'warning', title: `ส่งซ้ำ! ${std.name} ส่งไปแล้ว`}); 
+                        if(inp)inp.value=''; return; 
+                    }
+                    if (!DB.works[submitWorkKey]) DB.works[submitWorkKey] = {};
+                    DB.works[submitWorkKey][std.id] = { status: 'submitted', time: time };
+                    let payload = {}; payload[submitWorkKey] = DB.works[submitWorkKey];
+                    
+                    playSuccessBeep(); Toast.fire({ icon: 'success', title: `${std.name}`, text: 'บันทึกส่งงานเรียบร้อย' });
+                    if(inp)inp.value=''; currentWorkSess.unshift({id:std.id, name:std.name, time:time}); updateMainLogTable();
+                    try{ if(IS_GAS) google.script.run.saveDataToSheet('works', payload); else save('works', payload); }catch(e){}
+                }
+            } else { 
+                playErrorBeep(); Toast.fire({ icon: 'error', title: `ไม่พบรหัสนักเรียน: ${id}`}); 
+                if(inp)inp.value='';
+            }
+        }
+
+        function updateMainLogTable() {
+            const arr = currentScanMode === 'attendance' ? currentSess : currentWorkSess;
+            const colorClass = currentScanMode === 'attendance' ? 'border-l-secondary text-secondary bg-slate-50 text-primary' : 'border-l-green-500 text-green-600 bg-green-50';
+            
+            document.getElementById('txtMainCount').innerText = arr.length;
+            
+            let html = arr.map(l => `<div class="bg-white border border-slate-100 border-l-4 ${colorClass.split(' ')[0]} p-3 rounded-xl shadow-sm flex justify-between items-center"><div class="leading-tight"><b class="text-sm text-slate-700">${l.name}</b><br><span class="text-[10px] text-slate-400 font-bold">${l.id}</span></div><div class="${colorClass.split(' ').slice(2).join(' ')} px-2 py-1 rounded font-bold text-xs">${l.time}</div></div>`).join('');
+            
+            if(!html) {
+                const msg = currentScanMode === 'attendance' ? 'รอการสแกนเข้าเรียน...' : 'รอการสแกนส่งงาน...';
+                html = `<div class="h-full flex flex-col items-center justify-center text-slate-400 opacity-60"><i class="fas fa-list-ul text-3xl mb-2"></i><span class="text-xs font-medium">${msg}</span></div>`;
+            }
+            document.getElementById('mainLogTable').innerHTML = html;
+        }
+
+        // --- Data Management (CRUD) ---
+        function renderActivities() {
+            document.getElementById('activitiesList').innerHTML = DB.activities.map((a,i) => `<div class="glass-card flex justify-between items-center"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex justify-center items-center"><i class="fas fa-book"></i></div><span class="font-bold text-slate-700">${a.name}</span></div><button onclick="del('activities',${i})" class="text-rose-400 hover:text-rose-600 bg-rose-50 w-8 h-8 rounded-full flex justify-center items-center transition-colors"><i class="fas fa-trash text-xs"></i></button></div>`).join('');
+        }
+        function renderClassesGrid() {
+            document.getElementById('classesGrid').innerHTML = DB.classes.map((c,i) => `<div class="glass-card flex justify-between items-center"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-purple-50 text-purple-500 flex justify-center items-center"><i class="fas fa-layer-group"></i></div><span class="font-bold text-slate-700">${c.name}</span></div><button onclick="del('classes',${i})" class="text-rose-400 hover:text-rose-600 bg-rose-50 w-8 h-8 rounded-full flex justify-center items-center transition-colors"><i class="fas fa-trash text-xs"></i></button></div>`).join('');
+        }
+        function renderStudents() {
+            const f = document.getElementById('filterStudentClass');
+            const opts = '<option value="">-- ทุกชั้นเรียน --</option>' + DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+            if(f.innerHTML !== opts) { let curr=f.value; f.innerHTML=opts; f.value=curr; }
+            let d = DB.students; if(f.value) d = d.filter(s=>String(s.class||'').trim() === String(f.value||'').trim());
+            d.sort((a,b)=>String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
+            document.getElementById('tblStudents').innerHTML = d.map((s,i) => `<div class="glass-card flex justify-between items-center p-3"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-[10px] font-bold text-slate-500">${s.id}</div><div class="leading-tight"><div class="text-sm font-bold text-slate-700">${s.name}</div><div class="text-[10px] text-slate-400 font-bold">${s.class||'-'}</div></div></div><button onclick="delStudent('${s.id}')" class="text-rose-400 hover:text-rose-600 bg-rose-50 w-8 h-8 rounded-full flex justify-center items-center transition-colors"><i class="fas fa-trash text-xs"></i></button></div>`).join('');
+        }
+
+        async function addActivity() { const {value} = await Swal.fire({title:'เพิ่มวิชาใหม่', input:'text', confirmButtonColor: '#0ea5e9'}); if(value) save('activities', [...DB.activities, {id:'a'+Date.now(), name:value}]); }
+        async function addClass() { const {value} = await Swal.fire({title:'เพิ่มชั้นเรียน', input:'text', confirmButtonColor: '#0ea5e9'}); if(value) save('classes', [...DB.classes, {id:'c'+Date.now(), name:value}]); }
+        async function addStudent() {
+            const clsOpts = DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+
+            window.swTab = (t) => {
+                document.getElementById('p-s').style.display = t==='s' ? 'block' : 'none';
+                document.getElementById('p-b').style.display = t==='b' ? 'block' : 'none';
+                document.getElementById('tab-s').className = `cursor-pointer font-bold text-sm pb-1 px-2 transition-colors ${t==='s' ? 'text-secondary border-b-2 border-secondary' : 'text-slate-400 hover:text-secondary'}`;
+                document.getElementById('tab-b').className = `cursor-pointer font-bold text-sm pb-1 px-2 transition-colors ${t==='b' ? 'text-secondary border-b-2 border-secondary' : 'text-slate-400 hover:text-secondary'}`;
+            };
+
+            const html = `
+                <div class="flex gap-4 mb-4 border-b border-slate-200 pb-0 justify-center">
+                    <span id="tab-s" onclick="swTab('s')" class="cursor-pointer font-bold text-secondary text-sm border-b-2 border-secondary pb-1 px-2 transition-colors">เพิ่มทีละคน</span>
+                    <span id="tab-b" onclick="swTab('b')" class="cursor-pointer font-bold text-slate-400 hover:text-secondary text-sm pb-1 px-2 transition-colors">เพิ่มหลายคน (คัดลอกวาง)</span>
+                </div>
+                <div id="p-s">
+                    <input id="sw-id" class="swal2-input text-sm w-[80%] mx-auto" placeholder="รหัสประจำตัว (เช่น 1001)">
+                    <input id="sw-name" class="swal2-input text-sm w-[80%] mx-auto" placeholder="ชื่อ - นามสกุล">
+                    <select id="sw-cls" class="swal2-select text-sm w-[80%] mx-auto">
+                        <option value="">- เลือกห้องเรียน -</option>
+                        ${clsOpts}
+                    </select>
+                </div>
+                <div id="p-b" style="display:none">
+                    <p class="text-xs text-left text-slate-500 mb-2 pl-6">รูปแบบ: รหัส, ชื่อ-สกุล, ชั้นเรียน<br>(คัดลอกตารางจาก Excel มาวางได้เลย)</p>
+                    <textarea id="sw-bulk" class="swal2-textarea w-[80%] mx-auto h-32 text-xs font-mono p-3 bg-slate-50 border border-slate-200 placeholder-slate-400" placeholder="1001\tเด็กชายใจดี\tป.1/1\n1002\tเด็กหญิงรักเรียน\tป.1/1"></textarea>
+                </div>
+            `;
+
+            const {value} = await Swal.fire({
+                title:'เพิ่มข้อมูลนักเรียน',
+                html:html,
+                showCancelButton:true,
+                confirmButtonText:'บันทึก',
+                cancelButtonText:'ยกเลิก',
+                confirmButtonColor: '#0ea5e9',
+                preConfirm: () => {
+                    if (document.getElementById('p-s').style.display !== 'none') {
+                        const id = document.getElementById('sw-id').value.trim();
+                        const name = document.getElementById('sw-name').value.trim();
+                        const cls = document.getElementById('sw-cls').value;
+                        if(!id || !name || !cls) { Swal.showValidationMessage('กรุณากรอกข้อมูลให้ครบถ้วน'); return false; }
+                        return [{id, name, class: cls}];
+                    } else {
+                        const txt = document.getElementById('sw-bulk').value.trim();
+                        if(!txt) { Swal.showValidationMessage('กรุณากรอกข้อมูล'); return false; }
+                        return txt.split('\n').map(l => {
+                            const p = l.split(/[\t,]+/).map(s=>s.trim());
+                            return p.length >= 2 ? {id: p[0], name: p[1], class: p[2] || ''} : null;
+                        }).filter(x=>x);
+                    }
+                }
+            });
+
+            if(value && value.length > 0) {
+                let newData = [...DB.students];
+                let addedCount = 0;
+                value.forEach(v => {
+                    if(v && v.id && v.name) {
+                        const idx = newData.findIndex(s=>s.id == v.id);
+                        if(idx > -1) newData[idx] = v; else newData.push(v);
+                        addedCount++;
+                    }
+                });
+                save('students', newData);
+                Swal.fire({toast:true, position:'top', icon:'success', title:'เพิ่มสำเร็จ '+addedCount+' คน', showConfirmButton:false, timer:1500});
+            }
+        }
+        function del(type, idx) { Swal.fire({title:'ยืนยันการลบ?',icon:'warning',showCancelButton:true, confirmButtonColor:'#e11d48'}).then(r=>{if(r.isConfirmed){ let d=[...DB[type]]; d.splice(idx,1); save(type,d); }}); }
+        function delStudent(id) { Swal.fire({title:'ยืนยันการลบ?',icon:'warning',showCancelButton:true, confirmButtonColor:'#e11d48'}).then(r=>{if(r.isConfirmed){ let d=[...DB.students]; d.splice(d.findIndex(s=>String(s.id)===String(id)),1); save('students',d); }}); }
+
+        // --- Manual Check ---
+        function prepManualCheckPage() {
+            document.getElementById('selActManual').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
+            document.getElementById('selClassManual').innerHTML = '<option value="">- เลือกห้อง -</option>' + DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+            if(!document.getElementById('inpDateManual').value) document.getElementById('inpDateManual').value = new Date().toISOString().split('T')[0];
+            document.getElementById('manualCheckArea').classList.add('hidden');
+        }
+        function loadManualCheckData() {
+            const act=document.getElementById('selActManual').value, cls=document.getElementById('selClassManual').value, dt=document.getElementById('inpDateManual').value;
+            if(act && cls && dt) {
+                document.getElementById('manualCheckArea').classList.remove('hidden');
+                const key = `${act}|${dt}|${cls}`; const ex = DB.attendance[key] || {};
+                const stds = DB.students.filter(s=>String(s.class||'').trim() === String(cls||'').trim()).sort((a,b)=>String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
+                document.getElementById('manualStudentsList').innerHTML = stds.map(s => {
+                    const st = ex[s.id] ? (ex[s.id].status||'present') : 'absent';
+                    return `<div class="glass-card !p-3 flex flex-col sm:flex-row justify-between sm:items-center gap-3"><div class="leading-tight"><div class="text-sm font-bold text-slate-700">${s.id} ${s.name}</div></div><div class="flex gap-1 group-btn bg-slate-100 p-1 rounded-xl w-full sm:w-auto" data-id="${s.id}" data-st="${st}"><button onclick="setManSt('${s.id}','present',this)" class="flex-1 sm:w-16 py-1.5 text-xs font-bold rounded-lg transition-colors ${st==='present'?'bg-white text-green-600 shadow-sm':'text-slate-400'}">มา</button><button onclick="setManSt('${s.id}','late',this)" class="flex-1 sm:w-16 py-1.5 text-xs font-bold rounded-lg transition-colors ${st==='late'?'bg-white text-orange-500 shadow-sm':'text-slate-400'}">สาย</button><button onclick="setManSt('${s.id}','absent',this)" class="flex-1 sm:w-16 py-1.5 text-xs font-bold rounded-lg transition-colors ${st==='absent'?'bg-white text-red-500 shadow-sm':'text-slate-400'}">ขาด</button></div></div>`;
+                }).join('');
+            } else { document.getElementById('manualCheckArea').classList.add('hidden'); }
+        }
+        function setManSt(id, st, btn) {
+            const p = btn.parentElement; p.dataset.st = st; const b = p.querySelectorAll('button');
+            b[0].className=`flex-1 sm:w-16 py-1.5 text-xs font-bold rounded-lg transition-colors ${st==='present'?'bg-white text-green-600 shadow-sm':'text-slate-400'}`;
+            b[1].className=`flex-1 sm:w-16 py-1.5 text-xs font-bold rounded-lg transition-colors ${st==='late'?'bg-white text-orange-500 shadow-sm':'text-slate-400'}`;
+            b[2].className=`flex-1 sm:w-16 py-1.5 text-xs font-bold rounded-lg transition-colors ${st==='absent'?'bg-white text-red-500 shadow-sm':'text-slate-400'}`;
+        }
+        function setAllManual(st) { document.querySelectorAll('.group-btn').forEach(g => { const b=g.querySelectorAll('button'); setManSt(g.dataset.id, st, st==='present'?b[0]:(st==='late'?b[1]:b[2])); }); }
+        function saveManualAttendance() {
+            const act=document.getElementById('selActManual').value, cls=document.getElementById('selClassManual').value, dt=document.getElementById('inpDateManual').value;
+            const key = `${act}|${dt}|${cls}`; if(!DB.attendance[key]) DB.attendance[key]={};
+            const time = new Date().toLocaleTimeString('th-TH', { hour12: false });
+            document.querySelectorAll('.group-btn').forEach(g => {
+                const id=g.dataset.id, st=g.dataset.st;
+                if(st!=='absent') DB.attendance[key][id] = {status:st, time:time}; else delete DB.attendance[key][id];
+            });
+            let p={}; p[key]=DB.attendance[key]; save('attendance', p); Swal.fire({toast:true, position:'top', icon:'success', title:'บันทึกสำเร็จ', timer:1500, showConfirmButton:false});
+        }
+
+        // --- Summary Report ---
+        function prepSummaryPage() {
+            document.getElementById('selActRep').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
+            document.getElementById('selClassRep').innerHTML = '<option value="">- เลือกชั้นเรียน -</option>' + DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+            document.getElementById('inpRepStartWeek').value = new Date().toISOString().split('T')[0];
+            const now = new Date(); document.getElementById('inpRepMonth').value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+            toggleRepInputs();
+        }
+        function toggleRepInputs() {
+            const t = document.getElementById('repType').value;
+            document.getElementById('divRepWeekly').style.display = t==='weekly'?'block':'none';
+            document.getElementById('divRepMonthly').style.display = t==='monthly'?'block':'none';
+            document.getElementById('divRepCustom').style.display = t==='custom'?'flex':'none';
+        }
+        function genReport() {
+            const act=document.getElementById('selActRep').value, cls=document.getElementById('selClassRep').value; if(!act||!cls) return Swal.fire('เตือน','กรุณาเลือกวิชาและชั้นเรียน','warning');
+            const stds = DB.students.filter(s=>String(s.class||'').trim() === String(cls||'').trim()).sort((a,b)=>String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
+            
+            let dates = new Set(); Object.keys(DB.attendance).forEach(k => { const p=k.split('|'); if(p[0]===act && p[2]===cls) dates.add(p[1]); });
+            let sortedDates = Array.from(dates).sort();
+            
+            if(sortedDates.length===0) { document.getElementById('repResult').classList.remove('hidden'); document.getElementById('repBody').innerHTML='<tr><td colspan="100%" class="text-center p-8 text-slate-400 font-medium">ไม่พบข้อมูลการสอน</td></tr>'; return; }
+
+            let head = `<tr><th class="w-12 text-center">รหัส</th><th class="text-left">ชื่อ-นามสกุล</th>` + sortedDates.map(d=>`<th class="text-center text-[9px] bg-slate-100/50">${d.substring(5).replace('-','/')}</th>`).join('') + `<th class="text-center bg-green-50/50">มา</th><th class="text-center bg-red-50/50">ขาด</th></tr>`;
+            let tP=0, tA=0;
+            let body = stds.map(s => {
+                let rP=0, rA=0;
+                let html = `<tr><td class="text-center text-[11px] font-bold text-slate-500">${s.id}</td><td class="text-xs font-bold text-slate-700">${s.name}</td>`;
+                sortedDates.forEach(d => {
+                    const rec = (DB.attendance[`${act}|${d}|${cls}`] || {})[s.id];
+                    if(rec) { rP++; html+=`<td class="text-center text-green-500"><i class="fas fa-check"></i></td>`; }
+                    else { rA++; html+=`<td class="text-center text-red-400"><i class="fas fa-times"></i></td>`; }
+                });
+                tP+=rP; tA+=rA;
+                return html + `<td class="text-center font-black text-green-600 bg-green-50/50">${rP}</td><td class="text-center font-black text-red-500 bg-red-50/50">${rA}</td></tr>`;
+            }).join('');
+            
+            document.getElementById('repHead').innerHTML = head; document.getElementById('repBody').innerHTML = body;
+            document.getElementById('statTotal').innerText = stds.length; document.getElementById('statP').innerText = tP; document.getElementById('statA').innerText = tA;
+            document.getElementById('statPct').innerText = Math.round((tP/((tP+tA)||1))*100) + '%';
+            document.getElementById('printInfo').innerText = `วิชา: ${DB.activities.find(a=>a.id===act).name} | ระดับชั้น: ${cls}`;
+            document.getElementById('repResult').classList.remove('hidden');
+        }
+
+        // --- Scores ---
+        function prepScorePage() {
+            document.getElementById('selActScore').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
+            document.getElementById('selClassScore').innerHTML = '<option value="">- เลือกชั้นเรียน -</option>' + DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+            document.getElementById('scoreTableArea').classList.add('hidden');
+        }
+        function renderScoreTable() {
+            const act=document.getElementById('selActScore').value, cls=document.getElementById('selClassScore').value; if(!act||!cls){ document.getElementById('scoreTableArea').classList.add('hidden'); return; }
+            document.getElementById('scoreTableArea').classList.remove('hidden');
+            const stds = DB.students.filter(s=>String(s.class||'').trim() === String(cls||'').trim()).sort((a,b)=>String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
+            if(!DB.scores[act]) DB.scores[act] = {};
+            document.getElementById('scoreList').innerHTML = stds.map(s => {
+                let sc = DB.scores[act][s.id] || {c:'',e:''};
+                return `<div class="glass-card !p-4"><div class="text-sm font-bold text-slate-700 mb-3">${s.id} ${s.name}</div><div class="flex gap-3"><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-amber-500">คะแนนเก็บ (70)</span><input type="number" id="sc_c_${s.id}" value="${sc.c}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-amber-400"></div><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนนสอบ (30)</span><input type="number" id="sc_e_${s.id}" value="${sc.e}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-400"></div></div></div>`;
+            }).join('');
+        }
+        function saveScores() {
+            const act=document.getElementById('selActScore').value, cls=document.getElementById('selClassScore').value;
+            const stds = DB.students.filter(s=>String(s.class||'').trim() === String(cls||'').trim()); if(!DB.scores[act]) DB.scores[act]={};
+            stds.forEach(s => { const c=document.getElementById(`sc_c_${s.id}`), e=document.getElementById(`sc_e_${s.id}`); if(c&&e) DB.scores[act][s.id]={c:c.value, e:e.value}; });
+            save('scores', DB.scores); Swal.fire({toast:true, position:'top', icon:'success', title:'บันทึกคะแนนเรียบร้อย', timer:1500, showConfirmButton:false});
+        }
+
+        // --- Grades ---
+        function prepGradePage() {
+            document.getElementById('selActGrade').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
+            document.getElementById('selClassGrade').innerHTML = '<option value="">- เลือกชั้นเรียน -</option>' + DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+            document.getElementById('gradeTableArea').classList.add('hidden');
+        }
+        function renderGradeTable() {
+            const act=document.getElementById('selActGrade').value, cls=document.getElementById('selClassGrade').value; if(!act||!cls) return Swal.fire('เตือน','กรุณาเลือกวิชาและชั้นเรียน','warning');
+            document.getElementById('gradeTableArea').classList.remove('hidden');
+            const stds = DB.students.filter(s=>String(s.class||'').trim() === String(cls||'').trim()).sort((a,b)=>String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
+            document.getElementById('gradeList').innerHTML = stds.map(s => {
+                let sc = (DB.scores[act]||{})[s.id] || {c:0,e:0}; const tot = (parseFloat(sc.c)||0) + (parseFloat(sc.e)||0);
+                let g = '0', c = 'bg-red-50 text-red-600 border-red-200';
+                if(tot>=80){g='4';c='bg-green-50 text-green-600 border-green-200';} else if(tot>=75){g='3.5';c='bg-emerald-50 text-emerald-600 border-emerald-200';} else if(tot>=70){g='3';c='bg-teal-50 text-teal-600 border-teal-200';} else if(tot>=65){g='2.5';c='bg-cyan-50 text-cyan-600 border-cyan-200';} else if(tot>=60){g='2';c='bg-blue-50 text-blue-600 border-blue-200';} else if(tot>=55){g='1.5';c='bg-indigo-50 text-indigo-600 border-indigo-200';} else if(tot>=50){g='1';c='bg-violet-50 text-violet-600 border-violet-200';}
+                return `<div class="glass-card !p-3 flex justify-between items-center"><div class="leading-tight"><div class="text-xs font-bold text-slate-700 mb-1">${s.id} ${s.name}</div><div class="text-[10px] text-slate-500 font-medium bg-slate-100 inline-block px-2 py-1 rounded">เก็บ: <b class="text-slate-700">${sc.c||0}</b> | สอบ: <b class="text-slate-700">${sc.e||0}</b> | รวม: <b class="text-primary">${tot}</b></div></div><div class="w-12 h-12 ${c} border flex flex-col items-center justify-center rounded-xl shadow-sm"><span class="text-[8px] uppercase font-bold opacity-60 leading-none">เกรด</span><span class="font-black text-xl leading-none">${g}</span></div></div>`;
+            }).join('');
+        }
+
+        // --- QR Maker ---
+        function prepQRMakerPage() {
+            document.getElementById('selClassQRMaker').innerHTML = '<option value="">-- กรุณาเลือกห้อง --</option><option value="ALL">-- ดึงรายชื่อทั้งหมด --</option>' + DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+            const cp = document.getElementById('qrHeaderColor');
+            if (cp) cp.value = appConfig.theme;
+        }
+        
+        function generateQRFromDB() {
+            const cls = document.getElementById('selClassQRMaker').value; 
+            if(!cls) return Swal.fire('เตือน','กรุณาเลือกห้องเรียนก่อนครับ','warning');
+            
+            let stds = DB.students; 
+            if(cls !== 'ALL') stds = stds.filter(s=>String(s.class||'').trim() === String(cls||'').trim());
+            
+            if(stds.length===0) return Swal.fire('เตือน','ไม่พบข้อมูลนักเรียน','warning');
+            
+            renderQRCards(stds); 
+            document.getElementById('btnMakerPrint').classList.remove('hidden'); 
+            document.getElementById('preview-container').classList.remove('hidden');
+        }
+        
+        function downloadExcelTemplate() {
+            const ws = XLSX.utils.aoa_to_sheet([ ["รหัส", "ชื่อ-นามสกุล", "ชั้นเรียน"], ["1001", "ด.ช.ตัวอย่าง รักเรียน", "ป.1/1"] ]); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "รายชื่อ"); XLSX.writeFile(wb, "Template_QR.xlsx");
+        }
+        
+        function handleExcelUpload(input) {
+            const file = input.files[0]; if(!file) return;
+            const r = new FileReader(); r.onload = function(e) {
+                const data = new Uint8Array(e.target.result); const wb = XLSX.read(data, {type: 'array'});
+                const stds = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header: 1}).slice(1).map(row => ({id:row[0], name:row[1], class:row[2]})).filter(s=>s.id&&s.name);
+                if(stds.length>0){ renderQRCards(stds); document.getElementById('btnMakerPrint').classList.remove('hidden'); document.getElementById('preview-container').classList.remove('hidden'); document.getElementById('qrMakerStatus').innerHTML=`<span class="text-green-500 font-bold"><i class="fas fa-check-circle"></i> โหลดสำเร็จ ${stds.length} รายการ</span>`; document.getElementById('qrMakerStatus').classList.remove('hidden');}
+                input.value='';
+            }; r.readAsArrayBuffer(file);
+        }
+        
+        function renderQRCards(stds) {
+            const cont = document.getElementById('cardContainer'); 
+            cont.innerHTML = '';
+            
+            const headerText = document.getElementById('qrHeaderText').value.trim();
+            const headerColor = document.getElementById('qrHeaderColor').value;
+            
+            stds.forEach((s, i) => {
+                const id = 'qr-'+i;
+                
+                let headerHtml = '';
+                if(headerText) {
+                    headerHtml = `<div class="card-header" style="background-color: ${headerColor}; border-radius: 4px 4px 0 0;">${headerText}</div>`;
+                }
+
+                cont.innerHTML += `
+                <div class="card" style="border-color: ${headerColor};">
+                    ${headerHtml}
+                    <div class="card-body">
+                        <img src="${appConfig.logo}" class="school-logo" onerror="this.style.display='none'">
+                        <div class="school-name" style="color: ${headerColor};">${appConfig.school1}</div>
+                        
+                        <div id="${id}" class="qr-code"></div>
+                        
+                        <div class="student-info">รหัส: ${s.id}</div>
+                        <div class="student-info" style="margin-bottom: 2px;">ชั้น: ${s.class||'-'}</div>
+                        
+                        <div class="student-name">${s.name}</div>
+                    </div>
+                </div>`;
+            });
+            
+            setTimeout(() => { stds.forEach((s, i) => {
+                document.getElementById('qr-'+i).innerHTML = "";
+                new QRCode(document.getElementById('qr-'+i), { text: s.id.toString(), width: 100, height: 100, correctLevel: QRCode.CorrectLevel.M });
+            }); }, 300);
+        }
+
+        function printQRCards() {
+            document.body.classList.add('printing-qr-maker'); 
+            window.print(); 
+            document.body.classList.remove('printing-qr-maker');
+        }
+
+        window.onload = () => { applyConfig(); fetchAll(); };
+    </script>
+</body>
+</html>
