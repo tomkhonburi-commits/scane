@@ -229,7 +229,7 @@
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="fixed inset-0 bg-white/90 z-[9999] hidden flex-col justify-center items-center">
         <i class="fas fa-circle-notch fa-spin fa-3x text-secondary mb-4"></i>
-        <p class="font-bold text-slate-600 tracking-wide">กำลังซิงค์ข้อมูล...</p>
+        <p class="font-bold text-slate-600 tracking-wide">กำลังประมวลผลฐานข้อมูล...</p>
     </div>
 
     <!-- ==========================================
@@ -621,7 +621,7 @@
                     <button onclick="document.getElementById('mobileMenuOverlay').classList.add('hidden')" class="w-8 h-8 bg-slate-100 text-slate-500 rounded-full"><i class="fas fa-times"></i></button>
                 </div>
                 <div class="grid grid-cols-3 gap-y-6 gap-x-2">
-                    <button onclick="navigate('dashboard'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-sky-50 text-sky-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-home"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">สแกนเข้าเรียน</span></button>
+                    <button onclick="navigate('dashboard'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-sky-50 text-sky-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-home"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">สแกน/ส่งงาน</span></button>
                     <button onclick="navigate('manualcheck'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-tasks"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">เช็คชื่อมือ</span></button>
                     <button onclick="navigate('activities'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-book-open"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">กิจกรรม/วิชา</span></button>
                     <button onclick="navigate('classes'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-purple-50 text-purple-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-layer-group"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">ชั้นเรียน</span></button>
@@ -669,8 +669,8 @@
          ========================================== -->
     <script>
         // 🌟 ใส่ URL และ KEY จาก Supabase ของคุณครูตรงนี้ 🌟
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL_HERE'; 
-        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE';
+        const SUPABASE_URL = 'https://apwaoxlzeheqmaiecqwz.supabase.co'; 
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwd2FveGx6ZWhlcW1haWVjcXd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwMzkyMTIsImV4cCI6MjA5NzYxNTIxMn0.4yv3JfjS2WCPCEf-v4xqKFBEONWT8QxjMzv1uywHJxY';
         
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -720,65 +720,66 @@
         async function fetchAll() {
             showLoad(true);
             try {
-                if(IS_GAS) {
-                    const [resStudents, resClasses, resActivities, resAtt, resScores, resWorks] = await Promise.all([
-                        supabaseClient.from('students').select('*'),
-                        supabaseClient.from('classes').select('*'),
-                        supabaseClient.from('activities').select('*'),
-                        supabaseClient.from('attendance').select('*'),
-                        supabaseClient.from('scores').select('*'),
-                        supabaseClient.from('works').select('*')
-                    ]);
+                const [resStudents, resClasses, resActivities, resAtt, resScores, resWorks] = await Promise.all([
+                    supabaseClient.from('students').select('*'),
+                    supabaseClient.from('classes').select('*'),
+                    supabaseClient.from('activities').select('*'),
+                    supabaseClient.from('attendance').select('*'),
+                    supabaseClient.from('scores').select('*'),
+                    supabaseClient.from('works').select('*')
+                ]);
 
-                    if(resStudents.error) throw resStudents.error;
+                if(resStudents.error) throw resStudents.error;
+                if(resClasses.error) throw resClasses.error;
+                if(resActivities.error) throw resActivities.error;
+                if(resWorks.error) throw resWorks.error;
 
-                    const normalize = (arr, type) => {
-                        return (arr||[]).map((obj, idx) => {
-                            let newObj = { ...obj }; let values = Object.values(obj);
-                            for(let k in obj) {
-                                let key = String(k).toLowerCase().trim();
-                                if (type === 'students') {
-                                    if(['id', 'รหัส', 'รหัสนักเรียน', 'เลขประจำตัว'].includes(key)) newObj.id = String(obj[k]||'').trim();
-                                    if(['name', 'ชื่อ', 'ชื่อ-สกุล', 'ชื่อ-นามสกุล', 'ชื่อนักเรียน'].includes(key)) newObj.name = String(obj[k]||'').trim();
-                                    if(['class', 'ชั้น', 'ชั้นเรียน', 'ห้อง', 'ห้องเรียน', 'ระดับชั้น'].includes(key)) newObj.class = String(obj[k]||'').trim();
-                                }
-                                if (type === 'classes') {
-                                    if(['id', 'รหัส'].includes(key)) newObj.id = String(obj[k]||'').trim();
-                                    if(['name', 'ชื่อ', 'ชั้น', 'ชั้นเรียน', 'ห้อง'].includes(key)) newObj.name = String(obj[k]||'').trim();
-                                }
-                                if (type === 'activities') {
-                                    if(['id', 'รหัส'].includes(key)) newObj.id = String(obj[k]||'').trim();
-                                    if(['name', 'ชื่อ', 'วิชา', 'กิจกรรม', 'รายวิชา'].includes(key)) newObj.name = String(obj[k]||'').trim();
-                                }
-                            }
+                const normalize = (arr, type) => {
+                    return (arr||[]).map((obj, idx) => {
+                        let newObj = { ...obj }; let values = Object.values(obj);
+                        for(let k in obj) {
+                            let key = String(k).toLowerCase().trim();
                             if (type === 'students') {
-                                if (!newObj.id && values.length > 0) newObj.id = String(values[0] || '').trim();
-                                if (!newObj.name && values.length > 1) newObj.name = String(values[1] || '').trim();
-                                if (!newObj.class && values.length > 2) newObj.class = String(values[2] || '').trim();
-                            } else if (type === 'classes' || type === 'activities') {
-                                if (!newObj.id && values.length > 0) newObj.id = String(values[0] || '').trim();
-                                if (!newObj.name && values.length > 1) newObj.name = String(values[1] || '').trim();
+                                if(['id', 'รหัส', 'รหัสนักเรียน', 'เลขประจำตัว'].includes(key)) newObj.id = String(obj[k]||'').trim();
+                                if(['name', 'ชื่อ', 'ชื่อ-สกุล', 'ชื่อ-นามสกุล', 'ชื่อนักเรียน'].includes(key)) newObj.name = String(obj[k]||'').trim();
+                                if(['class', 'ชั้น', 'ชั้นเรียน', 'ห้อง', 'ห้องเรียน', 'ระดับชั้น'].includes(key)) newObj.class = String(obj[k]||'').trim();
                             }
-                            if (!newObj.id && newObj.name) { newObj.id = type === 'students' ? 'STD-' + (idx + 1) : newObj.name; }
-                            if (!newObj.name && newObj.id) { newObj.name = newObj.id; }
-                            return newObj;
-                        }).filter(item => (item.id || item.name) && item.id !== "undefined"); 
-                    };
+                            if (type === 'classes') {
+                                if(['id', 'รหัส'].includes(key)) newObj.id = String(obj[k]||'').trim();
+                                if(['name', 'ชื่อ', 'ชั้น', 'ชั้นเรียน', 'ห้อง'].includes(key)) newObj.name = String(obj[k]||'').trim();
+                            }
+                            if (type === 'activities') {
+                                if(['id', 'รหัส'].includes(key)) newObj.id = String(obj[k]||'').trim();
+                                if(['name', 'ชื่อ', 'วิชา', 'กิจกรรม', 'รายวิชา'].includes(key)) newObj.name = String(obj[k]||'').trim();
+                            }
+                        }
+                        if (type === 'students') {
+                            if (!newObj.id && values.length > 0) newObj.id = String(values[0] || '').trim();
+                            if (!newObj.name && values.length > 1) newObj.name = String(values[1] || '').trim();
+                            if (!newObj.class && values.length > 2) newObj.class = String(values[2] || '').trim();
+                        } else if (type === 'classes' || type === 'activities') {
+                            if (!newObj.id && values.length > 0) newObj.id = String(values[0] || '').trim();
+                            if (!newObj.name && values.length > 1) newObj.name = String(values[1] || '').trim();
+                        }
+                        if (!newObj.id && newObj.name) { newObj.id = type === 'students' ? 'STD-' + (idx + 1) : newObj.name; }
+                        if (!newObj.name && newObj.id) { newObj.name = newObj.id; }
+                        return newObj;
+                    }).filter(item => (item.id || item.name) && item.id !== "undefined"); 
+                };
 
-                    DB.students = normalize(resStudents.data, 'students'); 
-                    DB.classes = normalize(resClasses.data, 'classes'); 
-                    DB.activities = normalize(resActivities.data, 'activities'); 
-                    
-                    DB.attendance = {}; (resAtt.data || []).forEach(r => DB.attendance[r.key] = r.data);
-                    DB.scores = {}; (resScores.data || []).forEach(r => DB.scores[r.key] = r.data);
-                    DB.works = {}; (resWorks.data || []).forEach(r => DB.works[r.key] = r.data);
+                DB.students = normalize(resStudents.data, 'students'); 
+                DB.classes = normalize(resClasses.data, 'classes'); 
+                DB.activities = normalize(resActivities.data, 'activities'); 
+                
+                DB.attendance = {}; (resAtt.data || []).forEach(r => DB.attendance[r.key] = r.data);
+                DB.scores = {}; (resScores.data || []).forEach(r => DB.scores[r.key] = r.data);
+                DB.works = {}; (resWorks.data || []).forEach(r => DB.works[r.key] = r.data);
 
-                    renderAll(); navigate('dashboard');
-                } else {
-                    DB = JSON.parse(localStorage.getItem('LocalDB_V2')) || { students: [], classes: [], activities: [], attendance: {}, scores: {}, works: {} };
-                    renderAll(); navigate('dashboard');
-                }
-            } catch(e) { Swal.fire('Error','โหลดข้อมูลล้มเหลว: '+e.message,'error'); } finally { showLoad(false); }
+                renderAll(); navigate('dashboard');
+            } catch(e) { 
+                Swal.fire('Error','โหลดข้อมูลล้มเหลว: '+e.message,'error'); 
+                renderAll(); navigate('dashboard');
+            } finally { showLoad(false); }
         }
 
         async function save(type, data) {
@@ -789,19 +790,18 @@
                     if (updates.length > 0) { const { error } = await supabaseClient.from(type).upsert(updates); if (error) throw error; }
                     DB[type] = {...DB[type], ...data};
                 } else {
-                    const existingIds = DB[type].map(item => String(item.id));
-                    const incomingIds = data.map(item => String(item.id));
+                    const existingIds = (DB[type] || []).map(item => String(item.id));
+                    const incomingIds = (data || []).map(item => String(item.id));
                     const idsToDelete = existingIds.filter(id => !incomingIds.includes(id));
 
                     if (idsToDelete.length > 0) { const { error: delErr } = await supabaseClient.from(type).delete().in('id', idsToDelete); if (delErr) throw delErr; }
                     if (data && data.length > 0) { const { error: upsertErr } = await supabaseClient.from(type).upsert(data); if (upsertErr) throw upsertErr; }
                     DB[type] = data;
                 }
-                if(!IS_GAS) localStorage.setItem('LocalDB_V2', JSON.stringify(DB));
                 renderAll();
             } catch(e) { 
                 let errMsg = e.message;
-                if(errMsg === 'Failed to fetch') errMsg = 'การเชื่อมต่อถูกบล็อก! (เช็ค URL/Key ของ Supabase ให้ถูกต้อง)';
+                if(errMsg === 'Failed to fetch') errMsg = 'การเชื่อมต่อถูกบล็อก! (เช็ค URL/Key ของ Supabase หรือตารางในฐานข้อมูล)';
                 Swal.fire('Error','บันทึกข้อมูลล้มเหลว: ' + errMsg,'error'); 
             } finally { showLoad(false); }
         }
@@ -1210,13 +1210,8 @@
                 if(r.isConfirmed){ 
                     showLoad(true);
                     try {
-                        if(IS_GAS) {
-                            await new Promise((resolve, reject) => { google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).deleteDataByKey('works', key); });
-                        } else {
-                            await supabaseClient.from('works').delete().eq('key', key);
-                        }
+                        await supabaseClient.from('works').delete().eq('key', key);
                         delete DB.works[key];
-                        localStorage.setItem('LocalDB_V2', JSON.stringify(DB));
                         renderWorkTopics();
                         if (typeof populateDashboardWorkTopics === 'function') populateDashboardWorkTopics();
                         Swal.fire({toast:true, position:'top', icon:'success', title:'ลบสำเร็จ', timer:1500, showConfirmButton:false});
