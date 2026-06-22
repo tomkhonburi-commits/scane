@@ -60,18 +60,17 @@
         .table-custom td { padding: 10px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; font-size: 0.85rem;}
 
         /* ========================================================
-           CSS สำหรับบัตร QR ขนาดบัตรประชาชน (CR80: 54mm x 86mm แนวตั้ง) 
+           CSS สำหรับบัตร QR ขนาดบัตรประชาชน (CR80: 86mm x 54mm แนวนอน) 
            ======================================================== */
-        .card-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 5mm; }
+        .card-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 4mm; }
         
         .qr-maker-container .card { 
-            width: 54mm !important; 
-            height: 86mm !important; 
+            width: 86mm !important; 
+            height: 54mm !important; 
             border: 1px solid #cbd5e1; 
             border-radius: 6px; 
             display: flex; 
             flex-direction: column; 
-            align-items: center; 
             background-color: #fff; 
             box-sizing: border-box !important; 
             position: relative; 
@@ -80,17 +79,105 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
         }
 
-        .qr-maker-container .card-header { width: 100%; padding: 4px 0; text-align: center; color: white; font-size: 9pt; font-weight: bold; letter-spacing: 0.5px; }
-        .qr-maker-container .card-body { display: flex; flex-direction: column; align-items: center; padding: 5px; height: 100%; width: 100%; }
-        .qr-maker-container .school-logo { width: 40px; height: auto; max-height: 40px; object-fit: contain; margin-bottom: 3px; margin-top: 2px; z-index: 10; }
-        .qr-maker-container .school-name { font-size: 11px; font-weight: bold; line-height: 1.1; z-index: 10; color: #1e293b; margin-bottom: 5px; text-align: center; }
+        .qr-maker-container .card-header { 
+            width: 100%; 
+            padding: 3px 0; 
+            text-align: center; 
+            color: white; 
+            font-size: 8pt; 
+            font-weight: bold; 
+            letter-spacing: 0.5px; 
+        }
         
-        /* ล็อกขนาด QR Code */
-        .qr-maker-container .qr-code { margin: 2px 0 5px 0 !important; background: white; z-index: 10; display: flex !important; justify-content: center; align-items: center; }
-        .qr-maker-container .qr-code img, .qr-maker-container .qr-code canvas { width: 90px !important; height: 90px !important; object-fit: contain !important; aspect-ratio: 1/1 !important; display: block; }
+        .qr-maker-container .card-body { 
+            display: flex; 
+            flex-direction: row; 
+            align-items: center; 
+            justify-content: space-between;
+            padding: 4mm; 
+            height: 100%; 
+            width: 100%; 
+        }
+
+        .qr-maker-container .card-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            width: 65%;
+        }
+
+        .qr-maker-container .school-header {
+            display: flex;
+            align-items: center;
+            gap: 2mm;
+            margin-bottom: 2mm;
+        }
         
-        .qr-maker-container .student-info { font-size: 11px; color: #475569; line-height: 1.2; z-index: 10; }
-        .qr-maker-container .student-name { font-size: 14px; font-weight: bold; margin-top: auto; margin-bottom: 2px; padding-top: 4px; border-top: 1px dashed #cbd5e1; width: 90%; z-index: 10; line-height: 1.1; color: #0f172a; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .qr-maker-container .school-logo { 
+            width: 12mm; 
+            height: 12mm; 
+            object-fit: contain; 
+            z-index: 10; 
+        }
+
+        .qr-maker-container .school-name { 
+            font-size: 8pt; 
+            font-weight: bold; 
+            line-height: 1.1; 
+            z-index: 10; 
+            color: #1e293b;
+        }
+        
+        .qr-maker-container .student-info { 
+            font-size: 8pt; 
+            color: #475569; 
+            line-height: 1.2; 
+            z-index: 10;
+        }
+
+        .qr-maker-container .student-name { 
+            font-size: 11pt; 
+            font-weight: bold; 
+            margin-top: 1mm; 
+            padding-top: 1mm; 
+            border-top: 1px dashed #cbd5e1; 
+            width: 95%; 
+            z-index: 10; 
+            line-height: 1.1; 
+            color: #0f172a; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+        }
+
+        .qr-maker-container .card-right {
+            width: 35%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .qr-maker-container .qr-code { 
+            width: 22mm !important; 
+            height: 22mm !important; 
+            background: white; 
+            padding: 1mm; 
+            border-radius: 2mm; 
+            z-index: 10; 
+            display: flex !important; 
+            justify-content: center; 
+            align-items: center; 
+            border: 1px solid #e2e8f0;
+        }
+
+        .qr-maker-container .qr-code img, 
+        .qr-maker-container .qr-code canvas { 
+            width: 100% !important; 
+            height: 100% !important; 
+            object-fit: contain !important; 
+            display: block; 
+        }
 
         /* Print Style */
         @media print {
@@ -106,14 +193,15 @@
             body.printing-report table { width: 100% !important; border-collapse: collapse !important; font-size: 10pt !important; }
             body.printing-report th, body.printing-report td { border: 1px solid #cbd5e1 !important; padding: 4px !important; color: black !important; }
 
-            /* --- การพิมพ์ บัตร QR Code --- */
+            /* --- การพิมพ์ บัตร QR Code (แนวนอนจัดเรียง 2 คอลัมน์) --- */
             body.printing-qr-maker #page-qrmaker { display: block !important; margin: 0 !important; padding: 0 !important; }
             body.printing-qr-maker #preview-container { display: block !important; position: relative !important; width: 100% !important; margin: 0 !important; padding: 0 !important; background: transparent !important; overflow: visible !important; }
             body.printing-qr-maker #preview-container > div { max-width: none !important; width: 100% !important; min-height: auto !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; background: transparent !important; }
-            body.printing-qr-maker .card-grid { display: grid !important; grid-template-columns: repeat(3, 54mm) !important; gap: 5mm !important; justify-content: center !important; align-content: flex-start !important; margin: 0 auto !important; width: 100% !important; }
-            body.printing-qr-maker .qr-maker-container .card { width: 54mm !important; height: 86mm !important; box-shadow: none !important; border-style: solid !important; border-width: 1px !important; page-break-inside: avoid !important; margin: 0 !important; }
-            body.printing-qr-maker .qr-maker-container .qr-code { display: flex !important; justify-content: center !important; align-items: center !important; width: 90px !important; height: 90px !important; margin: 5px auto !important; padding: 0 !important; border: none !important; }
-            body.printing-qr-maker .qr-maker-container .qr-code img, body.printing-qr-maker .qr-maker-container .qr-code canvas { width: 90px !important; height: 90px !important; max-width: 90px !important; max-height: 90px !important; object-fit: contain !important; }
+            
+            body.printing-qr-maker .card-grid { display: grid !important; grid-template-columns: repeat(2, 86mm) !important; gap: 2mm 6mm !important; justify-content: center !important; align-content: flex-start !important; margin: 0 auto !important; width: 100% !important; }
+            body.printing-qr-maker .qr-maker-container .card { width: 86mm !important; height: 54mm !important; box-shadow: none !important; border: 1px dashed #94a3b8 !important; page-break-inside: avoid !important; margin: 0 !important; }
+            body.printing-qr-maker .qr-maker-container .qr-code { display: flex !important; justify-content: center !important; align-items: center !important; width: 22mm !important; height: 22mm !important; margin: 0 !important; padding: 1mm !important; border: 1px solid #e2e8f0 !important; }
+            body.printing-qr-maker .qr-maker-container .qr-code img, body.printing-qr-maker .qr-maker-container .qr-code canvas { width: 100% !important; height: 100% !important; max-width: 100% !important; max-height: 100% !important; object-fit: contain !important; }
         }
     </style>
 </head>
@@ -412,7 +500,7 @@
                 <div id="classesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
             </div>
 
-            <!-- --- PAGE: QR MAKER --- -->
+            <!-- --- PAGE: QR MAKER (แนวนอน รูปแบบบัตรประชาชน) --- -->
             <div id="page-qrmaker" class="page-content qr-maker-container">
                 <div class="flex justify-between items-center mb-6 no-print">
                     <h2 class="text-xl md:text-2xl font-bold text-primary flex items-center gap-2">
@@ -430,7 +518,7 @@
                             <input type="text" id="qrHeaderText" value="บัตรประจำตัวนักเรียน" placeholder="เช่น บัตรประจำตัวนักเรียน" class="w-full border-2 border-slate-200 rounded-xl p-3 text-sm outline-none focus:border-blue-500 transition-colors">
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-slate-600 mb-1"><i class="fas fa-palette text-slate-400 mr-1"></i> สีหัวบัตร</label>
+                            <label class="block text-sm font-bold text-slate-600 mb-1"><i class="fas fa-palette text-slate-400 mr-1"></i> สีแถบบัตร</label>
                             <div class="w-full border-2 border-slate-200 rounded-xl p-1 bg-white flex items-center focus-within:border-blue-500 transition-colors h-12">
                                 <input type="color" id="qrHeaderColor" class="w-full h-full cursor-pointer rounded-lg border-none outline-none bg-transparent">
                             </div>
@@ -440,15 +528,9 @@
                             <select id="selClassQRMaker" class="w-full border-2 border-slate-200 rounded-xl p-3 text-sm bg-white outline-none focus:border-blue-500 transition-colors cursor-pointer appearance-none">
                             </select>
                         </div>
-                        <div>
-                            <label class="block text-sm font-bold text-slate-600 mb-1"><i class="fas fa-qrcode text-slate-400 mr-1"></i> รูปแบบรหัส</label>
-                            <select id="qrCodeType" class="w-full border-2 border-slate-200 rounded-xl p-3 text-sm bg-white outline-none focus:border-blue-500 transition-colors cursor-pointer appearance-none">
-                                <option value="qr">สี่เหลี่ยม (QR Code)</option>
-                            </select>
-                        </div>
 
                         <button onclick="generateQRFromDB()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl text-sm font-bold shadow-md transition-colors mt-4">
-                            สร้างตัวอย่างบัตร
+                            สร้างตัวอย่างบัตร (แนวนอน)
                         </button>
                     </div>
                     
@@ -566,15 +648,19 @@
          JAVASCRIPT LOGIC
          ========================================== -->
     <script>
-        // 🌟 ใส่ URL และ KEY จาก Supabase ของคุณครูตรงนี้ 🌟
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL_HERE'; 
-        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE';
+        // 🌟 ตั้งค่า SUPABASE ตรงนี้ (ผมดักจับ Error กรณีใส่ผิดไว้ให้แล้ว ระบบจะไม่พัง) 🌟
+        const SUPABASE_URL = 'https://apwaoxlzeheqmaiecqwz.supabase.co'; 
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwd2FveGx6ZWhlcW1haWVjcXd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwMzkyMTIsImV4cCI6MjA5NzYxNTIxMn0.4yv3JfjS2WCPCEf-v4xqKFBEONWT8QxjMzv1uywHJxY';
         
-        let supabaseClient;
-        if(typeof window.supabase !== 'undefined') {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        } else {
-            console.error("Supabase CDN not loaded.");
+        let supabaseClient = null;
+        try {
+            if(typeof window.supabase !== 'undefined' && SUPABASE_URL.startsWith('http')) {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            } else {
+                console.warn("ไม่ได้กำหนด URL ของ Supabase หรือระบบดึงไลบรารีไม่สำเร็จ");
+            }
+        } catch(err) {
+            console.error("Supabase init error:", err);
         }
 
         let DB = { students:[], classes:[], activities:[], attendance:{}, scores:{}, works:{} };
@@ -587,19 +673,14 @@
         let currentScanMode = 'attendance';
 
         // --- Config ---
-        let appConfig = JSON.parse(localStorage.getItem('myAppCfgV2')) || 
-                        JSON.parse(localStorage.getItem('myAppCfg')) || 
-                        JSON.parse(localStorage.getItem('appConfig')) || 
-                        { sysName: 'ระบบจัดการเรียนการสอน', school1: 'โรงเรียนบ้านซับก้านเหลือง', school2: 'สพป.นครราชสีมา เขต 3', theme: '#0ea5e9', logo: 'https://img2.pic.in.th/pic/-161baf06cd7f44fd8.png' };
+        let appConfig = JSON.parse(localStorage.getItem('myAppCfgV2')) || { sysName: 'ระบบจัดการเรียนการสอน', school1: 'โรงเรียนบ้านซับก้านเหลือง', school2: 'สพป.นครราชสีมา เขต 3', theme: '#0ea5e9', logo: 'https://img2.pic.in.th/pic/-161baf06cd7f44fd8.png' };
         
         function applyConfig() {
             document.querySelectorAll('#appTitleDesktop, #appTitleMobile').forEach(e=>e.innerText=appConfig.sysName);
             document.getElementById('appSchoolDesktop').innerText=appConfig.school1;
             document.querySelectorAll('#appLogoDesktop, #appLogoMobile, #logoPreview').forEach(e=>{e.src=appConfig.logo; e.style.display='block';});
             document.getElementById('cfgSysName').value=appConfig.sysName; document.getElementById('cfgSchool1').value=appConfig.school1; document.getElementById('cfgSchool2').value=appConfig.school2; document.getElementById('cfgTheme').value=appConfig.theme; document.getElementById('cfgLogo').value=appConfig.logo;
-            
-            const colorPicker = document.getElementById('qrHeaderColor');
-            if(colorPicker) colorPicker.value = appConfig.theme;
+            const colorPicker = document.getElementById('qrHeaderColor'); if(colorPicker) colorPicker.value = appConfig.theme;
         }
         function saveConfig() {
             appConfig.sysName=document.getElementById('cfgSysName').value; appConfig.school1=document.getElementById('cfgSchool1').value; appConfig.school2=document.getElementById('cfgSchool2').value; appConfig.theme=document.getElementById('cfgTheme').value; appConfig.logo=document.getElementById('cfgLogo').value; localStorage.setItem('myAppCfgV2', JSON.stringify(appConfig)); applyConfig(); Swal.fire({toast:true, position:'top', icon:'success', title:'บันทึกสำเร็จ', timer:1500, showConfirmButton:false});
@@ -616,137 +697,121 @@
             
             if(tabId === 'dashboard') { prepDashboardPage(); updateDashboard(); }
             if(tabId === 'manualcheck') prepManualCheckPage();
-            if(tabId === 'report') prepSummaryPage(); // 🌟 แก้ไข: ให้หน้า Report เรียกใช้งานฟังก์ชันโหลดตาราง
+            if(tabId === 'report') prepSummaryPage(); 
             if(tabId === 'scores') prepScorePage();
             if(tabId === 'grades') prepGradePage();
             if(tabId === 'qrmaker') prepQRMakerPage();
         }
 
-        // --- Data Layer (เชื่อมกับ Supabase แบบทนทานพิเศษ) ---
+        // --- Data Layer ---
         const showLoad = (b) => document.getElementById('loadingOverlay').style.display = b ? 'flex' : 'none';
         
         async function fetchAll() {
             showLoad(true);
             try {
-                if(!supabaseClient) {
-                    throw new Error("ระบบไม่สามารถเชื่อมต่อ Supabase CDN ได้ กรุณาตรวจสอบอินเทอร์เน็ต");
-                }
+                if(supabaseClient) {
+                    const getTableData = async (tableName) => {
+                        try {
+                            const { data, error } = await supabaseClient.from(tableName).select('*');
+                            if (error) throw error;
+                            return data || [];
+                        } catch (err) {
+                            console.warn(`ไม่สามารถดึงตาราง ${tableName}:`, err);
+                            return [];
+                        }
+                    };
 
-                // 🌟 ดึงข้อมูลแบบแยกตาราง ป้องกันกรณีตารางใดตารางหนึ่งหาย แล้วพังทั้งแอป 🌟
-                const getTableData = async (tableName) => {
-                    try {
-                        const { data, error } = await supabaseClient.from(tableName).select('*');
-                        if (error) console.warn(`ตาราง ${tableName} อาจจะยังไม่ถูกสร้าง: ${error.message}`);
-                        return data || [];
-                    } catch (err) {
-                        return [];
-                    }
-                };
+                    const rawStudents = await getTableData('students');
+                    const rawClasses = await getTableData('classes');
+                    const rawActivities = await getTableData('activities');
+                    const rawAtt = await getTableData('attendance');
+                    const rawScores = await getTableData('scores');
+                    const rawWorks = await getTableData('works');
 
-                const rawStudents = await getTableData('students');
-                const rawClasses = await getTableData('classes');
-                const rawActivities = await getTableData('activities');
-                const rawAtt = await getTableData('attendance');
-                const rawScores = await getTableData('scores');
-                const rawWorks = await getTableData('works');
-
-                const normalize = (arr, type) => {
-                    return (arr||[]).map((obj, idx) => {
-                        let newObj = { ...obj };
-                        let values = Object.values(obj);
-                        for(let k in obj) {
-                            let key = String(k).toLowerCase().trim();
+                    const normalize = (arr, type) => {
+                        return (arr||[]).map((obj, idx) => {
+                            let newObj = { ...obj }; let values = Object.values(obj);
+                            for(let k in obj) {
+                                let key = String(k).toLowerCase().trim();
+                                if (type === 'students') {
+                                    if(['id', 'รหัส', 'รหัสนักเรียน', 'เลขประจำตัว'].includes(key)) newObj.id = String(obj[k]||'').trim();
+                                    if(['name', 'ชื่อ', 'ชื่อ-สกุล', 'ชื่อ-นามสกุล', 'ชื่อนักเรียน'].includes(key)) newObj.name = String(obj[k]||'').trim();
+                                    if(['class', 'ชั้น', 'ชั้นเรียน', 'ห้อง', 'ห้องเรียน', 'ระดับชั้น'].includes(key)) newObj.class = String(obj[k]||'').trim();
+                                }
+                                if (type === 'classes') {
+                                    if(['id', 'รหัส'].includes(key)) newObj.id = String(obj[k]||'').trim();
+                                    if(['name', 'ชื่อ', 'ชั้น', 'ชั้นเรียน', 'ห้อง'].includes(key)) newObj.name = String(obj[k]||'').trim();
+                                }
+                                if (type === 'activities') {
+                                    if(['id', 'รหัส'].includes(key)) newObj.id = String(obj[k]||'').trim();
+                                    if(['name', 'ชื่อ', 'วิชา', 'กิจกรรม', 'รายวิชา'].includes(key)) newObj.name = String(obj[k]||'').trim();
+                                }
+                            }
                             if (type === 'students') {
-                                if(['id', 'รหัส', 'รหัสนักเรียน', 'เลขประจำตัว', 'เลขที่'].includes(key)) newObj.id = String(obj[k]||'').trim();
-                                if(['name', 'ชื่อ', 'ชื่อ-สกุล', 'ชื่อ-นามสกุล', 'ชื่อนักเรียน', 'สกุล', 'ชื่อสกุล'].includes(key)) newObj.name = String(obj[k]||'').trim();
-                                if(['class', 'ชั้น', 'ชั้นเรียน', 'ห้อง', 'ห้องเรียน', 'ระดับชั้น'].includes(key)) newObj.class = String(obj[k]||'').trim();
+                                if (!newObj.id && values.length > 0) newObj.id = String(values[0] || '').trim();
+                                if (!newObj.name && values.length > 1) newObj.name = String(values[1] || '').trim();
+                                if (!newObj.class && values.length > 2) newObj.class = String(values[2] || '').trim();
+                            } else if (type === 'classes' || type === 'activities') {
+                                if (!newObj.id && values.length > 0) newObj.id = String(values[0] || '').trim();
+                                if (!newObj.name && values.length > 1) newObj.name = String(values[1] || '').trim();
                             }
-                            if (type === 'classes') {
-                                if(['id', 'รหัส'].includes(key)) newObj.id = String(obj[k]||'').trim();
-                                if(['name', 'ชื่อ', 'ชั้น', 'ชั้นเรียน', 'ห้อง'].includes(key)) newObj.name = String(obj[k]||'').trim();
-                            }
-                            if (type === 'activities') {
-                                if(['id', 'รหัส'].includes(key)) newObj.id = String(obj[k]||'').trim();
-                                if(['name', 'ชื่อ', 'วิชา', 'กิจกรรม', 'รายวิชา'].includes(key)) newObj.name = String(obj[k]||'').trim();
-                            }
-                        }
-                        if (type === 'students') {
-                            if (!newObj.id && values.length > 0) newObj.id = String(values[0] || '').trim();
-                            if (!newObj.name && values.length > 1) newObj.name = String(values[1] || '').trim();
-                            if (!newObj.class && values.length > 2) newObj.class = String(values[2] || '').trim();
-                        } else if (type === 'classes' || type === 'activities') {
-                            if (!newObj.id && values.length > 0) newObj.id = String(values[0] || '').trim();
-                            if (!newObj.name && values.length > 1) newObj.name = String(values[1] || '').trim();
-                        }
-                        if (!newObj.id && newObj.name) { newObj.id = type === 'students' ? 'STD-' + (idx + 1) : newObj.name; }
-                        if (!newObj.name && newObj.id) { newObj.name = newObj.id; }
-                        return newObj;
-                    }).filter(item => (item.id || item.name) && item.id !== "undefined"); 
-                };
+                            if (!newObj.id && newObj.name) { newObj.id = type === 'students' ? 'STD-' + (idx + 1) : newObj.name; }
+                            if (!newObj.name && newObj.id) { newObj.name = newObj.id; }
+                            return newObj;
+                        }).filter(item => (item.id || item.name) && item.id !== "undefined"); 
+                    };
 
-                DB.students = normalize(rawStudents, 'students'); 
-                DB.classes = normalize(rawClasses, 'classes'); 
-                DB.activities = normalize(rawActivities, 'activities'); 
-                
-                DB.attendance = {}; (rawAtt || []).forEach(r => DB.attendance[r.key] = r.data);
-                DB.scores = {}; (rawScores || []).forEach(r => DB.scores[r.key] = r.data);
-                DB.works = {}; (rawWorks || []).forEach(r => DB.works[r.key] = r.data);
-
+                    DB.students = normalize(rawStudents, 'students'); 
+                    DB.classes = normalize(rawClasses, 'classes'); 
+                    DB.activities = normalize(rawActivities, 'activities'); 
+                    
+                    DB.attendance = {}; (rawAtt || []).forEach(r => DB.attendance[r.key] = r.data);
+                    DB.scores = {}; (rawScores || []).forEach(r => DB.scores[r.key] = r.data);
+                    DB.works = {}; (rawWorks || []).forEach(r => DB.works[r.key] = r.data);
+                } else {
+                    DB = JSON.parse(localStorage.getItem('LocalDB_V2')) || 
+                         { students: [{id:'1001',name:'เด็กชาย สมบูรณ์',class:'ป.1/1'}], classes: [{id:'c1',name:'ป.1/1'}], activities: [{id:'a1',name:'วิชาคณิตศาสตร์'}], attendance: {}, scores: {}, works: {} };
+                }
                 renderAll(); navigate('dashboard');
             } catch(e) { 
                 console.error(e);
-                Swal.fire('Error','เกิดปัญหาในการโหลดข้อมูล: '+e.message,'error'); 
-            } finally { 
-                showLoad(false); 
-            }
+                Swal.fire('Error','โหลดข้อมูลล้มเหลว: '+e.message,'error'); 
+            } finally { showLoad(false); }
         }
 
         async function save(type, data) {
             showLoad(true);
             try {
-                if(!supabaseClient) throw new Error("Supabase ไม่ได้เชื่อมต่อ");
+                if(supabaseClient) {
+                    if (['attendance', 'scores', 'works'].includes(type)) {
+                        const updates = Object.keys(data).map(k => ({ key: k, data: data[k] }));
+                        if (updates.length > 0) { const { error } = await supabaseClient.from(type).upsert(updates); if (error) throw error; }
+                        DB[type] = {...DB[type], ...data};
+                    } else {
+                        const existingIds = (DB[type] || []).map(item => String(item.id));
+                        const incomingIds = (data || []).map(item => String(item.id));
+                        const idsToDelete = existingIds.filter(id => !incomingIds.includes(id));
 
-                if (['attendance', 'scores', 'works'].includes(type)) {
-                    const updates = Object.keys(data).map(k => ({ key: k, data: data[k] }));
-                    if (updates.length > 0) {
-                        const { error } = await supabaseClient.from(type).upsert(updates);
-                        if (error) throw error;
+                        if (idsToDelete.length > 0) { const { error: delErr } = await supabaseClient.from(type).delete().in('id', idsToDelete); if (delErr) throw delErr; }
+                        if (data && data.length > 0) { const { error: upsertErr } = await supabaseClient.from(type).upsert(data); if (upsertErr) throw upsertErr; }
+                        DB[type] = data;
                     }
-                    DB[type] = {...DB[type], ...data};
                 } else {
-                    // ระบบลบแล้วอัปเดตใหม่ ป้องกัน Error RLS หากยังไม่ได้เซ็ตอัปตารางให้สมบูรณ์
-                    try {
-                        await supabaseClient.from(type).delete().neq('id', 'dummy_value');
-                    } catch(delErr) {
-                        console.warn("ไม่สามารถลบข้อมูลเก่าได้ อาจเป็นเพราะ RLS หรือตารางว่าง", delErr);
-                    }
-                    
-                    if (data && data.length > 0) {
-                        const { error } = await supabaseClient.from(type).upsert(data); 
-                        if (error) throw error;
-                    }
-                    DB[type] = data;
+                    if (['attendance', 'scores', 'works'].includes(type)) { DB[type] = {...DB[type], ...data}; } else { DB[type] = data; }
+                    localStorage.setItem('LocalDB_V2', JSON.stringify(DB));
                 }
                 renderAll();
             } catch(e) { 
                 console.error(e);
-                let errMsg = e.message;
-                if(errMsg === 'Failed to fetch') errMsg = 'การเชื่อมต่อถูกบล็อก! (เช็ค URL/Key ของ Supabase หรือตารางในฐานข้อมูล)';
-                Swal.fire('Error','บันทึกข้อมูลล้มเหลว: ' + errMsg,'error'); 
-            } finally { 
-                showLoad(false); 
-            }
+                Swal.fire('Error','บันทึกข้อมูลล้มเหลว: ' + e.message,'error'); 
+            } finally { showLoad(false); }
         }
 
         function renderAll() { prepDashboardPage(); updateDashboard(); renderActivities(); renderClassesGrid(); renderStudents(); prepQRMakerPage(); }
 
         // --- Audio System ---
-        function playSuccessBeep() {
-            try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.1); } catch(e) {}
-        }
-        function playErrorBeep() {
-            try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'square'; osc.frequency.setValueAtTime(150, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.3); } catch(e) {}
-        }
+        function playSuccessBeep() { try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.1); } catch(e) {} }
+        function playErrorBeep() { try { const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain(); osc.type = 'square'; osc.frequency.setValueAtTime(150, ctx.currentTime); gainNode.gain.setValueAtTime(0.1, ctx.currentTime); osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.3); } catch(e) {} }
 
         // --- Dashboard & Stats ---
         function updateDashboard() {
@@ -770,7 +835,7 @@
             charts.pie = new Chart(document.getElementById('pieChart'), { type: 'doughnut', data: { labels: ['มาเรียน', 'ขาด/ลา'], datasets: [{ data: [pct, 100-pct], backgroundColor: ['#10b981', '#f1f5f9'], borderWidth: 0, cutout: '75%' }] }, options: { responsive: true, maintainAspectRatio: false, plugins:{legend:{position:'right'}} } });
         }
 
-        // --- Camera Scanner System (Dashboard: Combined) ---
+        // --- Camera Scanner System (Dashboard) ---
         function prepDashboardPage() {
             const a = '<option value="">-- เลือกวิชา --</option>' + DB.activities.map(x=>`<option value="${x.id}">${x.name}</option>`).join('');
             const c = '<option value="">-- เลือกห้อง --</option>' + DB.classes.map(x=>`<option value="${String(x.name||'').trim()}">${String(x.name||'').trim()}</option>`).join('');
@@ -785,10 +850,7 @@
             const cls = document.getElementById('selMainClass').value;
             const selWork = document.getElementById('selMainWork');
             
-            if(!act || !cls) { 
-                selWork.innerHTML = '<option value="">-- เลือกวิชาและห้องก่อน --</option>'; 
-                return; 
-            }
+            if(!act || !cls) { selWork.innerHTML = '<option value="">-- เลือกวิชาและห้องก่อน --</option>'; return; }
             
             let topics = new Set();
             Object.keys(DB.works).forEach(k => {
@@ -805,25 +867,18 @@
 
         function switchScanMode(mode) {
             currentScanMode = mode;
-            const tabAtt = document.getElementById('tabAtt');
-            const tabWork = document.getElementById('tabWork');
-            const boxDate = document.getElementById('boxDate');
-            const boxWork = document.getElementById('boxWork');
-            const btnScan = document.getElementById('btnMainScan');
-            const btnSubmit = document.getElementById('btnMainManualSubmit');
-            const txtScan = document.getElementById('txtMainScan');
-            const txtHeader = document.getElementById('txtLogHeader');
-            const badge = document.getElementById('badgeLogCount');
-            const inpMain = document.getElementById('inpMainManual');
-            const selAct = document.getElementById('selMainAct');
-            const selClass = document.getElementById('selMainClass');
+            const tabAtt = document.getElementById('tabAtt'); const tabWork = document.getElementById('tabWork');
+            const boxDate = document.getElementById('boxDate'); const boxWork = document.getElementById('boxWork');
+            const btnScan = document.getElementById('btnMainScan'); const btnSubmit = document.getElementById('btnMainManualSubmit');
+            const txtScan = document.getElementById('txtMainScan'); const txtHeader = document.getElementById('txtLogHeader');
+            const badge = document.getElementById('badgeLogCount'); const inpMain = document.getElementById('inpMainManual');
+            const selAct = document.getElementById('selMainAct'); const selClass = document.getElementById('selMainClass');
             const container = document.getElementById('dashboardCardContainer');
 
             if (mode === 'attendance') {
                 tabAtt.className = "px-6 py-3 font-bold text-sm text-secondary border-b-2 border-secondary transition-all w-1/2 md:w-auto";
                 tabWork.className = "px-6 py-3 font-bold text-sm text-slate-400 border-b-2 border-transparent hover:text-green-500 transition-all w-1/2 md:w-auto";
-                boxDate.classList.remove('hidden');
-                boxWork.classList.add('hidden');
+                boxDate.classList.remove('hidden'); boxWork.classList.add('hidden');
                 container.className = "glass-card mb-6 overflow-hidden relative border-t-4 border-t-secondary transition-colors";
                 
                 btnScan.className = "w-full bg-secondary hover:bg-slate-800 text-white py-4 rounded-2xl shadow-lg font-bold flex justify-center items-center gap-3 transition-transform active:scale-[0.98]";
@@ -832,14 +887,12 @@
                 selAct.classList.remove('focus:border-green-500'); selAct.classList.add('focus:border-secondary');
                 selClass.classList.remove('focus:border-green-500'); selClass.classList.add('focus:border-secondary');
                 
-                txtScan.innerText = "เปิดกล้องสแกนเข้าเรียน";
-                txtHeader.innerHTML = '<i class="fas fa-history text-slate-400 mr-1"></i> ประวัติสแกนเข้าเรียน';
+                txtScan.innerText = "เปิดกล้องสแกนเข้าเรียน"; txtHeader.innerHTML = '<i class="fas fa-history text-slate-400 mr-1"></i> ประวัติสแกนเข้าเรียน';
                 badge.className = "text-[10px] bg-secondary/10 text-secondary border border-secondary/20 px-2.5 py-1 rounded-lg font-bold";
             } else {
                 tabAtt.className = "px-6 py-3 font-bold text-sm text-slate-400 border-b-2 border-transparent hover:text-green-500 transition-all w-1/2 md:w-auto";
                 tabWork.className = "px-6 py-3 font-bold text-sm text-green-500 border-b-2 border-green-500 transition-all w-1/2 md:w-auto";
-                boxDate.classList.add('hidden');
-                boxWork.classList.remove('hidden');
+                boxDate.classList.add('hidden'); boxWork.classList.remove('hidden');
                 container.className = "glass-card mb-6 overflow-hidden relative border-t-4 border-t-green-500 transition-colors";
                 
                 populateDashboardWorkTopics();
@@ -850,8 +903,7 @@
                 selAct.classList.remove('focus:border-secondary'); selAct.classList.add('focus:border-green-500');
                 selClass.classList.remove('focus:border-secondary'); selClass.classList.add('focus:border-green-500');
 
-                txtScan.innerText = "เปิดกล้องสแกนส่งงาน";
-                txtHeader.innerHTML = '<i class="fas fa-check-circle text-slate-400 mr-1"></i> ประวัติสแกนส่งงาน';
+                txtScan.innerText = "เปิดกล้องสแกนส่งงาน"; txtHeader.innerHTML = '<i class="fas fa-check-circle text-slate-400 mr-1"></i> ประวัติสแกนส่งงาน';
                 badge.className = "text-[10px] bg-green-500/10 text-green-600 border border-green-500/20 px-2.5 py-1 rounded-lg font-bold";
             }
             validateMainScanForm();
@@ -864,18 +916,12 @@
             
             if(currentScanMode === 'attendance') {
                 const dt = document.getElementById('inpMainDate').value;
-                if(act && cls && dt) { 
-                    area.classList.remove('opacity-50','pointer-events-none'); 
-                    checkKey = `${act}|${dt}|${cls}`; 
-                    currentSess = []; updateMainLogTable(); 
-                } else { area.classList.add('opacity-50','pointer-events-none'); checkKey = ''; }
+                if(act && cls && dt) { area.classList.remove('opacity-50','pointer-events-none'); checkKey = `${act}|${dt}|${cls}`; currentSess = []; updateMainLogTable(); } 
+                else { area.classList.add('opacity-50','pointer-events-none'); checkKey = ''; }
             } else {
                 const wName = document.getElementById('selMainWork').value;
-                if(act && cls && wName) { 
-                    area.classList.remove('opacity-50','pointer-events-none'); 
-                    submitWorkKey = `${act}|${wName}|${cls}`; 
-                    currentWorkSess = []; updateMainLogTable(); 
-                } else { area.classList.add('opacity-50','pointer-events-none'); submitWorkKey = ''; }
+                if(act && cls && wName) { area.classList.remove('opacity-50','pointer-events-none'); submitWorkKey = `${act}|${wName}|${cls}`; currentWorkSess = []; updateMainLogTable(); } 
+                else { area.classList.add('opacity-50','pointer-events-none'); submitWorkKey = ''; }
             }
         }
 
@@ -884,17 +930,12 @@
             if(currentScanMode === 'submitwork' && !submitWorkKey) { Swal.fire('ข้อมูลไม่ครบ', 'กรุณาเลือกวิชา ห้องเรียน และเลือกชิ้นงานก่อน', 'warning'); return; }
             
             document.getElementById('txtScannerOverlayTitle').innerText = currentScanMode === 'attendance' ? 'สแกนเข้าเรียน' : 'สแกนส่งงาน';
-            const overlay = document.getElementById('cameraOverlay');
-            overlay.classList.remove('hidden'); overlay.style.display='flex';
+            const overlay = document.getElementById('cameraOverlay'); overlay.classList.remove('hidden'); overlay.style.display='flex';
             document.getElementById('qr-reader-fallback').classList.add('hidden');
             
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                document.getElementById('qr-reader-fallback').classList.remove('hidden'); return;
-            }
-
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { document.getElementById('qr-reader-fallback').classList.remove('hidden'); return; }
             if(!scanner) scanner = new Html5Qrcode("qr-reader");
             const config = { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 };
-            
             window.lastScanCode = ''; window.lastScanTime = 0;
 
             scanner.start({ facingMode: "environment" }, config, 
@@ -923,8 +964,7 @@
         }
 
         function closeScannerOverlay() {
-            const overlay = document.getElementById('cameraOverlay');
-            overlay.classList.add('hidden'); overlay.style.display='none';
+            const overlay = document.getElementById('cameraOverlay'); overlay.classList.add('hidden'); overlay.style.display='none';
             if(scanner) scanner.stop().catch(e => console.log(e));
         }
 
@@ -940,7 +980,6 @@
             const iconHTML = type === 'success' 
                 ? `<div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-check text-3xl text-green-500"></i></div>` 
                 : `<div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-times text-3xl text-red-500"></i></div>`;
-            
             const colorClass = type === 'success' ? 'text-green-600' : 'text-red-500';
 
             Swal.fire({
@@ -949,8 +988,7 @@
                     <h2 class="text-2xl font-black ${colorClass} mb-2">${title}</h2>
                     <p class="text-slate-500 font-medium text-sm">${text}</p>
                 `,
-                showConfirmButton: false,
-                timer: 1500,
+                showConfirmButton: false, timer: 1500,
                 customClass: { popup: 'rounded-3xl p-6 shadow-2xl border border-slate-100' },
                 backdrop: `rgba(15, 23, 42, 0.4)`
             });
@@ -965,50 +1003,39 @@
 
             if(std) {
                 if (String(std.class||'').trim() !== String(cls||'').trim()) { 
-                    playErrorBeep(); 
-                    showScanAlert('ผิดห้องเรียน!', `${std.name} อยู่ชั้น ${std.class}`, 'error');
+                    playErrorBeep(); showScanAlert('ผิดห้องเรียน!', `${std.name} อยู่ชั้น ${std.class}`, 'error');
                     if(inp)inp.value=''; return; 
                 }
-
                 const time = new Date().toLocaleTimeString('th-TH', { hour12: false });
-
                 if (currentScanMode === 'attendance') {
                     let ex = DB.attendance[checkKey] || {}; 
                     if(ex[std.id]) { 
-                        playErrorBeep(); 
-                        showScanAlert('สแกนซ้ำ!', `${std.name} เช็คชื่อไปแล้ว`, 'error');
+                        playErrorBeep(); showScanAlert('สแกนซ้ำ!', `${std.name} เช็คชื่อไปแล้ว`, 'error');
                         if(inp)inp.value=''; return; 
                     }
                     if (!DB.attendance[checkKey]) DB.attendance[checkKey] = {};
                     DB.attendance[checkKey][std.id] = { status: 'present', time: time };
                     let payload = {}; payload[checkKey] = DB.attendance[checkKey];
                     
-                    playSuccessBeep(); 
-                    showScanAlert(std.name, `บันทึกเข้าเรียนเวลา ${time} น.`, 'success');
-
+                    playSuccessBeep(); showScanAlert(std.name, `บันทึกเข้าเรียนเวลา ${time} น.`, 'success');
                     if(inp)inp.value=''; currentSess.unshift({id:std.id, name:std.name, time:time}); updateMainLogTable(); updateDashboard();
                     save('attendance', payload);
-                
                 } else {
                     let ex = DB.works[submitWorkKey] || {}; 
                     if(ex[std.id]) { 
-                        playErrorBeep(); 
-                        showScanAlert('ส่งงานซ้ำ!', `${std.name} ส่งงานชิ้นนี้ไปแล้ว`, 'error');
+                        playErrorBeep(); showScanAlert('ส่งงานซ้ำ!', `${std.name} ส่งงานชิ้นนี้ไปแล้ว`, 'error');
                         if(inp)inp.value=''; return; 
                     }
                     if (!DB.works[submitWorkKey]) DB.works[submitWorkKey] = {};
                     DB.works[submitWorkKey][std.id] = { status: 'submitted', time: time };
                     let payload = {}; payload[submitWorkKey] = DB.works[submitWorkKey];
                     
-                    playSuccessBeep(); 
-                    showScanAlert(std.name, `บันทึกส่งงานเวลา ${time} น.`, 'success');
-
+                    playSuccessBeep(); showScanAlert(std.name, `บันทึกส่งงานเวลา ${time} น.`, 'success');
                     if(inp)inp.value=''; currentWorkSess.unshift({id:std.id, name:std.name, time:time}); updateMainLogTable();
                     save('works', payload);
                 }
             } else { 
-                playErrorBeep(); 
-                showScanAlert('ไม่พบข้อมูล', `รหัสนักเรียน: ${id} ไม่มีในระบบ`, 'error');
+                playErrorBeep(); showScanAlert('ไม่พบข้อมูล', `รหัสนักเรียน: ${id} ไม่มีในระบบ`, 'error');
                 if(inp)inp.value='';
             }
         }
@@ -1016,11 +1043,9 @@
         function updateMainLogTable() {
             const arr = currentScanMode === 'attendance' ? currentSess : currentWorkSess;
             const colorClass = currentScanMode === 'attendance' ? 'border-l-secondary text-secondary bg-slate-50 text-primary' : 'border-l-green-500 text-green-600 bg-green-50';
-            
             document.getElementById('txtMainCount').innerText = arr.length;
             
             let html = arr.map(l => `<div class="bg-white border border-slate-100 border-l-4 ${colorClass.split(' ')[0]} p-3 rounded-xl shadow-sm flex justify-between items-center"><div class="leading-tight"><b class="text-sm text-slate-700">${l.name}</b><br><span class="text-[10px] text-slate-400 font-bold">${l.id}</span></div><div class="${colorClass.split(' ').slice(2).join(' ')} px-2 py-1 rounded font-bold text-xs">${l.time}</div></div>`).join('');
-            
             if(!html) {
                 const msg = currentScanMode === 'attendance' ? 'รอการสแกนเข้าเรียน...' : 'รอการสแกนส่งงาน...';
                 html = `<div class="h-full flex flex-col items-center justify-center text-slate-400 opacity-60"><i class="fas fa-list-ul text-3xl mb-2"></i><span class="text-xs font-medium">${msg}</span></div>`;
@@ -1049,9 +1074,7 @@
             Object.keys(DB.works).forEach(key => {
                 const parts = key.split('|');
                 if(parts.length === 3) {
-                    const actId = parts[0];
-                    const topicName = parts[1];
-                    const clsName = parts[2];
+                    const actId = parts[0]; const topicName = parts[1]; const clsName = parts[2];
                     const actObj = DB.activities.find(a => a.id === actId);
                     const actName = actObj ? actObj.name : actId;
                     const submittedCount = Object.keys(DB.works[key]).length;
@@ -1088,17 +1111,11 @@
             const html = `
                 <div class="text-left mb-3">
                     <label class="block text-xs font-bold text-slate-500 mb-1">เลือกวิชา</label>
-                    <select id="sw-work-act" class="w-full border border-slate-200 rounded-lg p-3 text-sm outline-none focus:border-green-500">
-                        <option value="">- เลือกวิชา -</option>
-                        ${actOpts}
-                    </select>
+                    <select id="sw-work-act" class="w-full border border-slate-200 rounded-lg p-3 text-sm outline-none focus:border-green-500"><option value="">- เลือกวิชา -</option>${actOpts}</select>
                 </div>
                 <div class="text-left mb-3">
                     <label class="block text-xs font-bold text-slate-500 mb-1">เลือกชั้นเรียน</label>
-                    <select id="sw-work-cls" class="w-full border border-slate-200 rounded-lg p-3 text-sm outline-none focus:border-green-500">
-                        <option value="">- เลือกชั้นเรียน -</option>
-                        ${clsOpts}
-                    </select>
+                    <select id="sw-work-cls" class="w-full border border-slate-200 rounded-lg p-3 text-sm outline-none focus:border-green-500"><option value="">- เลือกชั้นเรียน -</option>${clsOpts}</select>
                 </div>
                 <div class="text-left">
                     <label class="block text-xs font-bold text-slate-500 mb-1">ชื่อชิ้นงาน / กิจกรรม</label>
@@ -1107,16 +1124,9 @@
             `;
 
             const {value} = await Swal.fire({
-                title: 'สร้างงาน/กิจกรรม',
-                html: html,
-                showCancelButton: true,
-                confirmButtonText: 'สร้าง',
-                cancelButtonText: 'ยกเลิก',
-                confirmButtonColor: '#10b981',
+                title: 'สร้างงาน/กิจกรรม', html: html, showCancelButton: true, confirmButtonText: 'สร้าง', cancelButtonText: 'ยกเลิก', confirmButtonColor: '#10b981',
                 preConfirm: () => {
-                    const act = document.getElementById('sw-work-act').value;
-                    const cls = document.getElementById('sw-work-cls').value;
-                    const topic = document.getElementById('sw-work-topic').value.trim();
+                    const act = document.getElementById('sw-work-act').value; const cls = document.getElementById('sw-work-cls').value; const topic = document.getElementById('sw-work-topic').value.trim();
                     if(!act || !cls || !topic) { Swal.showValidationMessage('กรุณากรอกข้อมูลให้ครบถ้วน'); return false; }
                     return {act, cls, topic};
                 }
@@ -1125,15 +1135,11 @@
             if(value) {
                 const key = `${value.act}|${value.topic}|${value.cls}`;
                 if(!DB.works[key]) {
-                    DB.works[key] = {};
-                    let payload = {}; payload[key] = DB.works[key];
+                    DB.works[key] = {}; let payload = {}; payload[key] = DB.works[key];
                     save('works', payload);
                     Swal.fire({toast:true, position:'top', icon:'success', title:'สร้างงานสำเร็จ', timer:1500, showConfirmButton:false});
-                    renderWorkTopics();
-                    if (typeof populateDashboardWorkTopics === 'function') populateDashboardWorkTopics();
-                } else {
-                    Swal.fire('ซ้ำ', 'มีชิ้นงานนี้อยู่แล้ว', 'warning');
-                }
+                    renderWorkTopics(); if (typeof populateDashboardWorkTopics === 'function') populateDashboardWorkTopics();
+                } else { Swal.fire('ซ้ำ', 'มีชิ้นงานนี้อยู่แล้ว', 'warning'); }
             }
         }
 
@@ -1143,15 +1149,10 @@
                     showLoad(true);
                     try {
                         if(supabaseClient) await supabaseClient.from('works').delete().eq('key', key);
-                        delete DB.works[key];
-                        renderWorkTopics();
+                        delete DB.works[key]; renderWorkTopics();
                         if (typeof populateDashboardWorkTopics === 'function') populateDashboardWorkTopics();
                         Swal.fire({toast:true, position:'top', icon:'success', title:'ลบสำเร็จ', timer:1500, showConfirmButton:false});
-                    } catch(e) {
-                        Swal.fire('Error', e.message, 'error');
-                    } finally {
-                        showLoad(false);
-                    }
+                    } catch(e) { Swal.fire('Error', e.message, 'error'); } finally { showLoad(false); }
                 }
             });
         }
@@ -1170,7 +1171,6 @@
 
         async function addActivity() { 
             const clsOpts = DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
-            
             const html = `
                 <div class="mb-3 text-left">
                     <label class="block text-xs font-bold text-slate-500 mb-1">ชื่อวิชา</label>
@@ -1184,94 +1184,50 @@
                     </select>
                 </div>
             `;
-
             const {value} = await Swal.fire({
-                title: 'เพิ่มวิชาเรียนใหม่',
-                html: html,
-                showCancelButton: true,
-                confirmButtonText: 'บันทึก',
-                cancelButtonText: 'ยกเลิก',
-                confirmButtonColor: '#3b82f6',
+                title: 'เพิ่มวิชาเรียนใหม่', html: html, showCancelButton: true, confirmButtonText: 'บันทึก', cancelButtonText: 'ยกเลิก', confirmButtonColor: '#3b82f6',
                 preConfirm: () => {
-                    const name = document.getElementById('sw-act-name').value.trim();
-                    const cls = document.getElementById('sw-act-cls').value;
+                    const name = document.getElementById('sw-act-name').value.trim(); const cls = document.getElementById('sw-act-cls').value;
                     if(!name) { Swal.showValidationMessage('กรุณากรอกชื่อวิชา'); return false; }
                     return {name, class: cls};
                 }
             });
-
-            if(value) {
-                let finalName = value.class ? `${value.name} [${value.class}]` : value.name;
-                save('activities', [...DB.activities, {id:'a'+Date.now(), name:finalName}]);
-            }
+            if(value) { let finalName = value.class ? `${value.name} [${value.class}]` : value.name; save('activities', [...DB.activities, {id:'a'+Date.now(), name:finalName}]); }
         }
         async function addClass() { const {value} = await Swal.fire({title:'เพิ่มชั้นเรียน', input:'text', confirmButtonColor: '#0ea5e9'}); if(value) save('classes', [...DB.classes, {id:'c'+Date.now(), name:value}]); }
         async function addStudent() {
             const clsOpts = DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
-
             window.swTab = (t) => {
-                document.getElementById('p-s').style.display = t==='s' ? 'block' : 'none';
-                document.getElementById('p-b').style.display = t==='b' ? 'block' : 'none';
+                document.getElementById('p-s').style.display = t==='s' ? 'block' : 'none'; document.getElementById('p-b').style.display = t==='b' ? 'block' : 'none';
                 document.getElementById('tab-s').className = `cursor-pointer font-bold text-sm pb-1 px-2 transition-colors ${t==='s' ? 'text-secondary border-b-2 border-secondary' : 'text-slate-400 hover:text-secondary'}`;
                 document.getElementById('tab-b').className = `cursor-pointer font-bold text-sm pb-1 px-2 transition-colors ${t==='b' ? 'text-secondary border-b-2 border-secondary' : 'text-slate-400 hover:text-secondary'}`;
             };
-
             const html = `
                 <div class="flex gap-4 mb-4 border-b border-slate-200 pb-0 justify-center">
                     <span id="tab-s" onclick="swTab('s')" class="cursor-pointer font-bold text-secondary text-sm border-b-2 border-secondary pb-1 px-2 transition-colors">เพิ่มทีละคน</span>
                     <span id="tab-b" onclick="swTab('b')" class="cursor-pointer font-bold text-slate-400 hover:text-secondary text-sm pb-1 px-2 transition-colors">เพิ่มหลายคน (คัดลอกวาง)</span>
                 </div>
-                <div id="p-s">
-                    <input id="sw-id" class="swal2-input text-sm w-[80%] mx-auto" placeholder="รหัสประจำตัว (เช่น 1001)">
-                    <input id="sw-name" class="swal2-input text-sm w-[80%] mx-auto" placeholder="ชื่อ - นามสกุล">
-                    <select id="sw-cls" class="swal2-select text-sm w-[80%] mx-auto">
-                        <option value="">- เลือกห้องเรียน -</option>
-                        ${clsOpts}
-                    </select>
-                </div>
-                <div id="p-b" style="display:none">
-                    <p class="text-xs text-left text-slate-500 mb-2 pl-6">รูปแบบ: รหัส, ชื่อ-สกุล, ชั้นเรียน<br>(คัดลอกตารางจาก Excel มาวางได้เลย)</p>
-                    <textarea id="sw-bulk" class="swal2-textarea w-[80%] mx-auto h-32 text-xs font-mono p-3 bg-slate-50 border border-slate-200 placeholder-slate-400" placeholder="1001\tเด็กชายใจดี\tป.1/1\n1002\tเด็กหญิงรักเรียน\tป.1/1"></textarea>
-                </div>
+                <div id="p-s"><input id="sw-id" class="swal2-input text-sm w-[80%] mx-auto" placeholder="รหัสประจำตัว (เช่น 1001)"><input id="sw-name" class="swal2-input text-sm w-[80%] mx-auto" placeholder="ชื่อ - นามสกุล"><select id="sw-cls" class="swal2-select text-sm w-[80%] mx-auto"><option value="">- เลือกห้องเรียน -</option>${clsOpts}</select></div>
+                <div id="p-b" style="display:none"><p class="text-xs text-left text-slate-500 mb-2 pl-6">รูปแบบ: รหัส, ชื่อ-สกุล, ชั้นเรียน<br>(คัดลอกตารางจาก Excel มาวางได้เลย)</p><textarea id="sw-bulk" class="swal2-textarea w-[80%] mx-auto h-32 text-xs font-mono p-3 bg-slate-50 border border-slate-200 placeholder-slate-400" placeholder="1001\tเด็กชายใจดี\tป.1/1\n1002\tเด็กหญิงรักเรียน\tป.1/1"></textarea></div>
             `;
-
             const {value} = await Swal.fire({
-                title:'เพิ่มข้อมูลนักเรียน',
-                html:html,
-                showCancelButton:true,
-                confirmButtonText:'บันทึก',
-                cancelButtonText:'ยกเลิก',
-                confirmButtonColor: '#0ea5e9',
+                title:'เพิ่มข้อมูลนักเรียน', html:html, showCancelButton:true, confirmButtonText:'บันทึก', cancelButtonText:'ยกเลิก', confirmButtonColor: '#0ea5e9',
                 preConfirm: () => {
                     if (document.getElementById('p-s').style.display !== 'none') {
-                        const id = document.getElementById('sw-id').value.trim();
-                        const name = document.getElementById('sw-name').value.trim();
-                        const cls = document.getElementById('sw-cls').value;
+                        const id = document.getElementById('sw-id').value.trim(); const name = document.getElementById('sw-name').value.trim(); const cls = document.getElementById('sw-cls').value;
                         if(!id || !name || !cls) { Swal.showValidationMessage('กรุณากรอกข้อมูลให้ครบถ้วน'); return false; }
                         return [{id, name, class: cls}];
                     } else {
                         const txt = document.getElementById('sw-bulk').value.trim();
                         if(!txt) { Swal.showValidationMessage('กรุณากรอกข้อมูล'); return false; }
-                        return txt.split('\n').map(l => {
-                            const p = l.split(/[\t,]+/).map(s=>s.trim());
-                            return p.length >= 2 ? {id: p[0], name: p[1], class: p[2] || ''} : null;
-                        }).filter(x=>x);
+                        return txt.split('\n').map(l => { const p = l.split(/[\t,]+/).map(s=>s.trim()); return p.length >= 2 ? {id: p[0], name: p[1], class: p[2] || ''} : null; }).filter(x=>x);
                     }
                 }
             });
-
             if(value && value.length > 0) {
-                let newData = [...DB.students];
-                let addedCount = 0;
-                value.forEach(v => {
-                    if(v && v.id && v.name) {
-                        const idx = newData.findIndex(s=>s.id == v.id);
-                        if(idx > -1) newData[idx] = v; else newData.push(v);
-                        addedCount++;
-                    }
-                });
-                save('students', newData);
-                Swal.fire({toast:true, position:'top', icon:'success', title:'เพิ่มสำเร็จ '+addedCount+' คน', showConfirmButton:false, timer:1500});
+                let newData = [...DB.students]; let addedCount = 0;
+                value.forEach(v => { if(v && v.id && v.name) { const idx = newData.findIndex(s=>s.id == v.id); if(idx > -1) newData[idx] = v; else newData.push(v); addedCount++; } });
+                save('students', newData); Swal.fire({toast:true, position:'top', icon:'success', title:'เพิ่มสำเร็จ '+addedCount+' คน', showConfirmButton:false, timer:1500});
             }
         }
         function del(type, idx) { Swal.fire({title:'ยืนยันการลบ?',icon:'warning',showCancelButton:true, confirmButtonColor:'#e11d48'}).then(r=>{if(r.isConfirmed){ let d=[...DB[type]]; d.splice(idx,1); save(type,d); }}); }
@@ -1318,15 +1274,10 @@
         function prepSummaryPage() {
             document.getElementById('selActRep').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
             document.getElementById('selClassRep').innerHTML = '<option value="">- เลือกชั้นเรียน -</option>' + DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
-            
-            const now = new Date();
-            const currDay = now.getDay(); 
-            const firstDayOfWeek = new Date(now);
+            const now = new Date(); const currDay = now.getDay(); const firstDayOfWeek = new Date(now);
             firstDayOfWeek.setDate(now.getDate() - currDay + (currDay === 0 ? -6 : 1)); 
-            
             document.getElementById('inpRepStartWeek').value = firstDayOfWeek.toISOString().split('T')[0];
             document.getElementById('inpRepMonth').value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-            
             toggleRepInputs();
         }
         function toggleRepInputs() {
@@ -1345,34 +1296,22 @@
             if(repType === 'weekly') {
                 const startStr = document.getElementById('inpRepStartWeek').value;
                 if(!startStr) return Swal.fire('เตือน','กรุณาเลือกวันเริ่มต้นสัปดาห์','warning');
-                startDate = new Date(startStr);
-                endDate = new Date(startDate);
-                endDate.setDate(startDate.getDate() + 6); 
+                startDate = new Date(startStr); endDate = new Date(startDate); endDate.setDate(startDate.getDate() + 6); 
             } else if (repType === 'monthly') {
                 const monthStr = document.getElementById('inpRepMonth').value;
                 if(!monthStr) return Swal.fire('เตือน','กรุณาเลือกเดือน','warning');
                 const [yyyy, mm] = monthStr.split('-');
-                startDate = new Date(yyyy, parseInt(mm)-1, 1);
-                endDate = new Date(yyyy, parseInt(mm), 0); 
+                startDate = new Date(yyyy, parseInt(mm)-1, 1); endDate = new Date(yyyy, parseInt(mm), 0); 
             } else {
-                const startStr = document.getElementById('repStart').value;
-                const endStr = document.getElementById('repEnd').value;
+                const startStr = document.getElementById('repStart').value; const endStr = document.getElementById('repEnd').value;
                 if(!startStr || !endStr) return Swal.fire('เตือน','กรุณาระบุช่วงวันที่ให้ครบถ้วน','warning');
-                startDate = new Date(startStr);
-                endDate = new Date(endStr);
+                startDate = new Date(startStr); endDate = new Date(endStr);
             }
 
             const getDatesInRange = (start, end) => {
-                let dates = [];
-                let currDate = new Date(start);
-                currDate.setHours(0,0,0,0);
-                const lastDate = new Date(end);
-                lastDate.setHours(0,0,0,0);
-
-                while (currDate <= lastDate) {
-                    dates.push(new Date(currDate).toISOString().split('T')[0]);
-                    currDate.setDate(currDate.getDate() + 1);
-                }
+                let dates = []; let currDate = new Date(start); currDate.setHours(0,0,0,0);
+                const lastDate = new Date(end); lastDate.setHours(0,0,0,0);
+                while (currDate <= lastDate) { dates.push(new Date(currDate).toISOString().split('T')[0]); currDate.setDate(currDate.getDate() + 1); }
                 return dates;
             };
 
@@ -1382,9 +1321,7 @@
             let teachingDates = new Set(); 
             Object.keys(DB.attendance).forEach(k => { 
                 const p=k.split('|'); 
-                if(p[0]===act && p[2]===cls && targetDates.includes(p[1])) {
-                    teachingDates.add(p[1]); 
-                }
+                if(p[0]===act && p[2]===cls && targetDates.includes(p[1])) { teachingDates.add(p[1]); }
             });
             let sortedDates = Array.from(teachingDates).sort();
             
@@ -1395,8 +1332,7 @@
             }
 
             let head = `<tr><th class="w-12 text-center">รหัส</th><th class="text-left">ชื่อ-นามสกุล</th>` + sortedDates.map(d=>{
-                const [y,m,day] = d.split('-');
-                return `<th class="text-center text-[9px] bg-slate-100/50 min-w-[30px]">${day}/${m}</th>`;
+                const [y,m,day] = d.split('-'); return `<th class="text-center text-[9px] bg-slate-100/50 min-w-[30px]">${day}/${m}</th>`;
             }).join('') + `<th class="text-center bg-green-50/50">มา</th><th class="text-center bg-orange-50/50">สาย</th><th class="text-center bg-red-50/50">ขาด</th></tr>`;
             
             let tP=0, tL=0, tA=0;
@@ -1408,8 +1344,7 @@
                     if(rec) { 
                         if(rec.status === 'late') { rL++; html+=`<td class="text-center text-orange-400 font-black" title="${rec.time}">ส</td>`; }
                         else { rP++; html+=`<td class="text-center text-green-500 font-black"><i class="fas fa-check"></i></td>`; }
-                    }
-                    else { rA++; html+=`<td class="text-center text-red-400 font-black"><i class="fas fa-times"></i></td>`; }
+                    } else { rA++; html+=`<td class="text-center text-red-400 font-black"><i class="fas fa-times"></i></td>`; }
                 });
                 tP+=rP; tL+=rL; tA+=rA;
                 return html + `<td class="text-center font-black text-green-600 bg-green-50/50">${rP}</td><td class="text-center font-black text-orange-500 bg-orange-50/50">${rL}</td><td class="text-center font-black text-red-500 bg-red-50/50">${rA}</td></tr>`;
@@ -1433,115 +1368,63 @@
             document.getElementById('repResult').classList.remove('hidden');
         }
 
-        // --- Scores & Works (ให้คะแนนชิ้นงาน) ---
+        // --- Scores & Works ---
         function prepScorePage() {
             document.getElementById('selActScore').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
             document.getElementById('selClassScore').innerHTML = '<option value="">- เลือกชั้นเรียน -</option>' + DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
             document.getElementById('scoreTableArea').classList.add('hidden');
         }
+        function populateScoreWorkTopics() {
+            const act = document.getElementById('selActScore').value; const cls = document.getElementById('selClassScore').value; const selWork = document.getElementById('selWorkScore');
+            if(!act || !cls) { selWork.innerHTML = '<option value="">-- ไม่เลือก (กรอกคะแนนรวมปกติ) --</option>'; return; }
+            let topics = new Set();
+            Object.keys(DB.works).forEach(k => { const parts = k.split('|'); if(parts.length === 3 && parts[0] === act && parts[2] === cls) { topics.add(parts[1]); } });
+            if(topics.size > 0) { selWork.innerHTML = '<option value="">-- ไม่เลือก (กรอกคะแนนรวมปกติ) --</option>' + Array.from(topics).map(t => `<option value="${t}">${t}</option>`).join(''); } 
+            else { selWork.innerHTML = '<option value="">-- ไม่มีประวัติการส่งงานในระบบ --</option>'; }
+        }
         function renderScoreTable() {
-            const act=document.getElementById('selActScore').value, cls=document.getElementById('selClassScore').value; 
-            const workTopic = document.getElementById('selWorkScore').value;
-            
+            const act=document.getElementById('selActScore').value, cls=document.getElementById('selClassScore').value, workTopic = document.getElementById('selWorkScore').value;
             if(!act||!cls){ document.getElementById('scoreTableArea').classList.add('hidden'); return; }
             document.getElementById('scoreTableArea').classList.remove('hidden');
             
             const stds = DB.students.filter(s=>String(s.class||'').trim() === String(cls||'').trim()).sort((a,b)=>String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
-            
             if(!DB.scores[act]) DB.scores[act] = {};
             
-            let workKey = '';
-            let workData = {};
+            let workKey = ''; let workData = {};
             if(workTopic) {
-                workKey = `${act}|${workTopic}|${cls}`;
-                workData = DB.works[workKey] || {};
-                
+                workKey = `${act}|${workTopic}|${cls}`; workData = DB.works[workKey] || {};
                 const badge = document.getElementById('scoreWorkBadge');
-                badge.innerText = `ชิ้นงาน: ${workTopic} (${Object.keys(workData).length}/${stds.length} ส่งแล้ว)`;
-                badge.classList.remove('hidden');
-            } else {
-                document.getElementById('scoreWorkBadge').classList.add('hidden');
-            }
+                badge.innerText = `ชิ้นงาน: ${workTopic} (${Object.keys(workData).length}/${stds.length} ส่งแล้ว)`; badge.classList.remove('hidden');
+            } else { document.getElementById('scoreWorkBadge').classList.add('hidden'); }
 
             document.getElementById('scoreList').innerHTML = stds.map(s => {
                 let sc = DB.scores[act][s.id] || {c:'',e:''};
                 
                 let workScoreVal = '';
-                if(workTopic && sc[`w_${workTopic}`] !== undefined) {
-                    workScoreVal = sc[`w_${workTopic}`];
-                }
+                if(workTopic && sc[`w_${workTopic}`] !== undefined) { workScoreVal = sc[`w_${workTopic}`]; }
 
                 let statusBadge = '';
                 if(workTopic) {
                     const isSubmitted = workData[s.id];
-                    statusBadge = isSubmitted 
-                        ? `<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[9px] font-bold"><i class="fas fa-check mr-1"></i>ส่งแล้ว</span>` 
-                        : `<span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[9px] font-bold">ยังไม่ส่ง</span>`;
-                    
-                    return `
-                    <div class="glass-card !p-4 border-l-4 ${isSubmitted ? 'border-green-500' : 'border-slate-300'} flex items-center justify-between gap-4">
-                        <div class="flex-1 min-w-0">
-                            <div class="text-sm font-bold text-slate-700 truncate">${s.id} ${s.name}</div>
-                            <div class="mt-1">${statusBadge}</div>
-                        </div>
-                        <div class="relative w-24 flex-shrink-0">
-                            <span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนนเต็ม 10</span>
-                            <input type="number" id="sc_w_${s.id}" value="${workScoreVal}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-500 transition-colors bg-blue-50/30">
-                        </div>
-                    </div>`;
+                    statusBadge = isSubmitted ? `<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[9px] font-bold"><i class="fas fa-check mr-1"></i>ส่งแล้ว</span>` : `<span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[9px] font-bold">ยังไม่ส่ง</span>`;
+                    return `<div class="glass-card !p-4 border-l-4 ${isSubmitted ? 'border-green-500' : 'border-slate-300'} flex items-center justify-between gap-4"><div class="flex-1 min-w-0"><div class="text-sm font-bold text-slate-700 truncate">${s.id} ${s.name}</div><div class="mt-1">${statusBadge}</div></div><div class="relative w-24 flex-shrink-0"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนนเต็ม 10</span><input type="number" id="sc_w_${s.id}" value="${workScoreVal}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-500 transition-colors bg-blue-50/30"></div></div>`;
                 }
 
                 return `<div class="glass-card !p-4"><div class="text-sm font-bold text-slate-700 mb-3">${s.id} ${s.name}</div><div class="flex gap-3"><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-amber-500">คะแนนเก็บ (70)</span><input type="number" id="sc_c_${s.id}" value="${sc.c}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-amber-400"></div><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนนสอบ (30)</span><input type="number" id="sc_e_${s.id}" value="${sc.e}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-400"></div></div></div>`;
             }).join('');
         }
         
-        function populateScoreWorkTopics() {
-            const act = document.getElementById('selActScore').value;
-            const cls = document.getElementById('selClassScore').value;
-            const selWork = document.getElementById('selWorkScore');
-            
-            if(!act || !cls) { 
-                selWork.innerHTML = '<option value="">-- ไม่เลือก (กรอกคะแนนรวมปกติ) --</option>'; 
-                return; 
-            }
-            
-            let topics = new Set();
-            Object.keys(DB.works).forEach(k => {
-                const parts = k.split('|');
-                if(parts.length === 3 && parts[0] === act && parts[2] === cls) { topics.add(parts[1]); }
-            });
-            
-            if(topics.size > 0) {
-                selWork.innerHTML = '<option value="">-- ไม่เลือก (กรอกคะแนนรวมปกติ) --</option>' + Array.from(topics).map(t => `<option value="${t}">${t}</option>`).join('');
-            } else {
-                selWork.innerHTML = '<option value="">-- ไม่มีประวัติการส่งงานในระบบ --</option>';
-            }
-        }
-
         function saveScores() {
-            const act = document.getElementById('selActScore').value;
-            const cls = document.getElementById('selClassScore').value;
-            const workTopic = document.getElementById('selWorkScore').value;
-
+            const act = document.getElementById('selActScore').value; const cls = document.getElementById('selClassScore').value; const workTopic = document.getElementById('selWorkScore').value;
             const stds = DB.students.filter(s=>String(s.class||'').trim() === String(cls||'').trim()); 
             if(!DB.scores[act]) DB.scores[act]={};
             
             stds.forEach(s => { 
                 if(!DB.scores[act][s.id]) DB.scores[act][s.id] = {c:'', e:''};
-                
-                if(workTopic) {
-                    const wInp = document.getElementById(`sc_w_${s.id}`);
-                    if(wInp) DB.scores[act][s.id][`w_${workTopic}`] = wInp.value;
-                } else {
-                    const c = document.getElementById(`sc_c_${s.id}`);
-                    const e = document.getElementById(`sc_e_${s.id}`);
-                    if(c) DB.scores[act][s.id].c = c.value;
-                    if(e) DB.scores[act][s.id].e = e.value;
-                }
+                if(workTopic) { const wInp = document.getElementById(`sc_w_${s.id}`); if(wInp) DB.scores[act][s.id][`w_${workTopic}`] = wInp.value; } 
+                else { const c = document.getElementById(`sc_c_${s.id}`); const e = document.getElementById(`sc_e_${s.id}`); if(c) DB.scores[act][s.id].c = c.value; if(e) DB.scores[act][s.id].e = e.value; }
             });
-            
-            save('scores', DB.scores); 
-            Swal.fire({toast:true, position:'top', icon:'success', title:'บันทึกคะแนนเรียบร้อย', timer:1500, showConfirmButton:false});
+            save('scores', DB.scores); Swal.fire({toast:true, position:'top', icon:'success', title:'บันทึกคะแนนเรียบร้อย', timer:1500, showConfirmButton:false});
         }
 
         // --- Grades ---
@@ -1598,9 +1481,7 @@
         }
         
         function renderQRCards(stds) {
-            const cont = document.getElementById('cardContainer'); 
-            cont.innerHTML = '';
-            
+            const cont = document.getElementById('cardContainer'); cont.innerHTML = '';
             const headerText = document.getElementById('qrHeaderText').value.trim();
             const headerColor = document.getElementById('qrHeaderColor').value;
             
@@ -1616,15 +1497,18 @@
                 <div class="card" style="border-color: ${headerColor};">
                     ${headerHtml}
                     <div class="card-body">
-                        <img src="${appConfig.logo}" class="school-logo" onerror="this.style.display='none'">
-                        <div class="school-name" style="color: ${headerColor};">${appConfig.school1}</div>
-                        
-                        <div id="${id}" class="qr-code"></div>
-                        
-                        <div class="student-info">รหัส: ${s.id}</div>
-                        <div class="student-info" style="margin-bottom: 2px;">ชั้น: ${s.class||'-'}</div>
-                        
-                        <div class="student-name">${s.name}</div>
+                        <div class="card-left">
+                            <div class="school-header">
+                                <img src="${appConfig.logo}" class="school-logo" onerror="this.style.display='none'">
+                                <div class="school-name" style="color: ${headerColor};">${appConfig.school1}</div>
+                            </div>
+                            <div class="student-info">รหัส: ${s.id}</div>
+                            <div class="student-info">ชั้น: ${s.class||'-'}</div>
+                            <div class="student-name">${s.name}</div>
+                        </div>
+                        <div class="card-right">
+                            <div id="${id}" class="qr-code"></div>
+                        </div>
                     </div>
                 </div>`;
             });
@@ -1633,6 +1517,10 @@
                 document.getElementById('qr-'+i).innerHTML = "";
                 new QRCode(document.getElementById('qr-'+i), { text: s.id.toString(), width: 100, height: 100, correctLevel: QRCode.CorrectLevel.M });
             }); }, 300);
+        }
+
+        function printQRCards() {
+            document.body.classList.add('printing-qr-maker'); window.print(); document.body.classList.remove('printing-qr-maker');
         }
 
         window.onload = () => { applyConfig(); fetchAll(); };
