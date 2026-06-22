@@ -1478,9 +1478,11 @@
 
         // --- QR Maker ---
         function prepQRMakerPage() {
-            document.getElementById('selClassQRMaker').innerHTML = '<option value="">-- กรุณาเลือกห้อง --</option><option value="ALL">-- ดึงรายชื่อทั้งหมด --</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
-            const cp = document.getElementById('qrHeaderColor');
-            if (cp) cp.value = appConfig.theme;
+            try {
+                document.getElementById('selClassQRMaker').innerHTML = '<option value="">-- กรุณาเลือกห้อง --</option><option value="ALL">-- ดึงรายชื่อทั้งหมด --</option>' + (DB.classes||[]).map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
+                const cp = document.getElementById('qrHeaderColor');
+                if (cp) cp.value = appConfig.theme;
+            } catch(e) { console.error(e); }
         }
         
         function generateQRFromDB() {
