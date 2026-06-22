@@ -60,167 +60,60 @@
         .table-custom td { padding: 10px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; font-size: 0.85rem;}
 
         /* ========================================================
-           CSS สำหรับบัตร QR ขนาดบัตรประชาชน (CR80: 86mm x 54mm แนวนอน) 
+           CSS สำหรับบัตร QR ขนาดบัตรประชาชน (CR80: 54mm x 86mm แนวตั้ง) 
            ======================================================== */
-        .card-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 4mm; }
+        .card-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 5mm; }
         
         .qr-maker-container .card { 
-            width: 86mm !important; 
-            height: 54mm !important; 
+            width: 54mm !important; 
+            height: 86mm !important; 
             border: 1px solid #cbd5e1; 
-            border-radius: 3.3mm; 
+            border-radius: 6px; 
             display: flex; 
-            flex-direction: row; 
+            flex-direction: column; 
             align-items: center; 
-            justify-content: space-between;
             background-color: #fff; 
             box-sizing: border-box !important; 
             position: relative; 
             overflow: hidden; 
+            padding: 0 !important;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
-            padding: 4mm !important;
         }
+
+        .qr-maker-container .card-header { width: 100%; padding: 4px 0; text-align: center; color: white; font-size: 9pt; font-weight: bold; letter-spacing: 0.5px; }
+        .qr-maker-container .card-body { display: flex; flex-direction: column; align-items: center; padding: 5px; height: 100%; width: 100%; }
+        .qr-maker-container .school-logo { width: 40px; height: auto; max-height: 40px; object-fit: contain; margin-bottom: 3px; margin-top: 2px; z-index: 10; }
+        .qr-maker-container .school-name { font-size: 11px; font-weight: bold; line-height: 1.1; z-index: 10; color: #1e293b; margin-bottom: 5px; text-align: center; }
         
-        .qr-maker-container .card-left-bar { 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 4mm; 
-            height: 100%; 
-        }
-
-        .qr-maker-container .card-content-left {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-            width: 65%;
-            padding-left: 5mm; /* เว้นระยะจากแถบสีซ้าย */
-            text-align: left;
-        }
-
-        .qr-maker-container .school-header {
-            display: flex;
-            align-items: center;
-            gap: 2mm;
-            margin-bottom: 2mm;
-        }
+        /* ล็อกขนาด QR Code */
+        .qr-maker-container .qr-code { margin: 2px 0 5px 0 !important; background: white; z-index: 10; display: flex !important; justify-content: center; align-items: center; }
+        .qr-maker-container .qr-code img, .qr-maker-container .qr-code canvas { width: 90px !important; height: 90px !important; object-fit: contain !important; aspect-ratio: 1/1 !important; display: block; }
         
-        .qr-maker-container .school-logo { 
-            width: 10mm; 
-            height: 10mm; 
-            object-fit: contain; 
-            z-index: 10;
-        }
-
-        .qr-maker-container .school-name-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .qr-maker-container .school-name { 
-            font-size: 8pt; 
-            font-weight: bold; 
-            line-height: 1.1; 
-            z-index: 10; 
-        }
-
-        .qr-maker-container .school-sub {
-            font-size: 6pt;
-            color: #64748b;
-            line-height: 1.1;
-        }
-        
-        .qr-maker-container .student-name { 
-            font-size: 11pt; 
-            font-weight: bold; 
-            margin-top: 1mm; 
-            z-index: 10; 
-            line-height: 1.1;
-            border-bottom: 1px dashed #cbd5e1;
-            padding-bottom: 1mm;
-            margin-bottom: 1mm;
-            width: 100%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .qr-maker-container .student-info { 
-            font-size: 8pt; 
-            color: #333; 
-            line-height: 1.3; 
-            font-weight: 600; 
-            z-index: 10;
-        }
-
-        .qr-maker-container .card-content-right {
-            width: 35%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        /* ล็อกขนาด QR Code ป้องกันการยืดหดตอน Print */
-        .qr-maker-container .qr-code { 
-            width: 25mm !important; 
-            height: 25mm !important; 
-            background: white; 
-            padding: 1mm; 
-            border-radius: 2mm; 
-            z-index: 10; 
-            display: flex !important; 
-            justify-content: center;
-            align-items: center;
-            border: 1px solid #e2e8f0;
-        }
-        .qr-maker-container .qr-code img, 
-        .qr-maker-container .qr-code canvas { 
-            width: 100% !important; 
-            height: 100% !important; 
-            object-fit: contain !important; 
-            aspect-ratio: 1/1 !important; /* บังคับสี่เหลี่ยมจัตุรัส */
-            display: block;
-        }
+        .qr-maker-container .student-info { font-size: 11px; color: #475569; line-height: 1.2; z-index: 10; }
+        .qr-maker-container .student-name { font-size: 14px; font-weight: bold; margin-top: auto; margin-bottom: 2px; padding-top: 4px; border-top: 1px dashed #cbd5e1; width: 90%; z-index: 10; line-height: 1.1; color: #0f172a; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* Print Style */
         @media print {
             @page { size: A4 portrait; margin: 10mm; }
-            
-            body { background: white; display: block; overflow: visible; height: auto; padding: 0;}
+            body, html { background: white !important; display: block !important; height: auto !important; width: auto !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; }
             aside, header, nav, .no-print, #mobileMenuOverlay { display: none !important; }
-            main { margin: 0 !important; padding: 0 !important; overflow: visible !important; height: auto !important;}
+            main { display: block !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; height: auto !important; width: 100% !important; max-width: none !important; }
             .page-content { display: none !important; }
-            
-            body.printing-report #page-report, body.printing-report #repResult, body.printing-report #repResult * { display: block !important; visibility: visible; opacity: 1;}
-            body.printing-report #repResult { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; }
+
+            /* --- การพิมพ์ ปพ.5 --- */
+            body.printing-report #page-report { display: block !important; }
+            body.printing-report #repResult { display: block !important; position: relative !important; width: 100% !important; box-shadow: none !important; border: none !important; }
             body.printing-report table { width: 100% !important; border-collapse: collapse !important; font-size: 10pt !important; }
             body.printing-report th, body.printing-report td { border: 1px solid #cbd5e1 !important; padding: 4px !important; color: black !important; }
-            
-            /* แสดงเฉพาะหน้า QrMaker ตอน Print */
-            body.printing-qr-maker #page-qrmaker, 
-            body.printing-qr-maker #preview-container, 
-            body.printing-qr-maker #preview-container * { display: block !important; visibility: visible; opacity: 1;}
-            
-            body.printing-qr-maker #preview-container { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; background: white; }
-            body.printing-qr-maker #preview-container > div { max-width: 100% !important; padding: 0 !important; box-shadow: none !important; background: transparent; }
-            
-            /* จัดเรียง 2 คอลัมน์ x 5 แถว สำหรับบัตรแนวนอนบน A4 (10 บัตร/หน้า) */
-            body.printing-qr-maker .card-grid { 
-                display: grid !important; 
-                grid-template-columns: repeat(2, 86mm) !important; 
-                gap: 2mm 6mm !important; 
-                justify-content: center !important; 
-                align-content: flex-start !important;
-            }
-            body.printing-qr-maker .qr-maker-container .card { 
-                width: 86mm !important; 
-                height: 54mm !important; 
-                box-shadow: none !important; 
-                border: 1px dashed #94a3b8 !important; /* เป็นเส้นประ เพื่อให้ใช้กรรไกรหรือคัตเตอร์ตัดง่ายขึ้น */
-                page-break-inside: avoid !important; /* ป้องกันบัตรขาดครึ่งหน้า */
-            }
+
+            /* --- การพิมพ์ บัตร QR Code --- */
+            body.printing-qr-maker #page-qrmaker { display: block !important; margin: 0 !important; padding: 0 !important; }
+            body.printing-qr-maker #preview-container { display: block !important; position: relative !important; width: 100% !important; margin: 0 !important; padding: 0 !important; background: transparent !important; overflow: visible !important; }
+            body.printing-qr-maker #preview-container > div { max-width: none !important; width: 100% !important; min-height: auto !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; background: transparent !important; }
+            body.printing-qr-maker .card-grid { display: grid !important; grid-template-columns: repeat(3, 54mm) !important; gap: 5mm !important; justify-content: center !important; align-content: flex-start !important; margin: 0 auto !important; width: 100% !important; }
+            body.printing-qr-maker .qr-maker-container .card { width: 54mm !important; height: 86mm !important; box-shadow: none !important; border-style: solid !important; border-width: 1px !important; page-break-inside: avoid !important; margin: 0 !important; }
+            body.printing-qr-maker .qr-maker-container .qr-code { display: flex !important; justify-content: center !important; align-items: center !important; width: 90px !important; height: 90px !important; margin: 5px auto !important; padding: 0 !important; border: none !important; }
+            body.printing-qr-maker .qr-maker-container .qr-code img, body.printing-qr-maker .qr-maker-container .qr-code canvas { width: 90px !important; height: 90px !important; max-width: 90px !important; max-height: 90px !important; object-fit: contain !important; }
         }
     </style>
 </head>
@@ -229,7 +122,7 @@
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="fixed inset-0 bg-white/90 z-[9999] hidden flex-col justify-center items-center">
         <i class="fas fa-circle-notch fa-spin fa-3x text-secondary mb-4"></i>
-        <p class="font-bold text-slate-600 tracking-wide">กำลังประมวลผลฐานข้อมูล...</p>
+        <p class="font-bold text-slate-600 tracking-wide">กำลังจัดการข้อมูล...</p>
     </div>
 
     <!-- ==========================================
@@ -283,7 +176,6 @@
             <!-- --- PAGE: DASHBOARD (สแกนเวลาเรียน & ส่งงาน) --- -->
             <div id="page-dashboard" class="page-content active">
                 <div class="glass-card mb-6 overflow-hidden relative border-t-4 border-t-secondary transition-colors" id="dashboardCardContainer">
-                    <!-- Tabs หัวข้อโหมดสแกน -->
                     <div class="flex justify-center border-b border-slate-200 mb-6">
                         <button id="tabAtt" onclick="switchScanMode('attendance')" class="px-6 py-3 font-bold text-sm text-secondary border-b-2 border-secondary transition-all w-1/2 md:w-auto">สแกนเข้าเรียน</button>
                         <button id="tabWork" onclick="switchScanMode('submitwork')" class="px-6 py-3 font-bold text-sm text-slate-400 border-b-2 border-transparent hover:text-green-500 transition-all w-1/2 md:w-auto">สแกนส่งงาน</button>
@@ -520,7 +412,7 @@
                 <div id="classesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
             </div>
 
-            <!-- --- PAGE: QR MAKER (แนวนอน รูปแบบบัตรประชาชน) --- -->
+            <!-- --- PAGE: QR MAKER --- -->
             <div id="page-qrmaker" class="page-content qr-maker-container">
                 <div class="flex justify-between items-center mb-6 no-print">
                     <h2 class="text-xl md:text-2xl font-bold text-primary flex items-center gap-2">
@@ -538,7 +430,7 @@
                             <input type="text" id="qrHeaderText" value="บัตรประจำตัวนักเรียน" placeholder="เช่น บัตรประจำตัวนักเรียน" class="w-full border-2 border-slate-200 rounded-xl p-3 text-sm outline-none focus:border-blue-500 transition-colors">
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-slate-600 mb-1"><i class="fas fa-palette text-slate-400 mr-1"></i> สีแถบบัตร</label>
+                            <label class="block text-sm font-bold text-slate-600 mb-1"><i class="fas fa-palette text-slate-400 mr-1"></i> สีหัวบัตร</label>
                             <div class="w-full border-2 border-slate-200 rounded-xl p-1 bg-white flex items-center focus-within:border-blue-500 transition-colors h-12">
                                 <input type="color" id="qrHeaderColor" class="w-full h-full cursor-pointer rounded-lg border-none outline-none bg-transparent">
                             </div>
@@ -548,9 +440,15 @@
                             <select id="selClassQRMaker" class="w-full border-2 border-slate-200 rounded-xl p-3 text-sm bg-white outline-none focus:border-blue-500 transition-colors cursor-pointer appearance-none">
                             </select>
                         </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-600 mb-1"><i class="fas fa-qrcode text-slate-400 mr-1"></i> รูปแบบรหัส</label>
+                            <select id="qrCodeType" class="w-full border-2 border-slate-200 rounded-xl p-3 text-sm bg-white outline-none focus:border-blue-500 transition-colors cursor-pointer appearance-none">
+                                <option value="qr">สี่เหลี่ยม (QR Code)</option>
+                            </select>
+                        </div>
 
                         <button onclick="generateQRFromDB()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl text-sm font-bold shadow-md transition-colors mt-4">
-                            สร้างตัวอย่างบัตร (แนวนอน)
+                            สร้างตัวอย่างบัตร
                         </button>
                     </div>
                     
@@ -669,10 +567,15 @@
          ========================================== -->
     <script>
         // 🌟 ใส่ URL และ KEY จาก Supabase ของคุณครูตรงนี้ 🌟
-        const SUPABASE_URL = 'https://apwaoxlzeheqmaiecqwz.supabase.co'; 
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwd2FveGx6ZWhlcW1haWVjcXd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwMzkyMTIsImV4cCI6MjA5NzYxNTIxMn0.4yv3JfjS2WCPCEf-v4xqKFBEONWT8QxjMzv1uywHJxY';
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL_HERE'; 
+        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE';
         
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        let supabaseClient;
+        if(typeof window.supabase !== 'undefined') {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        } else {
+            console.error("Supabase CDN not loaded.");
+        }
 
         let DB = { students:[], classes:[], activities:[], attendance:{}, scores:{}, works:{} };
         let charts = { bar: null, pie: null };
@@ -684,14 +587,19 @@
         let currentScanMode = 'attendance';
 
         // --- Config ---
-        let appConfig = JSON.parse(localStorage.getItem('myAppCfgV2')) || { sysName: 'ระบบจัดการเรียนการสอน', school1: 'โรงเรียนบ้านซับก้านเหลือง', school2: 'สพป.นครราชสีมา เขต 3', theme: '#0ea5e9', logo: 'https://img2.pic.in.th/pic/-161baf06cd7f44fd8.png' };
+        let appConfig = JSON.parse(localStorage.getItem('myAppCfgV2')) || 
+                        JSON.parse(localStorage.getItem('myAppCfg')) || 
+                        JSON.parse(localStorage.getItem('appConfig')) || 
+                        { sysName: 'ระบบจัดการเรียนการสอน', school1: 'โรงเรียนบ้านซับก้านเหลือง', school2: 'สพป.นครราชสีมา เขต 3', theme: '#0ea5e9', logo: 'https://img2.pic.in.th/pic/-161baf06cd7f44fd8.png' };
         
         function applyConfig() {
             document.querySelectorAll('#appTitleDesktop, #appTitleMobile').forEach(e=>e.innerText=appConfig.sysName);
             document.getElementById('appSchoolDesktop').innerText=appConfig.school1;
             document.querySelectorAll('#appLogoDesktop, #appLogoMobile, #logoPreview').forEach(e=>{e.src=appConfig.logo; e.style.display='block';});
             document.getElementById('cfgSysName').value=appConfig.sysName; document.getElementById('cfgSchool1').value=appConfig.school1; document.getElementById('cfgSchool2').value=appConfig.school2; document.getElementById('cfgTheme').value=appConfig.theme; document.getElementById('cfgLogo').value=appConfig.logo;
-            const colorPicker = document.getElementById('qrHeaderColor'); if(colorPicker) colorPicker.value = appConfig.theme;
+            
+            const colorPicker = document.getElementById('qrHeaderColor');
+            if(colorPicker) colorPicker.value = appConfig.theme;
         }
         function saveConfig() {
             appConfig.sysName=document.getElementById('cfgSysName').value; appConfig.school1=document.getElementById('cfgSchool1').value; appConfig.school2=document.getElementById('cfgSchool2').value; appConfig.theme=document.getElementById('cfgTheme').value; appConfig.logo=document.getElementById('cfgLogo').value; localStorage.setItem('myAppCfgV2', JSON.stringify(appConfig)); applyConfig(); Swal.fire({toast:true, position:'top', icon:'success', title:'บันทึกสำเร็จ', timer:1500, showConfirmButton:false});
@@ -708,40 +616,49 @@
             
             if(tabId === 'dashboard') { prepDashboardPage(); updateDashboard(); }
             if(tabId === 'manualcheck') prepManualCheckPage();
-            if(tabId === 'summary') prepSummaryPage();
+            if(tabId === 'report') prepSummaryPage(); // 🌟 แก้ไข: ให้หน้า Report เรียกใช้งานฟังก์ชันโหลดตาราง
             if(tabId === 'scores') prepScorePage();
             if(tabId === 'grades') prepGradePage();
             if(tabId === 'qrmaker') prepQRMakerPage();
         }
 
-        // --- Data Layer (เชื่อมกับ Supabase) ---
+        // --- Data Layer (เชื่อมกับ Supabase แบบทนทานพิเศษ) ---
         const showLoad = (b) => document.getElementById('loadingOverlay').style.display = b ? 'flex' : 'none';
         
         async function fetchAll() {
             showLoad(true);
             try {
-                const [resStudents, resClasses, resActivities, resAtt, resScores, resWorks] = await Promise.all([
-                    supabaseClient.from('students').select('*'),
-                    supabaseClient.from('classes').select('*'),
-                    supabaseClient.from('activities').select('*'),
-                    supabaseClient.from('attendance').select('*'),
-                    supabaseClient.from('scores').select('*'),
-                    supabaseClient.from('works').select('*')
-                ]);
+                if(!supabaseClient) {
+                    throw new Error("ระบบไม่สามารถเชื่อมต่อ Supabase CDN ได้ กรุณาตรวจสอบอินเทอร์เน็ต");
+                }
 
-                if(resStudents.error) throw resStudents.error;
-                if(resClasses.error) throw resClasses.error;
-                if(resActivities.error) throw resActivities.error;
-                if(resWorks.error) throw resWorks.error;
+                // 🌟 ดึงข้อมูลแบบแยกตาราง ป้องกันกรณีตารางใดตารางหนึ่งหาย แล้วพังทั้งแอป 🌟
+                const getTableData = async (tableName) => {
+                    try {
+                        const { data, error } = await supabaseClient.from(tableName).select('*');
+                        if (error) console.warn(`ตาราง ${tableName} อาจจะยังไม่ถูกสร้าง: ${error.message}`);
+                        return data || [];
+                    } catch (err) {
+                        return [];
+                    }
+                };
+
+                const rawStudents = await getTableData('students');
+                const rawClasses = await getTableData('classes');
+                const rawActivities = await getTableData('activities');
+                const rawAtt = await getTableData('attendance');
+                const rawScores = await getTableData('scores');
+                const rawWorks = await getTableData('works');
 
                 const normalize = (arr, type) => {
                     return (arr||[]).map((obj, idx) => {
-                        let newObj = { ...obj }; let values = Object.values(obj);
+                        let newObj = { ...obj };
+                        let values = Object.values(obj);
                         for(let k in obj) {
                             let key = String(k).toLowerCase().trim();
                             if (type === 'students') {
-                                if(['id', 'รหัส', 'รหัสนักเรียน', 'เลขประจำตัว'].includes(key)) newObj.id = String(obj[k]||'').trim();
-                                if(['name', 'ชื่อ', 'ชื่อ-สกุล', 'ชื่อ-นามสกุล', 'ชื่อนักเรียน'].includes(key)) newObj.name = String(obj[k]||'').trim();
+                                if(['id', 'รหัส', 'รหัสนักเรียน', 'เลขประจำตัว', 'เลขที่'].includes(key)) newObj.id = String(obj[k]||'').trim();
+                                if(['name', 'ชื่อ', 'ชื่อ-สกุล', 'ชื่อ-นามสกุล', 'ชื่อนักเรียน', 'สกุล', 'ชื่อสกุล'].includes(key)) newObj.name = String(obj[k]||'').trim();
                                 if(['class', 'ชั้น', 'ชั้นเรียน', 'ห้อง', 'ห้องเรียน', 'ระดับชั้น'].includes(key)) newObj.class = String(obj[k]||'').trim();
                             }
                             if (type === 'classes') {
@@ -767,43 +684,58 @@
                     }).filter(item => (item.id || item.name) && item.id !== "undefined"); 
                 };
 
-                DB.students = normalize(resStudents.data, 'students'); 
-                DB.classes = normalize(resClasses.data, 'classes'); 
-                DB.activities = normalize(resActivities.data, 'activities'); 
+                DB.students = normalize(rawStudents, 'students'); 
+                DB.classes = normalize(rawClasses, 'classes'); 
+                DB.activities = normalize(rawActivities, 'activities'); 
                 
-                DB.attendance = {}; (resAtt.data || []).forEach(r => DB.attendance[r.key] = r.data);
-                DB.scores = {}; (resScores.data || []).forEach(r => DB.scores[r.key] = r.data);
-                DB.works = {}; (resWorks.data || []).forEach(r => DB.works[r.key] = r.data);
+                DB.attendance = {}; (rawAtt || []).forEach(r => DB.attendance[r.key] = r.data);
+                DB.scores = {}; (rawScores || []).forEach(r => DB.scores[r.key] = r.data);
+                DB.works = {}; (rawWorks || []).forEach(r => DB.works[r.key] = r.data);
 
                 renderAll(); navigate('dashboard');
             } catch(e) { 
-                Swal.fire('Error','โหลดข้อมูลล้มเหลว: '+e.message,'error'); 
-                renderAll(); navigate('dashboard');
-            } finally { showLoad(false); }
+                console.error(e);
+                Swal.fire('Error','เกิดปัญหาในการโหลดข้อมูล: '+e.message,'error'); 
+            } finally { 
+                showLoad(false); 
+            }
         }
 
         async function save(type, data) {
             showLoad(true);
             try {
+                if(!supabaseClient) throw new Error("Supabase ไม่ได้เชื่อมต่อ");
+
                 if (['attendance', 'scores', 'works'].includes(type)) {
                     const updates = Object.keys(data).map(k => ({ key: k, data: data[k] }));
-                    if (updates.length > 0) { const { error } = await supabaseClient.from(type).upsert(updates); if (error) throw error; }
+                    if (updates.length > 0) {
+                        const { error } = await supabaseClient.from(type).upsert(updates);
+                        if (error) throw error;
+                    }
                     DB[type] = {...DB[type], ...data};
                 } else {
-                    const existingIds = (DB[type] || []).map(item => String(item.id));
-                    const incomingIds = (data || []).map(item => String(item.id));
-                    const idsToDelete = existingIds.filter(id => !incomingIds.includes(id));
-
-                    if (idsToDelete.length > 0) { const { error: delErr } = await supabaseClient.from(type).delete().in('id', idsToDelete); if (delErr) throw delErr; }
-                    if (data && data.length > 0) { const { error: upsertErr } = await supabaseClient.from(type).upsert(data); if (upsertErr) throw upsertErr; }
+                    // ระบบลบแล้วอัปเดตใหม่ ป้องกัน Error RLS หากยังไม่ได้เซ็ตอัปตารางให้สมบูรณ์
+                    try {
+                        await supabaseClient.from(type).delete().neq('id', 'dummy_value');
+                    } catch(delErr) {
+                        console.warn("ไม่สามารถลบข้อมูลเก่าได้ อาจเป็นเพราะ RLS หรือตารางว่าง", delErr);
+                    }
+                    
+                    if (data && data.length > 0) {
+                        const { error } = await supabaseClient.from(type).upsert(data); 
+                        if (error) throw error;
+                    }
                     DB[type] = data;
                 }
                 renderAll();
             } catch(e) { 
+                console.error(e);
                 let errMsg = e.message;
                 if(errMsg === 'Failed to fetch') errMsg = 'การเชื่อมต่อถูกบล็อก! (เช็ค URL/Key ของ Supabase หรือตารางในฐานข้อมูล)';
                 Swal.fire('Error','บันทึกข้อมูลล้มเหลว: ' + errMsg,'error'); 
-            } finally { showLoad(false); }
+            } finally { 
+                showLoad(false); 
+            }
         }
 
         function renderAll() { prepDashboardPage(); updateDashboard(); renderActivities(); renderClassesGrid(); renderStudents(); prepQRMakerPage(); }
@@ -910,7 +842,7 @@
                 boxWork.classList.remove('hidden');
                 container.className = "glass-card mb-6 overflow-hidden relative border-t-4 border-t-green-500 transition-colors";
                 
-                populateDashboardWorkTopics(); // อัปเดตชิ้นงานตอนสลับแท็บ
+                populateDashboardWorkTopics();
                 
                 btnScan.className = "w-full bg-green-500 hover:bg-slate-800 text-white py-4 rounded-2xl shadow-lg font-bold flex justify-center items-center gap-3 transition-transform active:scale-[0.98]";
                 btnSubmit.className = "bg-green-500 hover:bg-green-600 text-white w-16 rounded-2xl flex justify-center items-center shadow-md active:scale-95 transition-transform";
@@ -1210,7 +1142,7 @@
                 if(r.isConfirmed){ 
                     showLoad(true);
                     try {
-                        await supabaseClient.from('works').delete().eq('key', key);
+                        if(supabaseClient) await supabaseClient.from('works').delete().eq('key', key);
                         delete DB.works[key];
                         renderWorkTopics();
                         if (typeof populateDashboardWorkTopics === 'function') populateDashboardWorkTopics();
@@ -1382,30 +1314,27 @@
             let p={}; p[key]=DB.attendance[key]; save('attendance', p); Swal.fire({toast:true, position:'top', icon:'success', title:'บันทึกสำเร็จ', timer:1500, showConfirmButton:false});
         }
 
-        // --- Summary Report (รวมรายงานรายสัปดาห์ / เดือน) ---
+        // --- Summary Report ---
         function prepSummaryPage() {
             document.getElementById('selActRep').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
             document.getElementById('selClassRep').innerHTML = '<option value="">- เลือกชั้นเรียน -</option>' + DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
             
-            // Set default dates
             const now = new Date();
-            const currDay = now.getDay(); // 0 is Sunday, 1 is Monday...
+            const currDay = now.getDay(); 
             const firstDayOfWeek = new Date(now);
-            firstDayOfWeek.setDate(now.getDate() - currDay + (currDay === 0 ? -6 : 1)); // Set to Monday
+            firstDayOfWeek.setDate(now.getDate() - currDay + (currDay === 0 ? -6 : 1)); 
             
             document.getElementById('inpRepStartWeek').value = firstDayOfWeek.toISOString().split('T')[0];
             document.getElementById('inpRepMonth').value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
             
             toggleRepInputs();
         }
-        
         function toggleRepInputs() {
             const t = document.getElementById('repType').value;
             document.getElementById('divRepWeekly').style.display = t==='weekly'?'block':'none';
             document.getElementById('divRepMonthly').style.display = t==='monthly'?'block':'none';
             document.getElementById('divRepCustom').style.display = t==='custom'?'flex':'none';
         }
-        
         function genReport() {
             const act=document.getElementById('selActRep').value, cls=document.getElementById('selClassRep').value; 
             if(!act||!cls) return Swal.fire('เตือน','กรุณาเลือกวิชาและชั้นเรียน','warning');
@@ -1418,13 +1347,13 @@
                 if(!startStr) return Swal.fire('เตือน','กรุณาเลือกวันเริ่มต้นสัปดาห์','warning');
                 startDate = new Date(startStr);
                 endDate = new Date(startDate);
-                endDate.setDate(startDate.getDate() + 6); // Add 6 days for the week
+                endDate.setDate(startDate.getDate() + 6); 
             } else if (repType === 'monthly') {
                 const monthStr = document.getElementById('inpRepMonth').value;
                 if(!monthStr) return Swal.fire('เตือน','กรุณาเลือกเดือน','warning');
                 const [yyyy, mm] = monthStr.split('-');
                 startDate = new Date(yyyy, parseInt(mm)-1, 1);
-                endDate = new Date(yyyy, parseInt(mm), 0); // Last day of month
+                endDate = new Date(yyyy, parseInt(mm), 0); 
             } else {
                 const startStr = document.getElementById('repStart').value;
                 const endStr = document.getElementById('repEnd').value;
@@ -1433,12 +1362,9 @@
                 endDate = new Date(endStr);
             }
 
-            // Convert to string formats for easy comparison (YYYY-MM-DD)
-            // Function to generate date strings between start and end
             const getDatesInRange = (start, end) => {
                 let dates = [];
                 let currDate = new Date(start);
-                // Reset time to midnight for accurate comparison
                 currDate.setHours(0,0,0,0);
                 const lastDate = new Date(end);
                 lastDate.setHours(0,0,0,0);
@@ -1451,14 +1377,11 @@
             };
 
             const targetDates = getDatesInRange(startDate, endDate);
-            
             const stds = DB.students.filter(s=>String(s.class||'').trim() === String(cls||'').trim()).sort((a,b)=>String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
             
-            // กรองเฉพาะวันที่ที่มีการสอน (มีข้อมูลในฐานข้อมูล)
             let teachingDates = new Set(); 
             Object.keys(DB.attendance).forEach(k => { 
                 const p=k.split('|'); 
-                // p[0] = act, p[1] = date, p[2] = class
                 if(p[0]===act && p[2]===cls && targetDates.includes(p[1])) {
                     teachingDates.add(p[1]); 
                 }
@@ -1494,7 +1417,7 @@
             
             document.getElementById('repHead').innerHTML = head; document.getElementById('repBody').innerHTML = body;
             document.getElementById('statTotal').innerText = stds.length; 
-            document.getElementById('statP').innerText = tP + tL; // มา + สาย = เข้าเรียน
+            document.getElementById('statP').innerText = tP + tL; 
             document.getElementById('statA').innerText = tA;
             document.getElementById('statPct').innerText = Math.round(((tP+tL)/(((tP+tL)+tA)||1))*100) + '%';
             
@@ -1511,6 +1434,67 @@
         }
 
         // --- Scores & Works (ให้คะแนนชิ้นงาน) ---
+        function prepScorePage() {
+            document.getElementById('selActScore').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
+            document.getElementById('selClassScore').innerHTML = '<option value="">- เลือกชั้นเรียน -</option>' + DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+            document.getElementById('scoreTableArea').classList.add('hidden');
+        }
+        function renderScoreTable() {
+            const act=document.getElementById('selActScore').value, cls=document.getElementById('selClassScore').value; 
+            const workTopic = document.getElementById('selWorkScore').value;
+            
+            if(!act||!cls){ document.getElementById('scoreTableArea').classList.add('hidden'); return; }
+            document.getElementById('scoreTableArea').classList.remove('hidden');
+            
+            const stds = DB.students.filter(s=>String(s.class||'').trim() === String(cls||'').trim()).sort((a,b)=>String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
+            
+            if(!DB.scores[act]) DB.scores[act] = {};
+            
+            let workKey = '';
+            let workData = {};
+            if(workTopic) {
+                workKey = `${act}|${workTopic}|${cls}`;
+                workData = DB.works[workKey] || {};
+                
+                const badge = document.getElementById('scoreWorkBadge');
+                badge.innerText = `ชิ้นงาน: ${workTopic} (${Object.keys(workData).length}/${stds.length} ส่งแล้ว)`;
+                badge.classList.remove('hidden');
+            } else {
+                document.getElementById('scoreWorkBadge').classList.add('hidden');
+            }
+
+            document.getElementById('scoreList').innerHTML = stds.map(s => {
+                let sc = DB.scores[act][s.id] || {c:'',e:''};
+                
+                let workScoreVal = '';
+                if(workTopic && sc[`w_${workTopic}`] !== undefined) {
+                    workScoreVal = sc[`w_${workTopic}`];
+                }
+
+                let statusBadge = '';
+                if(workTopic) {
+                    const isSubmitted = workData[s.id];
+                    statusBadge = isSubmitted 
+                        ? `<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[9px] font-bold"><i class="fas fa-check mr-1"></i>ส่งแล้ว</span>` 
+                        : `<span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[9px] font-bold">ยังไม่ส่ง</span>`;
+                    
+                    return `
+                    <div class="glass-card !p-4 border-l-4 ${isSubmitted ? 'border-green-500' : 'border-slate-300'} flex items-center justify-between gap-4">
+                        <div class="flex-1 min-w-0">
+                            <div class="text-sm font-bold text-slate-700 truncate">${s.id} ${s.name}</div>
+                            <div class="mt-1">${statusBadge}</div>
+                        </div>
+                        <div class="relative w-24 flex-shrink-0">
+                            <span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนนเต็ม 10</span>
+                            <input type="number" id="sc_w_${s.id}" value="${workScoreVal}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-500 transition-colors bg-blue-50/30">
+                        </div>
+                    </div>`;
+                }
+
+                return `<div class="glass-card !p-4"><div class="text-sm font-bold text-slate-700 mb-3">${s.id} ${s.name}</div><div class="flex gap-3"><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-amber-500">คะแนนเก็บ (70)</span><input type="number" id="sc_c_${s.id}" value="${sc.c}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-amber-400"></div><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนนสอบ (30)</span><input type="number" id="sc_e_${s.id}" value="${sc.e}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-400"></div></div></div>`;
+            }).join('');
+        }
+        
         function populateScoreWorkTopics() {
             const act = document.getElementById('selActScore').value;
             const cls = document.getElementById('selClassScore').value;
@@ -1532,69 +1516,6 @@
             } else {
                 selWork.innerHTML = '<option value="">-- ไม่มีประวัติการส่งงานในระบบ --</option>';
             }
-        }
-
-        function renderScoreTable() {
-            const act = document.getElementById('selActScore').value;
-            const cls = document.getElementById('selClassScore').value; 
-            const workTopic = document.getElementById('selWorkScore').value;
-            
-            if(!act||!cls){ document.getElementById('scoreTableArea').classList.add('hidden'); return; }
-            document.getElementById('scoreTableArea').classList.remove('hidden');
-            
-            const stds = DB.students.filter(s=>String(s.class||'').trim() === String(cls||'').trim()).sort((a,b)=>String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
-            
-            // เตรียมข้อมูลคะแนนและประวัติส่งงาน
-            if(!DB.scores[act]) DB.scores[act] = {};
-            
-            let workKey = '';
-            let workData = {};
-            if(workTopic) {
-                workKey = `${act}|${workTopic}|${cls}`;
-                workData = DB.works[workKey] || {};
-                
-                // Show badge
-                const badge = document.getElementById('scoreWorkBadge');
-                badge.innerText = `ชิ้นงาน: ${workTopic} (${Object.keys(workData).length}/${stds.length} ส่งแล้ว)`;
-                badge.classList.remove('hidden');
-            } else {
-                document.getElementById('scoreWorkBadge').classList.add('hidden');
-            }
-
-            document.getElementById('scoreList').innerHTML = stds.map(s => {
-                let sc = DB.scores[act][s.id] || {c:'',e:''};
-                
-                // ถ้าระบุชิ้นงาน ให้ดึงคะแนนของชิ้นงานนั้นมา (ถ้าเคยให้ไว้ในโครงสร้างใหม่)
-                // เพื่อความเรียบง่ายและไม่กระทบโครงสร้างเดิม: เราจะเก็บคะแนนรายชิ้นงานไว้ใน DB.scores[act][s.id][`work_${workTopic}`]
-                let workScoreVal = '';
-                if(workTopic && sc[`w_${workTopic}`] !== undefined) {
-                    workScoreVal = sc[`w_${workTopic}`];
-                }
-
-                let statusBadge = '';
-                if(workTopic) {
-                    const isSubmitted = workData[s.id];
-                    statusBadge = isSubmitted 
-                        ? `<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[9px] font-bold"><i class="fas fa-check mr-1"></i>ส่งแล้ว</span>` 
-                        : `<span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[9px] font-bold">ยังไม่ส่ง</span>`;
-                    
-                    // Render UI สำหรับให้คะแนนชิ้นงานเดี่ยว
-                    return `
-                    <div class="glass-card !p-4 border-l-4 ${isSubmitted ? 'border-green-500' : 'border-slate-300'} flex items-center justify-between gap-4">
-                        <div class="flex-1 min-w-0">
-                            <div class="text-sm font-bold text-slate-700 truncate">${s.id} ${s.name}</div>
-                            <div class="mt-1">${statusBadge}</div>
-                        </div>
-                        <div class="relative w-24 flex-shrink-0">
-                            <span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนนเต็ม 10</span>
-                            <input type="number" id="sc_w_${s.id}" value="${workScoreVal}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-500 transition-colors bg-blue-50/30">
-                        </div>
-                    </div>`;
-                }
-
-                // Render UI สำหรับคะแนนรวม (แบบเดิม)
-                return `<div class="glass-card !p-4"><div class="text-sm font-bold text-slate-700 mb-3">${s.id} ${s.name}</div><div class="flex gap-3"><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-amber-500">คะแนนเก็บ (70)</span><input type="number" id="sc_c_${s.id}" value="${sc.c}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-amber-400"></div><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนนสอบ (30)</span><input type="number" id="sc_e_${s.id}" value="${sc.e}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-400"></div></div></div>`;
-            }).join('');
         }
 
         function saveScores() {
@@ -1634,12 +1555,7 @@
             document.getElementById('gradeTableArea').classList.remove('hidden');
             const stds = DB.students.filter(s=>String(s.class||'').trim() === String(cls||'').trim()).sort((a,b)=>String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
             document.getElementById('gradeList').innerHTML = stds.map(s => {
-                let sc = (DB.scores[act]||{})[s.id] || {c:0,e:0}; 
-                
-                // คำนวณคะแนนรวม โดยรวมคะแนนย่อยของใบงานเข้าไปในช่องเก็บ (ถ้ามี และตั้งค่าไว้) 
-                // *หมายเหตุ: ตรงนี้คำนวณแบบง่ายๆ คือเอาช่อง c + e
-                const tot = (parseFloat(sc.c)||0) + (parseFloat(sc.e)||0);
-                
+                let sc = (DB.scores[act]||{})[s.id] || {c:0,e:0}; const tot = (parseFloat(sc.c)||0) + (parseFloat(sc.e)||0);
                 let g = '0', c = 'bg-red-50 text-red-600 border-red-200';
                 if(tot>=80){g='4';c='bg-green-50 text-green-600 border-green-200';} else if(tot>=75){g='3.5';c='bg-emerald-50 text-emerald-600 border-emerald-200';} else if(tot>=70){g='3';c='bg-teal-50 text-teal-600 border-teal-200';} else if(tot>=65){g='2.5';c='bg-cyan-50 text-cyan-600 border-cyan-200';} else if(tot>=60){g='2';c='bg-blue-50 text-blue-600 border-blue-200';} else if(tot>=55){g='1.5';c='bg-indigo-50 text-indigo-600 border-indigo-200';} else if(tot>=50){g='1';c='bg-violet-50 text-violet-600 border-violet-200';}
                 return `<div class="glass-card !p-3 flex justify-between items-center"><div class="leading-tight"><div class="text-xs font-bold text-slate-700 mb-1">${s.id} ${s.name}</div><div class="text-[10px] text-slate-500 font-medium bg-slate-100 inline-block px-2 py-1 rounded">เก็บ: <b class="text-slate-700">${sc.c||0}</b> | สอบ: <b class="text-slate-700">${sc.e||0}</b> | รวม: <b class="text-primary">${tot}</b></div></div><div class="w-12 h-12 ${c} border flex flex-col items-center justify-center rounded-xl shadow-sm"><span class="text-[8px] uppercase font-bold opacity-60 leading-none">เกรด</span><span class="font-black text-xl leading-none">${g}</span></div></div>`;
@@ -1717,12 +1633,6 @@
                 document.getElementById('qr-'+i).innerHTML = "";
                 new QRCode(document.getElementById('qr-'+i), { text: s.id.toString(), width: 100, height: 100, correctLevel: QRCode.CorrectLevel.M });
             }); }, 300);
-        }
-
-        function printQRCards() {
-            document.body.classList.add('printing-qr-maker'); 
-            window.print(); 
-            document.body.classList.remove('printing-qr-maker');
         }
 
         window.onload = () => { applyConfig(); fetchAll(); };
