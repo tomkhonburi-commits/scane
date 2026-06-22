@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ระบบเช็คชื่อและส่งงาน Web App</title>
+    <title>ระบบเช็คชื่อและส่งงาน Web App (Supabase)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -19,9 +19,8 @@
     <!-- XLSX & QRCode.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-<!-- แทรกไว้ใต้ Chart.js หรือ QRCode.js ก็ได้ครับ -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- 🌟 นำเข้า Supabase Client 🌟 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
         tailwind.config = {
@@ -194,9 +193,9 @@
 <body class="h-screen w-screen overflow-hidden flex bg-background text-slate-800">
 
     <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="fixed inset-0 bg-white/90 z-[9999] hidden flex-col justify-center items-center">
+    <div id="loadingOverlay" class="fixed inset-0 bg-white/90 z-[9999] flex flex-col justify-center items-center">
         <i class="fas fa-circle-notch fa-spin fa-3x text-secondary mb-4"></i>
-        <p class="font-bold text-slate-600 tracking-wide">กำลังซิงค์ข้อมูล...</p>
+        <p class="font-bold text-slate-600 tracking-wide">กำลังเชื่อมต่อฐานข้อมูล Supabase...</p>
     </div>
 
     <!-- ==========================================
@@ -213,7 +212,7 @@
         
         <div class="flex-1 overflow-y-auto custom-scroll py-6">
             <div class="px-6 mb-2 text-[10px] font-bold text-slate-400 tracking-widest uppercase">เมนูหลัก</div>
-            <button onclick="navigate('dashboard')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item active" data-tab="dashboard"><i class="fas fa-home w-8 text-secondary"></i> สแกนเข้าเรียน</button>
+            <button onclick="navigate('dashboard')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item active" data-tab="dashboard"><i class="fas fa-home w-8 text-secondary"></i> สแกนเข้าเรียน / ส่งงาน</button>
             <button onclick="navigate('manualcheck')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="manualcheck"><i class="fas fa-tasks w-8 text-orange-500"></i> เช็คชื่อด้วยมือ</button>
             <button onclick="navigate('activities')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="activities"><i class="fas fa-book-open w-8 text-blue-500"></i> กิจกรรม / รายวิชา</button>
             <button onclick="navigate('classes')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="classes"><i class="fas fa-layer-group w-8 text-purple-500"></i> การจัดการชั้นเรียน</button>
@@ -627,19 +626,20 @@
          JAVASCRIPT LOGIC
          ========================================== -->
     <script>
-        // --- Core Variables ---
+        // 🌟 ใส่ URL และ KEY จาก Supabase ของคุณครูตรงนี้ 🌟
+        const SUPABASE_URL = 'https://apwaoxlzeheqmaiecqwz.supabase.co/rest/v1/'; 
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwd2FveGx6ZWhlcW1haWVjcXd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwMzkyMTIsImV4cCI6MjA5NzYxNTIxMn0.4yv3JfjS2WCPCEf-v4xqKFBEONWT8QxjMzv1uywHJxY';
         
-// --- Core Variables ---
-// ลบตัวแปร IS_GAS ทิ้ง แล้วใส่ URL และ KEY ของ Supabase แทน
-const SUPABASE_URL = 'https://apwaoxlzeheqmaiecqwz.supabase.co/rest/v1/';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwd2FveGx6ZWhlcW1haWVjcXd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwMzkyMTIsImV4cCI6MjA5NzYxNTIxMn0.4yv3JfjS2WCPCEf-v4xqKFBEONWT8QxjMzv1uywHJxY';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// สร้างตัวเชื่อมต่อ (Client)
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-let DB = { students:[], classes:[], activities:[], attendance:{}, scores:{}, works:{} };
-// ... (ตัวแปรอื่นๆ เหมือนเดิม)
-
+        let DB = { students:[], classes:[], activities:[], attendance:{}, scores:{}, works:{} };
+        let charts = { bar: null, pie: null };
+        let currentSess = []; 
+        let currentWorkSess = []; 
+        let checkKey = '';
+        let submitWorkKey = '';
+        let scanner;
+        let currentScanMode = 'attendance';
 
         // --- Config ---
         let appConfig = JSON.parse(localStorage.getItem('myAppCfgV2')) || 
@@ -656,6 +656,7 @@ let DB = { students:[], classes:[], activities:[], attendance:{}, scores:{}, wor
             const colorPicker = document.getElementById('qrHeaderColor');
             if(colorPicker) colorPicker.value = appConfig.theme;
         }
+        
         function saveConfig() {
             appConfig.sysName=document.getElementById('cfgSysName').value; appConfig.school1=document.getElementById('cfgSchool1').value; appConfig.school2=document.getElementById('cfgSchool2').value; appConfig.theme=document.getElementById('cfgTheme').value; appConfig.logo=document.getElementById('cfgLogo').value; localStorage.setItem('myAppCfgV2', JSON.stringify(appConfig)); applyConfig(); Swal.fire({toast:true, position:'top', icon:'success', title:'บันทึกสำเร็จ', timer:1500, showConfirmButton:false});
         }
@@ -677,92 +678,109 @@ let DB = { students:[], classes:[], activities:[], attendance:{}, scores:{}, wor
             if(tabId === 'qrmaker') prepQRMakerPage();
         }
 
-        // --- Data Layer ---
+        // --- Data Layer (เชื่อมกับ Supabase) ---
         const showLoad = (b) => document.getElementById('loadingOverlay').style.display = b ? 'flex' : 'none';
         
-       
+        async function fetchAll() {
+            showLoad(true);
+            try {
+                // ดึงข้อมูลทั้งหมดจากตารางใน Supabase พร้อมๆ กัน
+                const [resStudents, resClasses, resActivities, resAtt, resScores, resWorks] = await Promise.all([
+                    supabase.from('students').select('*'),
+                    supabase.from('classes').select('*'),
+                    supabase.from('activities').select('*'),
+                    supabase.from('attendance').select('*'),
+                    supabase.from('scores').select('*'),
+                    supabase.from('works').select('*')
+                ]);
 
-async function fetchAll() {
-    showLoad(true);
-    try {
-        // ดึงข้อมูลทั้งหมดจาก Supabase พร้อมๆ กัน
-        const [resStudents, resClasses, resActivities, resAtt, resScores, resWorks] = await Promise.all([
-            supabase.from('students').select('*'),
-            supabase.from('classes').select('*'),
-            supabase.from('activities').select('*'),
-            supabase.from('attendance').select('*'),
-            supabase.from('scores').select('*'),
-            supabase.from('works').select('*')
-        ]);
+                if(resStudents.error) throw resStudents.error;
 
-        DB.students = resStudents.data || [];
-        DB.classes = resClasses.data || [];
-        DB.activities = resActivities.data || [];
+                const normalize = (arr, type) => {
+                    return (arr||[]).map((obj, idx) => {
+                        let newObj = { ...obj };
+                        let values = Object.values(obj);
+                        for(let k in obj) {
+                            let key = String(k).toLowerCase().trim();
+                            if (type === 'students') {
+                                if(['id', 'รหัส', 'รหัสนักเรียน', 'เลขประจำตัว', 'เลขที่'].includes(key)) newObj.id = String(obj[k]||'').trim();
+                                if(['name', 'ชื่อ', 'ชื่อ-สกุล', 'ชื่อ-นามสกุล', 'ชื่อนักเรียน', 'สกุล', 'ชื่อสกุล'].includes(key)) newObj.name = String(obj[k]||'').trim();
+                                if(['class', 'ชั้น', 'ชั้นเรียน', 'ห้อง', 'ห้องเรียน', 'ระดับชั้น'].includes(key)) newObj.class = String(obj[k]||'').trim();
+                            }
+                            if (type === 'classes') {
+                                if(['id', 'รหัส'].includes(key)) newObj.id = String(obj[k]||'').trim();
+                                if(['name', 'ชื่อ', 'ชั้น', 'ชั้นเรียน', 'ห้อง'].includes(key)) newObj.name = String(obj[k]||'').trim();
+                            }
+                            if (type === 'activities') {
+                                if(['id', 'รหัส'].includes(key)) newObj.id = String(obj[k]||'').trim();
+                                if(['name', 'ชื่อ', 'วิชา', 'กิจกรรม', 'รายวิชา'].includes(key)) newObj.name = String(obj[k]||'').trim();
+                            }
+                        }
+                        if (type === 'students') {
+                            if (!newObj.id && values.length > 0) newObj.id = String(values[0] || '').trim();
+                            if (!newObj.name && values.length > 1) newObj.name = String(values[1] || '').trim();
+                            if (!newObj.class && values.length > 2) newObj.class = String(values[2] || '').trim();
+                        } else if (type === 'classes' || type === 'activities') {
+                            if (!newObj.id && values.length > 0) newObj.id = String(values[0] || '').trim();
+                            if (!newObj.name && values.length > 1) newObj.name = String(values[1] || '').trim();
+                        }
+                        if (!newObj.id && newObj.name) { newObj.id = type === 'students' ? 'STD-' + (idx + 1) : newObj.name; }
+                        if (!newObj.name && newObj.id) { newObj.name = newObj.id; }
+                        return newObj;
+                    }).filter(item => (item.id || item.name) && item.id !== "undefined"); 
+                };
 
-        // แปลงข้อมูลตาราง JSON ให้กลับมาเป็น Object แบบที่โค้ดเดิมใช้
-        DB.attendance = {};
-        if(resAtt.data) resAtt.data.forEach(item => DB.attendance[item.key] = item.data);
-        
-        DB.scores = {};
-        if(resScores.data) resScores.data.forEach(item => DB.scores[item.key] = item.data);
-        
-        DB.works = {};
-        if(resWorks.data) resWorks.data.forEach(item => DB.works[item.key] = item.data);
+                DB.students = normalize(resStudents.data, 'students'); 
+                DB.classes = normalize(resClasses.data, 'classes'); 
+                DB.activities = normalize(resActivities.data, 'activities'); 
+                
+                // แปลงข้อมูลการเช็คชื่อ/คะแนนที่อยู่ในรูป JSON ให้กลับมาเป็น Object แบบที่ Frontend ใช้
+                DB.attendance = {};
+                (resAtt.data || []).forEach(r => DB.attendance[r.key] = r.data);
+                
+                DB.scores = {};
+                (resScores.data || []).forEach(r => DB.scores[r.key] = r.data);
+                
+                DB.works = {};
+                (resWorks.data || []).forEach(r => DB.works[r.key] = r.data);
 
-        renderAll(); 
-        navigate('dashboard');
-    } catch(e) { 
-        console.error(e);
-        Swal.fire('Error','โหลดข้อมูลล้มเหลว','error'); 
-    } finally { 
-        showLoad(false); 
-    }
-}
-
-
-
-
-async function save(type, data) {
-    showLoad(true);
-    try {
-        if (type === 'attendance' || type === 'scores' || type === 'works') {
-            // โค้ดเดิมส่งมาเป็น Object เช่น {"key1": {ข้อมูล}, "key2": {ข้อมูล}}
-            // ต้องแปลงเป็น Array ก่อนส่งเข้า Supabase
-            const updates = Object.keys(data).map(k => ({
-                key: k,
-                data: data[k]
-            }));
-            const { error } = await supabase.from(type).upsert(updates);
-            if(error) throw error;
-            
-            DB[type] = {...DB[type], ...data};
-        } else {
-            // สำหรับ students, classes, activities ลบของเก่าและใส่ของใหม่เข้าไปเลย (เหมือน Google Sheets)
-            // เคลียร์ตารางเดิม
-            await supabase.from(type).delete().neq('id', 'dummy_value');
-            // ใส่ข้อมูลใหม่
-            if (data && data.length > 0) {
-                const { error } = await supabase.from(type).insert(data);
-                if(error) throw error;
+                renderAll(); navigate('dashboard');
+            } catch(e) { 
+                console.error(e);
+                Swal.fire('Error','โหลดข้อมูลล้มเหลว: '+e.message,'error'); 
+            } finally { 
+                showLoad(false); 
             }
-            DB[type] = data;
         }
-        
-        renderAll();
-    } catch(e) { 
-        console.error(e);
-        Swal.fire('Error','บันทึกข้อมูลล้มเหลว','error'); 
-    } finally { 
-        showLoad(false); 
-    }
-}
-        
 
-
-
-
-
-
+        async function save(type, data) {
+            showLoad(true);
+            try {
+                if (['attendance', 'scores', 'works'].includes(type)) {
+                    // แปลงรูปแบบ Object เป็น Array ให้ตรงกับโครงสร้างตาราง Supabase (key, data)
+                    const updates = Object.keys(data).map(k => ({ key: k, data: data[k] }));
+                    if (updates.length > 0) {
+                        const { error } = await supabase.from(type).upsert(updates);
+                        if (error) throw error;
+                    }
+                    DB[type] = {...DB[type], ...data};
+                } else {
+                    // สำหรับรายชื่อนักเรียน ชั้นเรียน รายวิชา: ล้างข้อมูลเก่าแล้วใส่ข้อมูลใหม่เพื่อให้ตรงกับหน้าเว็บ 100%
+                    await supabase.from(type).delete().neq('id', 'dummy_value'); // ลบข้อมูลทั้งหมด
+                    if (data && data.length > 0) {
+                        const { error } = await supabase.from(type).insert(data); // บันทึกชุดใหม่
+                        if (error) throw error;
+                    }
+                    DB[type] = data;
+                }
+                renderAll();
+            } catch(e) { 
+                console.error(e);
+                Swal.fire('Error','บันทึกข้อมูลล้มเหลว: '+e.message,'error'); 
+            } finally { 
+                showLoad(false); 
+            }
+        }
 
         function renderAll() { prepDashboardPage(); updateDashboard(); renderActivities(); renderClassesGrid(); renderStudents(); prepQRMakerPage(); }
 
@@ -961,7 +979,7 @@ async function save(type, data) {
                     
                     playSuccessBeep(); Toast.fire({ icon: 'success', title: `${std.name}`, text: 'บันทึกเข้าเรียนเรียบร้อย' });
                     if(inp)inp.value=''; currentSess.unshift({id:std.id, name:std.name, time:time}); updateMainLogTable(); updateDashboard();
-                    try{ if(IS_GAS) google.script.run.saveDataToSheet('attendance', payload); else save('attendance', payload); }catch(e){}
+                    save('attendance', payload);
                 
                 } else {
                     let ex = DB.works[submitWorkKey] || {}; 
@@ -975,7 +993,7 @@ async function save(type, data) {
                     
                     playSuccessBeep(); Toast.fire({ icon: 'success', title: `${std.name}`, text: 'บันทึกส่งงานเรียบร้อย' });
                     if(inp)inp.value=''; currentWorkSess.unshift({id:std.id, name:std.name, time:time}); updateMainLogTable();
-                    try{ if(IS_GAS) google.script.run.saveDataToSheet('works', payload); else save('works', payload); }catch(e){}
+                    save('works', payload);
                 }
             } else { 
                 playErrorBeep(); Toast.fire({ icon: 'error', title: `ไม่พบรหัสนักเรียน: ${id}`}); 
