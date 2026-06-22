@@ -37,12 +37,10 @@
         .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         
-        /* Layout Transitions */
         .page-content { display: none; opacity: 0; transition: opacity 0.3s ease; }
         .page-content.active { display: block; opacity: 1; animation: slideUp 0.3s ease-out forwards; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Navigation Styles */
         .nav-sidebar-item { transition: all 0.2s ease; border-left: 3px solid transparent; border-radius: 0 12px 12px 0; margin-right: 12px; }
         .nav-sidebar-item:hover { background-color: #f1f5f9; color: theme('colors.secondary'); }
         .nav-sidebar-item.active { background-color: #e0f2fe; color: theme('colors.secondary'); font-weight: 600; border-left-color: theme('colors.secondary'); }
@@ -52,51 +50,50 @@
         .nav-bottom-item.active i { transform: scale(1.15); color: theme('colors.secondary'); }
         .nav-bottom-item i { transition: transform 0.2s ease; margin-bottom: 4px; font-size: 1.25rem;}
 
-        /* Card Styles */
         .glass-card { background: #ffffff; border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; }
         
-        /* Table Styles */
         .table-custom th { color: #475569; font-weight: 600; padding: 12px 10px; border-bottom: 2px solid #e2e8f0; background: #f8fafc; font-size: 0.85rem;}
         .table-custom td { padding: 10px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; font-size: 0.85rem;}
 
-        /* ========================================================
-           CSS สำหรับบัตร QR ขนาดบัตรประชาชน (CR80: 86mm x 54mm แนวนอน) 
-           ======================================================== */
         .card-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 4mm; }
         
-        .qr-maker-container .card { 
-            width: 86mm !important; 
-            height: 54mm !important; 
-            border: 1px solid #cbd5e1; 
-            border-radius: 6px; 
-            display: flex; 
-            flex-direction: column; 
-            background-color: #fff; 
-            box-sizing: border-box !important; 
-            position: relative; 
-            overflow: hidden; 
+        .qr-maker-container .card {
+            width: 86mm !important;
+            height: 54mm !important;
+            border: 1px solid #cbd5e1;
+            border-radius: 4mm;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            box-sizing: border-box !important;
+            position: relative;
+            overflow: hidden;
             padding: 0 !important;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         }
 
-        .qr-maker-container .card-header { 
-            width: 100%; 
-            padding: 3px 0; 
-            text-align: center; 
-            color: white; 
-            font-size: 8pt; 
-            font-weight: bold; 
-            letter-spacing: 0.5px; 
+        .qr-maker-container .card-header {
+            width: 100%;
+            height: 8mm;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
         }
-        
-        .qr-maker-container .card-body { 
-            display: flex; 
-            flex-direction: row; 
-            align-items: center; 
+
+        .qr-maker-container .card-body {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
             justify-content: space-between;
-            padding: 4mm; 
-            height: 100%; 
-            width: 100%; 
+            padding: 4mm;
+            flex: 1;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .qr-maker-container .card-left {
@@ -104,7 +101,9 @@
             flex-direction: column;
             justify-content: center;
             align-items: flex-start;
-            width: 65%;
+            width: 60%;
+            height: 100%;
+            overflow: hidden;
         }
 
         .qr-maker-container .school-header {
@@ -112,43 +111,50 @@
             align-items: center;
             gap: 2mm;
             margin-bottom: 2mm;
-        }
-        
-        .qr-maker-container .school-logo { 
-            width: 12mm; 
-            height: 12mm; 
-            object-fit: contain; 
-            z-index: 10; 
+            width: 100%;
         }
 
-        .qr-maker-container .school-name { 
-            font-size: 8pt; 
-            font-weight: bold; 
-            line-height: 1.1; 
-            z-index: 10; 
+        .qr-maker-container .school-logo {
+            width: 10mm;
+            height: 10mm;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .qr-maker-container .school-name {
+            font-size: 10px;
+            font-weight: bold;
+            line-height: 1.1;
             color: #1e293b;
-        }
-        
-        .qr-maker-container .student-info { 
-            font-size: 8pt; 
-            color: #475569; 
-            line-height: 1.2; 
-            z-index: 10;
+            width: 100%;
+            /* นำการตัดคำแบบจุดๆ ออก อนุญาตให้ขึ้นบรรทัดใหม่ได้ 2 บรรทัด */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        .qr-maker-container .student-name { 
-            font-size: 11pt; 
-            font-weight: bold; 
-            margin-top: 1mm; 
-            padding-top: 1mm; 
-            border-top: 1px dashed #cbd5e1; 
-            width: 95%; 
-            z-index: 10; 
-            line-height: 1.1; 
-            color: #0f172a; 
-            white-space: nowrap; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
+        .qr-maker-container .student-info {
+            font-size: 10px;
+            color: #475569;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .qr-maker-container .student-name {
+            font-size: 13px;
+            font-weight: 800;
+            margin-top: 1mm;
+            padding-top: 1mm;
+            border-top: 1px dashed #cbd5e1;
+            width: 100%;
+            line-height: 1.2;
+            color: #0f172a;
+            /* นำการตัดคำแบบจุดๆ ออก อนุญาตให้ชื่อยาวๆ ขึ้นบรรทัดใหม่ได้ */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .qr-maker-container .card-right {
@@ -158,28 +164,25 @@
             align-items: center;
         }
 
-        .qr-maker-container .qr-code { 
-            width: 22mm !important; 
-            height: 22mm !important; 
-            background: white; 
-            padding: 1mm; 
-            border-radius: 2mm; 
-            z-index: 10; 
-            display: flex !important; 
-            justify-content: center; 
-            align-items: center; 
+        .qr-maker-container .qr-code {
+            width: 24mm !important;
+            height: 24mm !important;
+            background: white;
+            padding: 1mm;
+            border-radius: 2mm;
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
             border: 1px solid #e2e8f0;
         }
 
-        .qr-maker-container .qr-code img, 
-        .qr-maker-container .qr-code canvas { 
-            width: 100% !important; 
-            height: 100% !important; 
-            object-fit: contain !important; 
-            display: block; 
+        .qr-maker-container .qr-code img,
+        .qr-maker-container .qr-code canvas {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
         }
 
-        /* Print Style */
         @media print {
             @page { size: A4 portrait; margin: 10mm; }
             body, html { background: white !important; display: block !important; height: auto !important; width: auto !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; }
@@ -193,21 +196,34 @@
             body.printing-report table { width: 100% !important; border-collapse: collapse !important; font-size: 10pt !important; }
             body.printing-report th, body.printing-report td { border: 1px solid #cbd5e1 !important; padding: 4px !important; color: black !important; }
 
-            /* --- การพิมพ์ บัตร QR Code (แนวนอนจัดเรียง 2 คอลัมน์) --- */
+            /* --- การพิมพ์ บัตร QR Code --- */
             body.printing-qr-maker #page-qrmaker { display: block !important; margin: 0 !important; padding: 0 !important; }
             body.printing-qr-maker #preview-container { display: block !important; position: relative !important; width: 100% !important; margin: 0 !important; padding: 0 !important; background: transparent !important; overflow: visible !important; }
             body.printing-qr-maker #preview-container > div { max-width: none !important; width: 100% !important; min-height: auto !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; background: transparent !important; }
             
-            body.printing-qr-maker .card-grid { display: grid !important; grid-template-columns: repeat(2, 86mm) !important; gap: 2mm 6mm !important; justify-content: center !important; align-content: flex-start !important; margin: 0 auto !important; width: 100% !important; }
-            body.printing-qr-maker .qr-maker-container .card { width: 86mm !important; height: 54mm !important; box-shadow: none !important; border: 1px dashed #94a3b8 !important; page-break-inside: avoid !important; margin: 0 !important; }
-            body.printing-qr-maker .qr-maker-container .qr-code { display: flex !important; justify-content: center !important; align-items: center !important; width: 22mm !important; height: 22mm !important; margin: 0 !important; padding: 1mm !important; border: 1px solid #e2e8f0 !important; }
-            body.printing-qr-maker .qr-maker-container .qr-code img, body.printing-qr-maker .qr-maker-container .qr-code canvas { width: 100% !important; height: 100% !important; max-width: 100% !important; max-height: 100% !important; object-fit: contain !important; }
+            body.printing-qr-maker .card-grid { 
+                display: grid !important; 
+                grid-template-columns: repeat(2, 86mm) !important; 
+                gap: 2mm 6mm !important; 
+                justify-content: center !important; 
+                align-content: flex-start !important; 
+                margin: 0 auto !important; 
+                width: 100% !important; 
+            }
+            body.printing-qr-maker .qr-maker-container .card { 
+                width: 86mm !important; 
+                height: 54mm !important; 
+                box-shadow: none !important; 
+                border: 1px solid #000 !important; /* เปลี่ยนเป็นกรอบสีดำชัดเจนเพื่อให้ตัดง่าย */
+                page-break-inside: avoid !important; 
+                margin: 0 !important; 
+            }
         }
     </style>
 </head>
 <body class="h-screen w-screen overflow-hidden flex bg-background text-slate-800">
 
-    <!-- Loading Overlay -->
+    <!-- Loading Overlay (ปรับให้ซ่อนไว้ตั้งแต่แรก) -->
     <div id="loadingOverlay" class="fixed inset-0 bg-white/90 z-[9999] hidden flex-col justify-center items-center">
         <i class="fas fa-circle-notch fa-spin fa-3x text-secondary mb-4"></i>
         <p class="font-bold text-slate-600 tracking-wide">กำลังจัดการข้อมูล...</p>
@@ -648,7 +664,16 @@
          JAVASCRIPT LOGIC
          ========================================== -->
     <script>
-        // 🌟 ตั้งค่า SUPABASE ตรงนี้ (ผมดักจับ Error กรณีใส่ผิดไว้ให้แล้ว ระบบจะไม่พัง) 🌟
+        // --- Helper: จัดการเปิด/ปิด Loading ป้องกันจอค้าง ---
+        const showLoad = (b) => {
+            const el = document.getElementById('loadingOverlay');
+            if(el) {
+                if(b) { el.classList.remove('hidden'); el.style.display = 'flex'; }
+                else { el.classList.add('hidden'); el.style.display = 'none'; }
+            }
+        };
+
+        // 🌟 ตั้งค่า SUPABASE ตรงนี้ 🌟
         const SUPABASE_URL = 'https://apwaoxlzeheqmaiecqwz.supabase.co'; 
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwd2FveGx6ZWhlcW1haWVjcXd6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwMzkyMTIsImV4cCI6MjA5NzYxNTIxMn0.4yv3JfjS2WCPCEf-v4xqKFBEONWT8QxjMzv1uywHJxY';
         
@@ -671,6 +696,16 @@
         let submitWorkKey = '';
         let scanner;
         let currentScanMode = 'attendance';
+
+        // --- Helper: ป้องกันโค้ดขยะ HTML ทำหน้าเว็บพัง (Sanitizer) ---
+        const escapeHTML = (str) => {
+            return (str || '').toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        };
 
         // --- Config ---
         let appConfig = JSON.parse(localStorage.getItem('myAppCfgV2')) || { sysName: 'ระบบจัดการเรียนการสอน', school1: 'โรงเรียนบ้านซับก้านเหลือง', school2: 'สพป.นครราชสีมา เขต 3', theme: '#0ea5e9', logo: 'https://img2.pic.in.th/pic/-161baf06cd7f44fd8.png' };
@@ -704,8 +739,6 @@
         }
 
         // --- Data Layer ---
-        const showLoad = (b) => document.getElementById('loadingOverlay').style.display = b ? 'flex' : 'none';
-        
         async function fetchAll() {
             showLoad(true);
             try {
@@ -837,8 +870,8 @@
 
         // --- Camera Scanner System (Dashboard) ---
         function prepDashboardPage() {
-            const a = '<option value="">-- เลือกวิชา --</option>' + DB.activities.map(x=>`<option value="${x.id}">${x.name}</option>`).join('');
-            const c = '<option value="">-- เลือกห้อง --</option>' + DB.classes.map(x=>`<option value="${String(x.name||'').trim()}">${String(x.name||'').trim()}</option>`).join('');
+            const a = '<option value="">-- เลือกวิชา --</option>' + DB.activities.map(x=>`<option value="${escapeHTML(x.id)}">${escapeHTML(x.name)}</option>`).join('');
+            const c = '<option value="">-- เลือกห้อง --</option>' + DB.classes.map(x=>`<option value="${escapeHTML(String(x.name||'').trim())}">${escapeHTML(String(x.name||'').trim())}</option>`).join('');
             document.getElementById('selMainAct').innerHTML = a; 
             document.getElementById('selMainClass').innerHTML = c;
             if(!document.getElementById('inpMainDate').value) document.getElementById('inpMainDate').value = new Date().toISOString().split('T')[0];
@@ -859,7 +892,7 @@
             });
             
             if(topics.size > 0) {
-                selWork.innerHTML = '<option value="">-- เลือกชิ้นงาน --</option>' + Array.from(topics).map(t => `<option value="${t}">${t}</option>`).join('');
+                selWork.innerHTML = '<option value="">-- เลือกชิ้นงาน --</option>' + Array.from(topics).map(t => `<option value="${escapeHTML(t)}">${escapeHTML(t)}</option>`).join('');
             } else {
                 selWork.innerHTML = '<option value="">-- ไม่มีชิ้นงาน (ไปเพิ่มในเมนูกิจกรรม) --</option>';
             }
@@ -975,7 +1008,6 @@
             .catch(err => { Swal.fire('ไม่พบ QR Code', 'ภาพไม่ชัดเจน กรุณาลองใหม่', 'error'); input.value = ''; });
         }
 
-        // 🌟 ฟังก์ชันแสดง Alert สวยงามตอนสแกน
         function showScanAlert(title, text, type) {
             const iconHTML = type === 'success' 
                 ? `<div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-check text-3xl text-green-500"></i></div>` 
@@ -985,8 +1017,8 @@
             Swal.fire({
                 html: `
                     ${iconHTML}
-                    <h2 class="text-2xl font-black ${colorClass} mb-2">${title}</h2>
-                    <p class="text-slate-500 font-medium text-sm">${text}</p>
+                    <h2 class="text-2xl font-black ${colorClass} mb-2">${escapeHTML(title)}</h2>
+                    <p class="text-slate-500 font-medium text-sm">${escapeHTML(text)}</p>
                 `,
                 showConfirmButton: false, timer: 1500,
                 customClass: { popup: 'rounded-3xl p-6 shadow-2xl border border-slate-100' },
@@ -1045,7 +1077,7 @@
             const colorClass = currentScanMode === 'attendance' ? 'border-l-secondary text-secondary bg-slate-50 text-primary' : 'border-l-green-500 text-green-600 bg-green-50';
             document.getElementById('txtMainCount').innerText = arr.length;
             
-            let html = arr.map(l => `<div class="bg-white border border-slate-100 border-l-4 ${colorClass.split(' ')[0]} p-3 rounded-xl shadow-sm flex justify-between items-center"><div class="leading-tight"><b class="text-sm text-slate-700">${l.name}</b><br><span class="text-[10px] text-slate-400 font-bold">${l.id}</span></div><div class="${colorClass.split(' ').slice(2).join(' ')} px-2 py-1 rounded font-bold text-xs">${l.time}</div></div>`).join('');
+            let html = arr.map(l => `<div class="bg-white border border-slate-100 border-l-4 ${colorClass.split(' ')[0]} p-3 rounded-xl shadow-sm flex justify-between items-center"><div class="leading-tight"><b class="text-sm text-slate-700">${escapeHTML(l.name)}</b><br><span class="text-[10px] text-slate-400 font-bold">${escapeHTML(l.id)}</span></div><div class="${colorClass.split(' ').slice(2).join(' ')} px-2 py-1 rounded font-bold text-xs">${l.time}</div></div>`).join('');
             if(!html) {
                 const msg = currentScanMode === 'attendance' ? 'รอการสแกนเข้าเรียน...' : 'รอการสแกนส่งงาน...';
                 html = `<div class="h-full flex flex-col items-center justify-center text-slate-400 opacity-60"><i class="fas fa-list-ul text-3xl mb-2"></i><span class="text-xs font-medium">${msg}</span></div>`;
@@ -1060,7 +1092,7 @@
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex justify-center items-center"><i class="fas fa-book"></i></div>
                     <div class="leading-tight">
-                        <div class="font-bold text-slate-700 text-sm">${a.name}</div>
+                        <div class="font-bold text-slate-700 text-sm">${escapeHTML(a.name)}</div>
                     </div>
                 </div>
                 <button onclick="del('activities',${i})" class="text-rose-400 hover:text-rose-600 bg-rose-50 w-8 h-8 rounded-full flex justify-center items-center transition-colors"><i class="fas fa-trash text-xs"></i></button>
@@ -1085,11 +1117,11 @@
                             <div class="flex items-center gap-3 overflow-hidden">
                                 <div class="w-10 h-10 rounded-full bg-green-50 text-green-500 flex justify-center items-center flex-shrink-0"><i class="fas fa-clipboard-list"></i></div>
                                 <div class="leading-tight overflow-hidden pr-2">
-                                    <div class="font-bold text-slate-700 text-sm truncate" title="${topicName}">${topicName}</div>
-                                    <div class="text-[10px] text-slate-500 font-bold mt-0.5 truncate">${actName} | ห้อง: ${clsName}</div>
+                                    <div class="font-bold text-slate-700 text-sm truncate" title="${escapeHTML(topicName)}">${escapeHTML(topicName)}</div>
+                                    <div class="text-[10px] text-slate-500 font-bold mt-0.5 truncate">${escapeHTML(actName)} | ห้อง: ${escapeHTML(clsName)}</div>
                                 </div>
                             </div>
-                            <button onclick="delWorkTopic('${key}')" class="text-rose-400 hover:text-rose-600 bg-rose-50 w-8 h-8 rounded-full flex justify-center items-center transition-colors flex-shrink-0"><i class="fas fa-trash text-[10px]"></i></button>
+                            <button onclick="delWorkTopic('${escapeHTML(key)}')" class="text-rose-400 hover:text-rose-600 bg-rose-50 w-8 h-8 rounded-full flex justify-center items-center transition-colors flex-shrink-0"><i class="fas fa-trash text-[10px]"></i></button>
                         </div>
                         <div class="bg-slate-50 rounded-lg p-2 px-3 flex justify-between items-center border border-slate-100">
                             <span class="text-[10px] font-bold text-slate-500">ส่งแล้ว</span>
@@ -1105,8 +1137,8 @@
             if(DB.activities.length === 0) return Swal.fire('ข้อมูลไม่ครบ', 'กรุณาเพิ่มวิชาเรียนก่อนครับ', 'warning');
             if(DB.classes.length === 0) return Swal.fire('ข้อมูลไม่ครบ', 'กรุณาเพิ่มชั้นเรียนก่อนครับ', 'warning');
 
-            const actOpts = DB.activities.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
-            const clsOpts = DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+            const actOpts = DB.activities.map(a=>`<option value="${escapeHTML(a.id)}">${escapeHTML(a.name)}</option>`).join('');
+            const clsOpts = DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
             
             const html = `
                 <div class="text-left mb-3">
@@ -1158,19 +1190,19 @@
         }
 
         function renderClassesGrid() {
-            document.getElementById('classesGrid').innerHTML = DB.classes.map((c,i) => `<div class="glass-card flex justify-between items-center"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-purple-50 text-purple-500 flex justify-center items-center"><i class="fas fa-layer-group"></i></div><span class="font-bold text-slate-700">${c.name}</span></div><button onclick="del('classes',${i})" class="text-rose-400 hover:text-rose-600 bg-rose-50 w-8 h-8 rounded-full flex justify-center items-center transition-colors"><i class="fas fa-trash text-xs"></i></button></div>`).join('');
+            document.getElementById('classesGrid').innerHTML = DB.classes.map((c,i) => `<div class="glass-card flex justify-between items-center"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full bg-purple-50 text-purple-500 flex justify-center items-center"><i class="fas fa-layer-group"></i></div><span class="font-bold text-slate-700">${escapeHTML(c.name)}</span></div><button onclick="del('classes',${i})" class="text-rose-400 hover:text-rose-600 bg-rose-50 w-8 h-8 rounded-full flex justify-center items-center transition-colors"><i class="fas fa-trash text-xs"></i></button></div>`).join('');
         }
         function renderStudents() {
             const f = document.getElementById('filterStudentClass');
-            const opts = '<option value="">-- ทุกชั้นเรียน --</option>' + DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+            const opts = '<option value="">-- ทุกชั้นเรียน --</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
             if(f.innerHTML !== opts) { let curr=f.value; f.innerHTML=opts; f.value=curr; }
             let d = DB.students; if(f.value) d = d.filter(s=>String(s.class||'').trim() === String(f.value||'').trim());
             d.sort((a,b)=>String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
-            document.getElementById('tblStudents').innerHTML = d.map((s,i) => `<div class="glass-card flex justify-between items-center p-3"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-[10px] font-bold text-slate-500">${s.id}</div><div class="leading-tight"><div class="text-sm font-bold text-slate-700">${s.name}</div><div class="text-[10px] text-slate-400 font-bold">${s.class||'-'}</div></div></div><button onclick="delStudent('${s.id}')" class="text-rose-400 hover:text-rose-600 bg-rose-50 w-8 h-8 rounded-full flex justify-center items-center transition-colors"><i class="fas fa-trash text-xs"></i></button></div>`).join('');
+            document.getElementById('tblStudents').innerHTML = d.map((s,i) => `<div class="glass-card flex justify-between items-center p-3"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-[10px] font-bold text-slate-500">${escapeHTML(s.id)}</div><div class="leading-tight"><div class="text-sm font-bold text-slate-700">${escapeHTML(s.name)}</div><div class="text-[10px] text-slate-400 font-bold">${escapeHTML(s.class||'-')}</div></div></div><button onclick="delStudent('${escapeHTML(s.id)}')" class="text-rose-400 hover:text-rose-600 bg-rose-50 w-8 h-8 rounded-full flex justify-center items-center transition-colors"><i class="fas fa-trash text-xs"></i></button></div>`).join('');
         }
 
         async function addActivity() { 
-            const clsOpts = DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+            const clsOpts = DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
             const html = `
                 <div class="mb-3 text-left">
                     <label class="block text-xs font-bold text-slate-500 mb-1">ชื่อวิชา</label>
@@ -1196,7 +1228,7 @@
         }
         async function addClass() { const {value} = await Swal.fire({title:'เพิ่มชั้นเรียน', input:'text', confirmButtonColor: '#0ea5e9'}); if(value) save('classes', [...DB.classes, {id:'c'+Date.now(), name:value}]); }
         async function addStudent() {
-            const clsOpts = DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+            const clsOpts = DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
             window.swTab = (t) => {
                 document.getElementById('p-s').style.display = t==='s' ? 'block' : 'none'; document.getElementById('p-b').style.display = t==='b' ? 'block' : 'none';
                 document.getElementById('tab-s').className = `cursor-pointer font-bold text-sm pb-1 px-2 transition-colors ${t==='s' ? 'text-secondary border-b-2 border-secondary' : 'text-slate-400 hover:text-secondary'}`;
@@ -1235,8 +1267,8 @@
 
         // --- Manual Check ---
         function prepManualCheckPage() {
-            document.getElementById('selActManual').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
-            document.getElementById('selClassManual').innerHTML = '<option value="">- เลือกห้อง -</option>' + DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+            document.getElementById('selActManual').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${escapeHTML(a.id)}">${escapeHTML(a.name)}</option>`).join('');
+            document.getElementById('selClassManual').innerHTML = '<option value="">- เลือกห้อง -</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
             if(!document.getElementById('inpDateManual').value) document.getElementById('inpDateManual').value = new Date().toISOString().split('T')[0];
             document.getElementById('manualCheckArea').classList.add('hidden');
         }
@@ -1248,7 +1280,7 @@
                 const stds = DB.students.filter(s=>String(s.class||'').trim() === String(cls||'').trim()).sort((a,b)=>String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
                 document.getElementById('manualStudentsList').innerHTML = stds.map(s => {
                     const st = ex[s.id] ? (ex[s.id].status||'present') : 'absent';
-                    return `<div class="glass-card !p-3 flex flex-col sm:flex-row justify-between sm:items-center gap-3"><div class="leading-tight"><div class="text-sm font-bold text-slate-700">${s.id} ${s.name}</div></div><div class="flex gap-1 group-btn bg-slate-100 p-1 rounded-xl w-full sm:w-auto" data-id="${s.id}" data-st="${st}"><button onclick="setManSt('${s.id}','present',this)" class="flex-1 sm:w-16 py-1.5 text-xs font-bold rounded-lg transition-colors ${st==='present'?'bg-white text-green-600 shadow-sm':'text-slate-400'}">มา</button><button onclick="setManSt('${s.id}','late',this)" class="flex-1 sm:w-16 py-1.5 text-xs font-bold rounded-lg transition-colors ${st==='late'?'bg-white text-orange-500 shadow-sm':'text-slate-400'}">สาย</button><button onclick="setManSt('${s.id}','absent',this)" class="flex-1 sm:w-16 py-1.5 text-xs font-bold rounded-lg transition-colors ${st==='absent'?'bg-white text-red-500 shadow-sm':'text-slate-400'}">ขาด</button></div></div>`;
+                    return `<div class="glass-card !p-3 flex flex-col sm:flex-row justify-between sm:items-center gap-3"><div class="leading-tight"><div class="text-sm font-bold text-slate-700">${escapeHTML(s.id)} ${escapeHTML(s.name)}</div></div><div class="flex gap-1 group-btn bg-slate-100 p-1 rounded-xl w-full sm:w-auto" data-id="${escapeHTML(s.id)}" data-st="${st}"><button onclick="setManSt('${escapeHTML(s.id)}','present',this)" class="flex-1 sm:w-16 py-1.5 text-xs font-bold rounded-lg transition-colors ${st==='present'?'bg-white text-green-600 shadow-sm':'text-slate-400'}">มา</button><button onclick="setManSt('${escapeHTML(s.id)}','late',this)" class="flex-1 sm:w-16 py-1.5 text-xs font-bold rounded-lg transition-colors ${st==='late'?'bg-white text-orange-500 shadow-sm':'text-slate-400'}">สาย</button><button onclick="setManSt('${escapeHTML(s.id)}','absent',this)" class="flex-1 sm:w-16 py-1.5 text-xs font-bold rounded-lg transition-colors ${st==='absent'?'bg-white text-red-500 shadow-sm':'text-slate-400'}">ขาด</button></div></div>`;
                 }).join('');
             } else { document.getElementById('manualCheckArea').classList.add('hidden'); }
         }
@@ -1272,8 +1304,8 @@
 
         // --- Summary Report ---
         function prepSummaryPage() {
-            document.getElementById('selActRep').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
-            document.getElementById('selClassRep').innerHTML = '<option value="">- เลือกชั้นเรียน -</option>' + DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+            document.getElementById('selActRep').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${escapeHTML(a.id)}">${escapeHTML(a.name)}</option>`).join('');
+            document.getElementById('selClassRep').innerHTML = '<option value="">- เลือกชั้นเรียน -</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
             const now = new Date(); const currDay = now.getDay(); const firstDayOfWeek = new Date(now);
             firstDayOfWeek.setDate(now.getDate() - currDay + (currDay === 0 ? -6 : 1)); 
             document.getElementById('inpRepStartWeek').value = firstDayOfWeek.toISOString().split('T')[0];
@@ -1338,7 +1370,7 @@
             let tP=0, tL=0, tA=0;
             let body = stds.map(s => {
                 let rP=0, rL=0, rA=0;
-                let html = `<tr><td class="text-center text-[11px] font-bold text-slate-500">${s.id}</td><td class="text-xs font-bold text-slate-700 truncate max-w-[120px]" title="${s.name}">${s.name}</td>`;
+                let html = `<tr><td class="text-center text-[11px] font-bold text-slate-500">${escapeHTML(s.id)}</td><td class="text-xs font-bold text-slate-700 truncate max-w-[120px]" title="${escapeHTML(s.name)}">${escapeHTML(s.name)}</td>`;
                 sortedDates.forEach(d => {
                     const rec = (DB.attendance[`${act}|${d}|${cls}`] || {})[s.id];
                     if(rec) { 
@@ -1364,14 +1396,14 @@
                 dateRangeText = `ระหว่างวันที่ ${startDate.getDate()}/${startDate.getMonth()+1}/${startDate.getFullYear()+543} ถึง ${endDate.getDate()}/${endDate.getMonth()+1}/${endDate.getFullYear()+543}`;
             }
             
-            document.getElementById('printInfo').innerHTML = `วิชา: <b>${DB.activities.find(a=>a.id===act).name}</b> | ชั้น: <b>${cls}</b><br><span class="text-xs text-slate-500">${dateRangeText}</span>`;
+            document.getElementById('printInfo').innerHTML = `วิชา: <b>${escapeHTML(DB.activities.find(a=>a.id===act).name)}</b> | ชั้น: <b>${escapeHTML(cls)}</b><br><span class="text-xs text-slate-500">${dateRangeText}</span>`;
             document.getElementById('repResult').classList.remove('hidden');
         }
 
         // --- Scores & Works ---
         function prepScorePage() {
-            document.getElementById('selActScore').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
-            document.getElementById('selClassScore').innerHTML = '<option value="">- เลือกชั้นเรียน -</option>' + DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+            document.getElementById('selActScore').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${escapeHTML(a.id)}">${escapeHTML(a.name)}</option>`).join('');
+            document.getElementById('selClassScore').innerHTML = '<option value="">- เลือกชั้นเรียน -</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
             document.getElementById('scoreTableArea').classList.add('hidden');
         }
         function populateScoreWorkTopics() {
@@ -1379,7 +1411,7 @@
             if(!act || !cls) { selWork.innerHTML = '<option value="">-- ไม่เลือก (กรอกคะแนนรวมปกติ) --</option>'; return; }
             let topics = new Set();
             Object.keys(DB.works).forEach(k => { const parts = k.split('|'); if(parts.length === 3 && parts[0] === act && parts[2] === cls) { topics.add(parts[1]); } });
-            if(topics.size > 0) { selWork.innerHTML = '<option value="">-- ไม่เลือก (กรอกคะแนนรวมปกติ) --</option>' + Array.from(topics).map(t => `<option value="${t}">${t}</option>`).join(''); } 
+            if(topics.size > 0) { selWork.innerHTML = '<option value="">-- ไม่เลือก (กรอกคะแนนรวมปกติ) --</option>' + Array.from(topics).map(t => `<option value="${escapeHTML(t)}">${escapeHTML(t)}</option>`).join(''); } 
             else { selWork.innerHTML = '<option value="">-- ไม่มีประวัติการส่งงานในระบบ --</option>'; }
         }
         function renderScoreTable() {
@@ -1399,18 +1431,17 @@
 
             document.getElementById('scoreList').innerHTML = stds.map(s => {
                 let sc = DB.scores[act][s.id] || {c:'',e:''};
-                
                 let workScoreVal = '';
-                if(workTopic && sc[`w_${workTopic}`] !== undefined) { workScoreVal = sc[`w_${workTopic}`]; }
+                if(workTopic && sc[`w_${workTopic}`] !== undefined) { workScoreVal = escapeHTML(sc[`w_${workTopic}`]); }
 
                 let statusBadge = '';
                 if(workTopic) {
                     const isSubmitted = workData[s.id];
                     statusBadge = isSubmitted ? `<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[9px] font-bold"><i class="fas fa-check mr-1"></i>ส่งแล้ว</span>` : `<span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[9px] font-bold">ยังไม่ส่ง</span>`;
-                    return `<div class="glass-card !p-4 border-l-4 ${isSubmitted ? 'border-green-500' : 'border-slate-300'} flex items-center justify-between gap-4"><div class="flex-1 min-w-0"><div class="text-sm font-bold text-slate-700 truncate">${s.id} ${s.name}</div><div class="mt-1">${statusBadge}</div></div><div class="relative w-24 flex-shrink-0"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนนเต็ม 10</span><input type="number" id="sc_w_${s.id}" value="${workScoreVal}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-500 transition-colors bg-blue-50/30"></div></div>`;
+                    return `<div class="glass-card !p-4 border-l-4 ${isSubmitted ? 'border-green-500' : 'border-slate-300'} flex items-center justify-between gap-4"><div class="flex-1 min-w-0"><div class="text-sm font-bold text-slate-700 truncate">${escapeHTML(s.id)} ${escapeHTML(s.name)}</div><div class="mt-1">${statusBadge}</div></div><div class="relative w-24 flex-shrink-0"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนนเต็ม 10</span><input type="number" id="sc_w_${escapeHTML(s.id)}" value="${workScoreVal}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-500 transition-colors bg-blue-50/30"></div></div>`;
                 }
 
-                return `<div class="glass-card !p-4"><div class="text-sm font-bold text-slate-700 mb-3">${s.id} ${s.name}</div><div class="flex gap-3"><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-amber-500">คะแนนเก็บ (70)</span><input type="number" id="sc_c_${s.id}" value="${sc.c}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-amber-400"></div><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนนสอบ (30)</span><input type="number" id="sc_e_${s.id}" value="${sc.e}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-400"></div></div></div>`;
+                return `<div class="glass-card !p-4"><div class="text-sm font-bold text-slate-700 mb-3">${escapeHTML(s.id)} ${escapeHTML(s.name)}</div><div class="flex gap-3"><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-amber-500">คะแนนเก็บ (70)</span><input type="number" id="sc_c_${escapeHTML(s.id)}" value="${escapeHTML(sc.c)}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-amber-400"></div><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนนสอบ (30)</span><input type="number" id="sc_e_${escapeHTML(s.id)}" value="${escapeHTML(sc.e)}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-400"></div></div></div>`;
             }).join('');
         }
         
@@ -1429,8 +1460,8 @@
 
         // --- Grades ---
         function prepGradePage() {
-            document.getElementById('selActGrade').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
-            document.getElementById('selClassGrade').innerHTML = '<option value="">- เลือกชั้นเรียน -</option>' + DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+            document.getElementById('selActGrade').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${escapeHTML(a.id)}">${escapeHTML(a.name)}</option>`).join('');
+            document.getElementById('selClassGrade').innerHTML = '<option value="">- เลือกชั้นเรียน -</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
             document.getElementById('gradeTableArea').classList.add('hidden');
         }
         function renderGradeTable() {
@@ -1441,13 +1472,13 @@
                 let sc = (DB.scores[act]||{})[s.id] || {c:0,e:0}; const tot = (parseFloat(sc.c)||0) + (parseFloat(sc.e)||0);
                 let g = '0', c = 'bg-red-50 text-red-600 border-red-200';
                 if(tot>=80){g='4';c='bg-green-50 text-green-600 border-green-200';} else if(tot>=75){g='3.5';c='bg-emerald-50 text-emerald-600 border-emerald-200';} else if(tot>=70){g='3';c='bg-teal-50 text-teal-600 border-teal-200';} else if(tot>=65){g='2.5';c='bg-cyan-50 text-cyan-600 border-cyan-200';} else if(tot>=60){g='2';c='bg-blue-50 text-blue-600 border-blue-200';} else if(tot>=55){g='1.5';c='bg-indigo-50 text-indigo-600 border-indigo-200';} else if(tot>=50){g='1';c='bg-violet-50 text-violet-600 border-violet-200';}
-                return `<div class="glass-card !p-3 flex justify-between items-center"><div class="leading-tight"><div class="text-xs font-bold text-slate-700 mb-1">${s.id} ${s.name}</div><div class="text-[10px] text-slate-500 font-medium bg-slate-100 inline-block px-2 py-1 rounded">เก็บ: <b class="text-slate-700">${sc.c||0}</b> | สอบ: <b class="text-slate-700">${sc.e||0}</b> | รวม: <b class="text-primary">${tot}</b></div></div><div class="w-12 h-12 ${c} border flex flex-col items-center justify-center rounded-xl shadow-sm"><span class="text-[8px] uppercase font-bold opacity-60 leading-none">เกรด</span><span class="font-black text-xl leading-none">${g}</span></div></div>`;
+                return `<div class="glass-card !p-3 flex justify-between items-center"><div class="leading-tight"><div class="text-xs font-bold text-slate-700 mb-1">${escapeHTML(s.id)} ${escapeHTML(s.name)}</div><div class="text-[10px] text-slate-500 font-medium bg-slate-100 inline-block px-2 py-1 rounded">เก็บ: <b class="text-slate-700">${escapeHTML(sc.c)||0}</b> | สอบ: <b class="text-slate-700">${escapeHTML(sc.e)||0}</b> | รวม: <b class="text-primary">${tot}</b></div></div><div class="w-12 h-12 ${c} border flex flex-col items-center justify-center rounded-xl shadow-sm"><span class="text-[8px] uppercase font-bold opacity-60 leading-none">เกรด</span><span class="font-black text-xl leading-none">${g}</span></div></div>`;
             }).join('');
         }
 
         // --- QR Maker ---
         function prepQRMakerPage() {
-            document.getElementById('selClassQRMaker').innerHTML = '<option value="">-- กรุณาเลือกห้อง --</option><option value="ALL">-- ดึงรายชื่อทั้งหมด --</option>' + DB.classes.map(c=>`<option value="${String(c.name||'').trim()}">${String(c.name||'').trim()}</option>`).join('');
+            document.getElementById('selClassQRMaker').innerHTML = '<option value="">-- กรุณาเลือกห้อง --</option><option value="ALL">-- ดึงรายชื่อทั้งหมด --</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
             const cp = document.getElementById('qrHeaderColor');
             if (cp) cp.value = appConfig.theme;
         }
@@ -1481,16 +1512,23 @@
         }
         
         function renderQRCards(stds) {
-            const cont = document.getElementById('cardContainer'); cont.innerHTML = '';
-            const headerText = document.getElementById('qrHeaderText').value.trim();
+            const cont = document.getElementById('cardContainer'); 
+            cont.innerHTML = '';
+            
+            const headerText = escapeHTML(document.getElementById('qrHeaderText').value.trim());
             const headerColor = document.getElementById('qrHeaderColor').value;
+            const schoolName = escapeHTML(appConfig.school1);
+            const logoSrc = appConfig.logo;
             
             stds.forEach((s, i) => {
                 const id = 'qr-'+i;
+                const safeName = escapeHTML(s.name);
+                const safeId = escapeHTML(s.id);
+                const safeClass = escapeHTML(s.class || '-');
                 
                 let headerHtml = '';
                 if(headerText) {
-                    headerHtml = `<div class="card-header" style="background-color: ${headerColor}; border-radius: 4px 4px 0 0;">${headerText}</div>`;
+                    headerHtml = `<div class="card-header" style="background-color: ${headerColor};">${headerText}</div>`;
                 }
 
                 cont.innerHTML += `
@@ -1499,12 +1537,12 @@
                     <div class="card-body">
                         <div class="card-left">
                             <div class="school-header">
-                                <img src="${appConfig.logo}" class="school-logo" onerror="this.style.display='none'">
-                                <div class="school-name" style="color: ${headerColor};">${appConfig.school1}</div>
+                                <img src="${logoSrc}" class="school-logo" onerror="this.style.display='none'">
+                                <div class="school-name" style="color: ${headerColor};">${schoolName}</div>
                             </div>
-                            <div class="student-info">รหัส: ${s.id}</div>
-                            <div class="student-info">ชั้น: ${s.class||'-'}</div>
-                            <div class="student-name">${s.name}</div>
+                            <div class="student-info">รหัส: ${safeId}</div>
+                            <div class="student-info">ชั้น: ${safeClass}</div>
+                            <div class="student-name">${safeName}</div>
                         </div>
                         <div class="card-right">
                             <div id="${id}" class="qr-code"></div>
@@ -1520,7 +1558,9 @@
         }
 
         function printQRCards() {
-            document.body.classList.add('printing-qr-maker'); window.print(); document.body.classList.remove('printing-qr-maker');
+            document.body.classList.add('printing-qr-maker'); 
+            window.print(); 
+            document.body.classList.remove('printing-qr-maker');
         }
 
         window.onload = () => { applyConfig(); fetchAll(); };
