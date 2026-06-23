@@ -110,7 +110,8 @@
         </div>
         
         <div class="flex-1 overflow-y-auto custom-scroll py-6">
-            <div class="px-6 mb-2 text-[10px] font-bold text-slate-400 tracking-widest uppercase">เมนูหลัก</div>
+            <!-- ปรับขนาดและน้ำหนักตัวอักษรของหัวข้อเมนู -->
+            <div class="px-6 mb-3 text-sm font-bold text-slate-600 tracking-wide">เมนูหลัก</div>
             <button onclick="navigate('dashboard')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item active" data-tab="dashboard"><i class="fas fa-home w-8 text-secondary"></i> สแกนเข้าเรียน / ส่งงาน</button>
             <button onclick="navigate('manualcheck')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="manualcheck"><i class="fas fa-tasks w-8 text-orange-500"></i> เช็คชื่อด้วยมือ</button>
             <button onclick="navigate('activities')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="activities"><i class="fas fa-book-open w-8 text-blue-500"></i> กิจกรรม / รายวิชา</button>
@@ -118,14 +119,14 @@
             <button onclick="navigate('students')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="students"><i class="fas fa-users w-8 text-emerald-500"></i> ทะเบียนนักเรียน</button>
             <button onclick="navigate('qrmaker')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="qrmaker"><i class="fas fa-id-badge w-8 text-rose-500"></i> สร้างบัตร QR Code ประจำตัว</button>
             
-            <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 tracking-widest uppercase">ผลการเรียน & สุขภาพ</div>
+            <div class="px-6 mt-6 mb-3 text-sm font-bold text-slate-600 tracking-wide">ผลการเรียน & สุขภาพ</div>
             <button onclick="navigate('scores')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="scores"><i class="fas fa-star w-8 text-amber-400"></i> บันทึกคะแนน / ตรวจงาน</button>
             <button onclick="navigate('grades')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="grades"><i class="fas fa-graduation-cap w-8 text-indigo-500"></i> คำนวณและตัดเกรด</button>
             <button onclick="navigate('health')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="health"><i class="fas fa-weight-scale w-8 text-pink-500"></i> บันทึกน้ำหนัก/ส่วนสูง</button>
             <button onclick="navigate('milk')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="milk"><i class="fas fa-glass-water w-8 text-sky-400"></i> บันทึกการดื่มนม</button>
             <button onclick="navigate('report')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="report"><i class="fas fa-file-invoice-dollar w-8 text-teal-500"></i> ระบบรายงานผล</button>
 
-            <div class="px-6 mt-6 mb-2 text-[10px] font-bold text-slate-400 tracking-widest uppercase">การตั้งค่า</div>
+            <div class="px-6 mt-6 mb-3 text-sm font-bold text-slate-600 tracking-wide">การตั้งค่า</div>
             <button onclick="navigate('settings')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="settings"><i class="fas fa-cog w-8 text-slate-500"></i> ตั้งค่าแอปพลิเคชัน</button>
         </div>
     </aside>
@@ -327,7 +328,7 @@
                     <button id="tabRepHealth" onclick="switchReportTab('health')" class="px-6 py-3 font-bold text-sm text-slate-400 border-b-2 border-transparent transition-all whitespace-nowrap"><i class="fas fa-weight-scale mr-1"></i> น้ำหนัก/ส่วนสูง (BMI)</button>
                 </div>
 
-                <!-- พื้นที่รายงาน 1: เวลาเรียน (ของเดิม) -->
+                <!-- พื้นที่รายงาน 1: เวลาเรียน -->
                 <div id="repAttArea">
                     <div class="glass-card mb-6 no-print max-w-4xl">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -353,11 +354,14 @@
                     </div>
                     <div id="repResult" class="hidden">
                         <div class="mb-4 no-print flex justify-end">
-                            <button onclick="printReport()" class="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-print"></i> พิมพ์เอกสาร PDF</button>
+                            <button onclick="printReport('attendance')" class="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-print"></i> พิมพ์เอกสาร PDF</button>
                         </div>
-                        <div class="glass-card !p-0 overflow-hidden shadow-lg border border-slate-200">
-                            <div class="p-6 text-center border-b-2 border-primary bg-white">
-                                <h1 class="text-xl font-bold text-primary mb-1">รายงานบันทึกเวลาเรียน</h1>
+                        <div class="glass-card !p-0 overflow-hidden shadow-lg border border-slate-200" id="printContentAtt">
+                            <div class="p-6 text-center border-b-2 border-primary bg-white relative">
+                                <!-- ส่วนโลโก้ในรายงาน (ดึงจากตั้งค่า) -->
+                                <img src="" class="school-logo-report absolute left-6 top-6 h-16 w-16 object-contain" style="display:none;" onerror="this.style.display='none'">
+                                <h1 class="text-xl font-bold text-primary mb-1 school-name-report">โรงเรียน</h1>
+                                <h2 class="text-lg font-bold text-slate-700 mb-2">รายงานบันทึกเวลาเรียน</h2>
                                 <p id="printInfo" class="text-slate-600 text-sm font-medium"></p>
                             </div>
                             <div class="grid grid-cols-4 gap-0 text-center bg-slate-50 border-b border-slate-200 divide-x divide-slate-200">
@@ -368,7 +372,7 @@
                             </div>
                             <div class="overflow-x-auto bg-white p-4">
                                 <table class="w-full text-left table-custom whitespace-nowrap min-w-[600px]"><thead id="repHead"></thead><tbody id="repBody"></tbody></table>
-                                <!-- ลายเซ็นครู (ปพ.5) -->
+                                <!-- ลายเซ็นครู -->
                                 <div class="mt-16 mb-8 flex justify-end text-center no-print-break" style="page-break-inside: avoid;">
                                     <div class="w-64">
                                         <p class="mb-8 text-slate-800 text-sm">ลงชื่อ...................................................</p>
@@ -399,11 +403,13 @@
                     
                     <div id="repResultWork" class="hidden">
                         <div class="mb-4 no-print flex justify-end">
-                            <button onclick="printWorkReport()" class="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-print"></i> พิมพ์เอกสาร PDF</button>
+                            <button onclick="printReport('work')" class="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-print"></i> พิมพ์เอกสาร PDF</button>
                         </div>
-                        <div class="glass-card !p-0 overflow-hidden shadow-lg border border-slate-200">
-                            <div class="p-6 text-center border-b-2 border-green-500 bg-white">
-                                <h1 class="text-xl font-bold text-green-600 mb-1">รายงานสรุปชิ้นงานและการให้คะแนน</h1>
+                        <div class="glass-card !p-0 overflow-hidden shadow-lg border border-slate-200" id="printContentWork">
+                            <div class="p-6 text-center border-b-2 border-green-500 bg-white relative">
+                                <img src="" class="school-logo-report absolute left-6 top-6 h-16 w-16 object-contain" style="display:none;" onerror="this.style.display='none'">
+                                <h1 class="text-xl font-bold text-primary mb-1 school-name-report">โรงเรียน</h1>
+                                <h2 class="text-lg font-bold text-green-600 mb-2">รายงานสรุปชิ้นงานและการให้คะแนน</h2>
                                 <p id="printInfoWork" class="text-slate-600 text-sm font-medium"></p>
                             </div>
                             <div class="overflow-x-auto bg-white p-4">
@@ -412,7 +418,6 @@
                                     <tbody id="repBodyWork"></tbody>
                                     <tfoot id="repFootWork" class="bg-slate-50 font-bold text-sm"></tfoot>
                                 </table>
-                                <!-- ลายเซ็นครู (ชิ้นงาน) -->
                                 <div class="mt-16 mb-8 flex justify-end text-center no-print-break" style="page-break-inside: avoid;">
                                     <div class="w-64">
                                         <p class="mb-8 text-slate-800 text-sm">ลงชื่อ...................................................</p>
@@ -451,11 +456,13 @@
                     
                     <div id="repResultMilk" class="hidden">
                         <div class="mb-4 no-print flex justify-end">
-                            <button onclick="printMilkReport()" class="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-print"></i> พิมพ์เอกสาร PDF</button>
+                            <button onclick="printReport('milk')" class="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-print"></i> พิมพ์เอกสาร PDF</button>
                         </div>
-                        <div class="glass-card !p-0 overflow-hidden shadow-lg border border-slate-200">
-                            <div class="p-6 text-center border-b-2 border-sky-500 bg-white">
-                                <h1 class="text-xl font-bold text-sky-600 mb-1">รายงานบันทึกการดื่มนม</h1>
+                        <div class="glass-card !p-0 overflow-hidden shadow-lg border border-slate-200" id="printContentMilk">
+                            <div class="p-6 text-center border-b-2 border-sky-500 bg-white relative">
+                                <img src="" class="school-logo-report absolute left-6 top-6 h-16 w-16 object-contain" style="display:none;" onerror="this.style.display='none'">
+                                <h1 class="text-xl font-bold text-primary mb-1 school-name-report">โรงเรียน</h1>
+                                <h2 class="text-lg font-bold text-sky-600 mb-2">รายงานบันทึกการดื่มนม</h2>
                                 <p id="printInfoMilk" class="text-slate-600 text-sm font-medium"></p>
                             </div>
                             <div class="grid grid-cols-3 gap-0 text-center bg-slate-50 border-b border-slate-200 divide-x divide-slate-200">
@@ -469,7 +476,6 @@
                                     </thead>
                                     <tbody id="repBodyMilk"></tbody>
                                 </table>
-                                <!-- ลายเซ็นครู (การดื่มนม) -->
                                 <div class="mt-16 mb-8 flex justify-end text-center no-print-break" style="page-break-inside: avoid;">
                                     <div class="w-64">
                                         <p class="mb-8 text-slate-800 text-sm">ลงชื่อ...................................................</p>
@@ -494,11 +500,13 @@
                     
                     <div id="repResultHealth" class="hidden">
                         <div class="mb-4 no-print flex justify-end">
-                            <button onclick="printHealthReport()" class="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-print"></i> พิมพ์เอกสาร PDF</button>
+                            <button onclick="printReport('health')" class="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-print"></i> พิมพ์เอกสาร PDF</button>
                         </div>
-                        <div class="glass-card !p-0 overflow-hidden shadow-lg border border-slate-200">
-                            <div class="p-6 text-center border-b-2 border-pink-500 bg-white">
-                                <h1 class="text-xl font-bold text-pink-600 mb-1">รายงานน้ำหนัก ส่วนสูง และมวลกาย (BMI)</h1>
+                        <div class="glass-card !p-0 overflow-hidden shadow-lg border border-slate-200" id="printContentHealth">
+                            <div class="p-6 text-center border-b-2 border-pink-500 bg-white relative">
+                                <img src="" class="school-logo-report absolute left-6 top-6 h-16 w-16 object-contain" style="display:none;" onerror="this.style.display='none'">
+                                <h1 class="text-xl font-bold text-primary mb-1 school-name-report">โรงเรียน</h1>
+                                <h2 class="text-lg font-bold text-pink-600 mb-2">รายงานน้ำหนัก ส่วนสูง และมวลกาย (BMI)</h2>
                                 <p id="printInfoHealth" class="text-slate-600 text-sm font-medium"></p>
                             </div>
                             <div class="overflow-x-auto bg-white p-4">
@@ -516,7 +524,6 @@
                                     </thead>
                                     <tbody id="repBodyHealth"></tbody>
                                 </table>
-                                <!-- ลายเซ็นครู (น้ำหนักส่วนสูง) -->
                                 <div class="mt-16 mb-8 flex justify-end text-center no-print-break" style="page-break-inside: avoid;">
                                     <div class="w-64">
                                         <p class="mb-8 text-slate-800 text-sm">ลงชื่อ...................................................</p>
@@ -648,6 +655,12 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- เครดิตผู้พัฒนา -->
+                <div class="mt-12 mb-6 text-center text-slate-400 text-xs font-medium">
+                    <p>พัฒนาระบบโดย <span class="font-bold text-slate-600">นายไพโรจน์ รุ่งเรืองคุณารักษ์ (ครูต้อม)</span></p>
+                    <p class="mt-1">โรงเรียนบ้านซับก้านเหลือง สพป.นครราชสีมา เขต 3</p>
+                </div>
             </div>
 
         </main>
@@ -680,7 +693,7 @@
                     <h3 class="font-bold text-primary text-lg">เมนูแอปพลิเคชัน</h3>
                     <button onclick="document.getElementById('mobileMenuOverlay').classList.add('hidden')" class="w-8 h-8 bg-slate-100 text-slate-500 rounded-full"><i class="fas fa-times"></i></button>
                 </div>
-                <div class="grid grid-cols-4 gap-y-6 gap-x-2">
+                <div class="grid grid-cols-3 gap-y-6 gap-x-2">
                     <button onclick="navigate('dashboard'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-sky-50 text-sky-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-home"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">สแกน/ส่งงาน</span></button>
                     <button onclick="navigate('manualcheck'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-tasks"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">เช็คชื่อมือ</span></button>
                     <button onclick="navigate('activities'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-book-open"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">กิจกรรม/วิชา</span></button>
@@ -809,9 +822,12 @@
             document.getElementById('cfgTeacherName').value=appConfig.teacherName || '';
             const colorPicker = document.getElementById('qrHeaderColor'); if(colorPicker) colorPicker.value = appConfig.theme;
             
-            // อัปเดตชื่อครูประจำชั้นในทุกหน้ารายงาน
-            document.querySelectorAll('.teacher-name-display').forEach(e => { 
-                e.innerText = appConfig.teacherName || '...................................................'; 
+            // อัปเดตชื่อครู และโลโก้ ในทุกหน้ารายงาน
+            document.querySelectorAll('.teacher-name-display').forEach(e => { e.innerText = appConfig.teacherName || '...................................................'; });
+            document.querySelectorAll('.school-name-report').forEach(e => { e.innerText = appConfig.school1 || 'โรงเรียน'; });
+            document.querySelectorAll('.school-logo-report').forEach(e => { 
+                if(appConfig.logo) { e.src = appConfig.logo; e.style.display = 'block'; } 
+                else { e.style.display = 'none'; }
             });
 
             // เปลี่ยน Favicon อัตโนมัติตามโลโก้
@@ -1667,7 +1683,6 @@
                         bmiText = res.bmi;
                         evalText = res.text;
                         
-                        // กำหนดสีของข้อความสำหรับหน้าปริ้นท์
                         if (res.bmi < 18.5) evalColor = 'text-blue-600';
                         else if (res.bmi >= 18.5 && res.bmi <= 22.9) evalColor = 'text-green-600';
                         else if (res.bmi >= 23.0 && res.bmi <= 24.9) evalColor = 'text-amber-600';
@@ -1869,14 +1884,22 @@
             document.getElementById('repResultMilk').classList.remove('hidden');
         }
 
-        // --- 🖨️ ฟังก์ชันสั่งพิมพ์รายงาน ปพ.5 และ น้ำหนักส่วนสูง และ ชิ้นงาน และ การดื่มนม ---
-        function printReport() {
+        function printReport(type) {
             showLoad(true);
-            const repResultNode = document.getElementById('repResult').cloneNode(true);
+            
+            let targetId = 'repResult';
+            if (type === 'health') targetId = 'repResultHealth';
+            if (type === 'work') targetId = 'repResultWork';
+            if (type === 'milk') targetId = 'repResultMilk';
+            
+            const repResultNode = document.getElementById(targetId).cloneNode(true);
             const noPrintElements = repResultNode.querySelectorAll('.no-print');
             noPrintElements.forEach(el => el.parentNode.removeChild(el));
 
             const printContent = repResultNode.innerHTML;
+            
+            // ใช้กระดาษแนวนอนสำหรับรายงานชิ้นงาน (คอลัมน์เยอะ) นอกนั้นใช้แนวตั้ง
+            const orientation = type === 'work' ? 'landscape' : 'portrait';
 
             let iframe = document.createElement('iframe');
             iframe.style.position = 'fixed'; iframe.style.right = '0'; iframe.style.bottom = '0';
@@ -1888,149 +1911,13 @@
             doc.write(`
                 <html>
                 <head>
-                    <title>รายงานเวลาเรียน</title>
+                    <title>พิมพ์เอกสาร</title>
                     <script src="https://cdn.tailwindcss.com"><\/script>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
                     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
                     <style>
                         body { font-family: 'Kanit', sans-serif; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                        @page { size: A4 portrait; margin: 10mm; }
-                        table { width: 100%; border-collapse: collapse; font-size: 10pt; page-break-inside: auto; }
-                        tr { page-break-inside: avoid; page-break-after: auto; }
-                        th, td { border: 1px solid #cbd5e1; padding: 4px; color: black; }
-                    </style>
-                </head>
-                <body class="p-8">
-                    ${printContent}
-                </body>
-                </html>
-            `);
-            doc.close();
-
-            setTimeout(() => {
-                showLoad(false);
-                iframe.contentWindow.focus();
-                iframe.contentWindow.print();
-                setTimeout(() => document.body.removeChild(iframe), 2000);
-            }, 1500);
-        }
-
-        function printHealthReport() {
-            showLoad(true);
-            const repResultNode = document.getElementById('repResultHealth').cloneNode(true);
-            const noPrintElements = repResultNode.querySelectorAll('.no-print');
-            noPrintElements.forEach(el => el.parentNode.removeChild(el));
-
-            const printContent = repResultNode.innerHTML;
-
-            let iframe = document.createElement('iframe');
-            iframe.style.position = 'fixed'; iframe.style.right = '0'; iframe.style.bottom = '0';
-            iframe.style.width = '0'; iframe.style.height = '0'; iframe.style.border = '0';
-            document.body.appendChild(iframe);
-
-            let doc = iframe.contentWindow.document;
-            doc.open();
-            doc.write(`
-                <html>
-                <head>
-                    <title>รายงานน้ำหนักส่วนสูง</title>
-                    <script src="https://cdn.tailwindcss.com"><\/script>
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-                    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-                    <style>
-                        body { font-family: 'Kanit', sans-serif; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                        @page { size: A4 portrait; margin: 10mm; }
-                        table { width: 100%; border-collapse: collapse; font-size: 10pt; page-break-inside: auto; }
-                        tr { page-break-inside: avoid; page-break-after: auto; }
-                        th, td { border: 1px solid #cbd5e1; padding: 4px; color: black; }
-                    </style>
-                </head>
-                <body class="p-8">
-                    ${printContent}
-                </body>
-                </html>
-            `);
-            doc.close();
-
-            setTimeout(() => {
-                showLoad(false);
-                iframe.contentWindow.focus();
-                iframe.contentWindow.print();
-                setTimeout(() => document.body.removeChild(iframe), 2000);
-            }, 1500);
-        }
-
-        function printWorkReport() {
-            showLoad(true);
-            const repResultNode = document.getElementById('repResultWork').cloneNode(true);
-            const noPrintElements = repResultNode.querySelectorAll('.no-print');
-            noPrintElements.forEach(el => el.parentNode.removeChild(el));
-
-            const printContent = repResultNode.innerHTML;
-
-            let iframe = document.createElement('iframe');
-            iframe.style.position = 'fixed'; iframe.style.right = '0'; iframe.style.bottom = '0';
-            iframe.style.width = '0'; iframe.style.height = '0'; iframe.style.border = '0';
-            document.body.appendChild(iframe);
-
-            let doc = iframe.contentWindow.document;
-            doc.open();
-            doc.write(`
-                <html>
-                <head>
-                    <title>รายงานคะแนนชิ้นงาน</title>
-                    <script src="https://cdn.tailwindcss.com"><\/script>
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-                    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-                    <style>
-                        body { font-family: 'Kanit', sans-serif; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                        /* ใช้กระดาษแนวนอน เพราะคอลัมน์อาจจะเยอะ */
-                        @page { size: A4 landscape; margin: 10mm; }
-                        table { width: 100%; border-collapse: collapse; font-size: 9pt; page-break-inside: auto; }
-                        tr { page-break-inside: avoid; page-break-after: auto; }
-                        th, td { border: 1px solid #cbd5e1 !important; padding: 4px !important; color: black !important; }
-                    </style>
-                </head>
-                <body class="p-8">
-                    ${printContent}
-                </body>
-                </html>
-            `);
-            doc.close();
-
-            setTimeout(() => {
-                showLoad(false);
-                iframe.contentWindow.focus();
-                iframe.contentWindow.print();
-                setTimeout(() => document.body.removeChild(iframe), 2000);
-            }, 1500);
-        }
-
-        function printMilkReport() {
-            showLoad(true);
-            const repResultNode = document.getElementById('repResultMilk').cloneNode(true);
-            const noPrintElements = repResultNode.querySelectorAll('.no-print');
-            noPrintElements.forEach(el => el.parentNode.removeChild(el));
-
-            const printContent = repResultNode.innerHTML;
-
-            let iframe = document.createElement('iframe');
-            iframe.style.position = 'fixed'; iframe.style.right = '0'; iframe.style.bottom = '0';
-            iframe.style.width = '0'; iframe.style.height = '0'; iframe.style.border = '0';
-            document.body.appendChild(iframe);
-
-            let doc = iframe.contentWindow.document;
-            doc.open();
-            doc.write(`
-                <html>
-                <head>
-                    <title>รายงานการดื่มนม</title>
-                    <script src="https://cdn.tailwindcss.com"><\/script>
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-                    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-                    <style>
-                        body { font-family: 'Kanit', sans-serif; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                        @page { size: A4 portrait; margin: 10mm; }
+                        @page { size: A4 ${orientation}; margin: 10mm; }
                         table { width: 100%; border-collapse: collapse; font-size: 10pt; page-break-inside: auto; }
                         tr { page-break-inside: avoid; page-break-after: auto; }
                         th, td { border: 1px solid #cbd5e1; padding: 4px; color: black; }
@@ -2080,7 +1967,7 @@
                 let statusBadge = '';
                 if(workTopic) {
                     const isSubmitted = workData[s.id]; statusBadge = isSubmitted ? `<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[9px] font-bold"><i class="fas fa-check mr-1"></i>ส่งแล้ว</span>` : `<span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[9px] font-bold">ยังไม่ส่ง</span>`;
-                    return `<div class="glass-card !p-4 border-l-4 ${isSubmitted ? 'border-green-500' : 'border-slate-300'} flex items-center justify-between gap-4"><div class="flex-1 min-w-0"><div class="text-sm font-bold text-slate-700 truncate">${escapeHTML(s.id)} ${escapeHTML(s.name)}</div><div class="mt-1">${statusBadge}</div></div><div class="relative w-24 flex-shrink-0"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนน</span><input type="number" id="sc_w_${escapeHTML(s.id)}" value="${workScoreVal}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-500 transition-colors bg-blue-50/30"></div></div>`;
+                    return `<div class="glass-card !p-4 border-l-4 ${isSubmitted ? 'border-green-500' : 'border-slate-300'} flex items-center justify-between gap-4"><div class="flex-1 min-w-0"><div class="text-sm font-bold text-slate-700 truncate">${escapeHTML(s.id)} ${escapeHTML(s.name)}</div><div class="mt-1">${statusBadge}</div></div><div class="relative w-24 flex-shrink-0"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนนเต็ม 10</span><input type="number" id="sc_w_${escapeHTML(s.id)}" value="${workScoreVal}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-500 transition-colors bg-blue-50/30"></div></div>`;
                 }
                 return `<div class="glass-card !p-4"><div class="text-sm font-bold text-slate-700 mb-3">${escapeHTML(s.id)} ${escapeHTML(s.name)}</div><div class="flex gap-3"><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-amber-500">คะแนนเก็บ (70)</span><input type="number" id="sc_c_${escapeHTML(s.id)}" value="${escapeHTML(sc.c)}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-amber-400"></div><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนนสอบ (30)</span><input type="number" id="sc_e_${escapeHTML(s.id)}" value="${escapeHTML(sc.e)}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-400"></div></div></div>`;
             }).join('');
@@ -2155,13 +2042,12 @@
             setTimeout(() => { stds.forEach((s, i) => { document.getElementById('qr-'+i).innerHTML = ""; new QRCode(document.getElementById('qr-'+i), { text: s.id.toString(), width: 100, height: 100, correctLevel: QRCode.CorrectLevel.M }); }); }, 300);
         }
 
-        // --- 🖨️ ฟังก์ชันสั่งพิมพ์บัตรนักเรียน (หน่วงเวลาให้ CSS ทำงาน) ---
         function printQRCards() { 
             showLoad(true);
             const container = document.getElementById('cardContainer');
             const clone = container.cloneNode(true);
             
-            // ดึงข้อมูล Canvas แปลงเป็นไฟล์รูปภาพ (เพื่อป้องกันบัตรปริ้นออกมาแล้ว QR Code หาย)
+            // ดึงข้อมูล Canvas แปลงเป็นไฟล์รูปภาพ
             const originalQrContainers = container.querySelectorAll('.qr-code');
             const clonedQrContainers = clone.querySelectorAll('.qr-code');
             
@@ -2172,7 +2058,6 @@
                     img.src = canvas.toDataURL('image/png');
                     img.style.width = '100%'; img.style.height = '100%'; img.style.objectFit = 'contain';
                     
-                    // ล้างเนื้อหาเดิมทั้งหมด (ทั้ง canvas และ img ซ่อนที่ไลบรารีแถมมา) ป้องกันรูปเบิ้ลและบีบอัด
                     clonedQrContainers[i].innerHTML = ''; 
                     clonedQrContainers[i].appendChild(img);
                 }
