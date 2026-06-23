@@ -43,9 +43,41 @@
         .page-content.active { display: block; opacity: 1; animation: slideUp 0.3s ease-out forwards; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        .nav-sidebar-item { transition: all 0.2s ease; border-left: 3px solid transparent; border-radius: 0 12px 12px 0; margin-right: 12px; }
-        .nav-sidebar-item:hover { background-color: #f1f5f9; color: theme('colors.secondary'); }
-        .nav-sidebar-item.active { background-color: #e0f2fe; color: theme('colors.secondary'); font-weight: 600; border-left-color: theme('colors.secondary'); }
+        /* --- ปรับปรุง Sidebar Item ให้อ่านง่ายและสวยงาม --- */
+        .nav-sidebar-item { 
+            transition: all 0.2s ease; 
+            border-left: 4px solid transparent; 
+            border-radius: 0 16px 16px 0; 
+            margin-right: 16px; 
+            margin-bottom: 4px;
+            font-size: 15px; /* ปรับขนาดอักษรให้ใหญ่ขึ้น */
+            font-weight: 500;
+            color: #334155;
+        }
+        .nav-sidebar-item:hover { 
+            background-color: #f1f5f9; 
+            color: theme('colors.secondary'); 
+        }
+        .nav-sidebar-item.active { 
+            background-color: #e0f2fe; 
+            color: theme('colors.secondary'); 
+            font-weight: 700; 
+            border-left-color: theme('colors.secondary'); 
+        }
+
+        /* ใส่สีพื้นหลังให้แต่ละเมนูเพื่อความโดดเด่น */
+        .bg-menu-dashboard { background-color: #f0f9ff; }
+        .bg-menu-manual { background-color: #fff7ed; }
+        .bg-menu-act { background-color: #eff6ff; }
+        .bg-menu-cls { background-color: #faf5ff; }
+        .bg-menu-std { background-color: #ecfdf5; }
+        .bg-menu-qr { background-color: #fff1f2; }
+        .bg-menu-score { background-color: #fef3c7; }
+        .bg-menu-grade { background-color: #eef2ff; }
+        .bg-menu-health { background-color: #fce7f3; }
+        .bg-menu-milk { background-color: #e0f2fe; }
+        .bg-menu-report { background-color: #f0fdfa; }
+        .bg-menu-setting { background-color: #f8fafc; }
         
         .nav-bottom-item { color: #64748b; transition: all 0.2s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px 0; width: 20%;}
         .nav-bottom-item.active { color: theme('colors.secondary'); }
@@ -57,22 +89,138 @@
         .table-custom th { color: #475569; font-weight: 600; padding: 12px 10px; border-bottom: 2px solid #e2e8f0; background: #f8fafc; font-size: 0.85rem;}
         .table-custom td { padding: 10px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; font-size: 0.85rem;}
 
-        /* --- QR Card Style --- */
+        /* --- QR Card Style (Responsive & Flexible Text) --- */
         .card-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 4mm; }
-        .qr-maker-container .card { width: 86mm !important; height: 54mm !important; border: 1px solid #cbd5e1; border-radius: 4mm; display: flex; flex-direction: column; background-color: #fff; box-sizing: border-box !important; position: relative; overflow: hidden; padding: 0 !important; box-shadow: 0 4px 10px rgba(0,0,0,0.08); flex-shrink: 0; }
-        .qr-maker-container .card-header { width: 100%; height: 8mm; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: bold; letter-spacing: 0.5px; flex-shrink: 0; }
-        .qr-maker-container .card-body { display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 4mm; flex: 1; width: 100%; box-sizing: border-box; gap: 2mm; }
-        .qr-maker-container .card-left { display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; width: 60%; height: 100%; }
-        .qr-maker-container .school-header { display: flex; align-items: center; gap: 2mm; margin-bottom: 2mm; width: 100%; }
-        .qr-maker-container .school-logo { width: 10mm; height: 10mm; object-fit: contain; flex-shrink: 0; }
-        .qr-maker-container .school-name { font-size: 10px; font-weight: bold; line-height: 1.1; color: #1e293b; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .qr-maker-container .student-info { font-size: 10px; color: #475569; line-height: 1.4; font-weight: 500; }
-        .qr-maker-container .student-name { font-size: 12px; font-weight: 800; margin-top: auto; padding-top: 1mm; border-top: 1px dashed #cbd5e1; width: 100%; line-height: 1.2; color: #0f172a; white-space: normal; word-wrap: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .qr-maker-container .card-right { width: 35%; height: 100%; display: flex; justify-content: flex-end; align-items: center; }
-        .qr-maker-container .qr-code { width: 24mm !important; height: 24mm !important; background: white; padding: 1mm; border-radius: 2mm; display: flex !important; justify-content: center; align-items: center; border: 1px solid #e2e8f0; flex-shrink: 0; }
-        .qr-maker-container .qr-code img, .qr-maker-container .qr-code canvas { width: 100% !important; height: 100% !important; object-fit: contain !important; }
+        
+        .qr-maker-container .card {
+            width: 86mm !important;
+            height: 54mm !important;
+            border: 1px solid #cbd5e1;
+            border-radius: 4mm;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            box-sizing: border-box !important;
+            position: relative;
+            overflow: hidden;
+            padding: 0 !important;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+        }
 
-        /* --- Print CSS --- */
+        .qr-maker-container .card-header {
+            width: 100%;
+            height: 8mm;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+
+        .qr-maker-container .card-body {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4mm;
+            flex: 1;
+            width: 100%;
+            box-sizing: border-box;
+            gap: 2mm;
+        }
+
+        .qr-maker-container .card-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            width: 60%;
+            height: 100%;
+        }
+
+        .qr-maker-container .school-header {
+            display: flex;
+            align-items: center;
+            gap: 2mm;
+            margin-bottom: 2mm;
+            width: 100%;
+        }
+
+        .qr-maker-container .school-logo {
+            width: 10mm;
+            height: 10mm;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .qr-maker-container .school-name {
+            font-size: 10px;
+            font-weight: bold;
+            line-height: 1.1;
+            color: #1e293b;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .qr-maker-container .student-info {
+            font-size: 10px;
+            color: #475569;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .qr-maker-container .student-name {
+            font-size: 12px;
+            font-weight: 800;
+            margin-top: auto; 
+            padding-top: 1mm;
+            border-top: 1px dashed #cbd5e1;
+            width: 100%;
+            line-height: 1.2;
+            color: #0f172a;
+            white-space: normal;
+            word-wrap: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .qr-maker-container .card-right {
+            width: 35%;
+            height: 100%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .qr-maker-container .qr-code {
+            width: 24mm !important;
+            height: 24mm !important;
+            background: white;
+            padding: 1mm;
+            border-radius: 2mm;
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #e2e8f0;
+            flex-shrink: 0;
+        }
+
+        .qr-maker-container .qr-code img,
+        .qr-maker-container .qr-code canvas {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+        }
+
+        /* --- การตั้งค่า Print CSS --- */
         @media print {
             @page { size: A4 portrait; margin: 10mm; }
             body, html { background: white !important; display: block !important; height: auto !important; width: auto !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; position: static !important;}
@@ -80,12 +228,6 @@
             main { display: block !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; height: auto !important; width: 100% !important; max-width: none !important; position: static !important; }
             aside, header, nav, .no-print, #mobileMenuOverlay { display: none !important; }
             .page-content { display: none !important; }
-            
-            body.printing-report #page-report { display: block !important; position: static !important; }
-            body.printing-report #repResult, body.printing-report #repResultHealth, body.printing-report #repResultMilk, body.printing-report #repResultWork { display: block !important; position: static !important; width: 100% !important; box-shadow: none !important; border: none !important; margin: 0 !important; padding: 0 !important; }
-            body.printing-report table { width: 100% !important; border-collapse: collapse !important; font-size: 10pt !important; page-break-inside: auto; }
-            body.printing-report tr { page-break-inside: avoid; page-break-after: auto; }
-            body.printing-report th, body.printing-report td { border: 1px solid #cbd5e1 !important; padding: 4px !important; color: black !important; }
         }
     </style>
 </head>
@@ -110,24 +252,23 @@
         </div>
         
         <div class="flex-1 overflow-y-auto custom-scroll py-6">
-            <!-- ปรับขนาดและน้ำหนักตัวอักษรของหัวข้อเมนู -->
-            <div class="px-6 mb-3 text-sm font-bold text-slate-600 tracking-wide">เมนูหลัก</div>
-            <button onclick="navigate('dashboard')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item active" data-tab="dashboard"><i class="fas fa-home w-8 text-secondary"></i> สแกนเข้าเรียน / ส่งงาน</button>
-            <button onclick="navigate('manualcheck')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="manualcheck"><i class="fas fa-tasks w-8 text-orange-500"></i> เช็คชื่อด้วยมือ</button>
-            <button onclick="navigate('activities')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="activities"><i class="fas fa-book-open w-8 text-blue-500"></i> กิจกรรม / รายวิชา</button>
-            <button onclick="navigate('classes')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="classes"><i class="fas fa-layer-group w-8 text-purple-500"></i> การจัดการชั้นเรียน</button>
-            <button onclick="navigate('students')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="students"><i class="fas fa-users w-8 text-emerald-500"></i> ทะเบียนนักเรียน</button>
-            <button onclick="navigate('qrmaker')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="qrmaker"><i class="fas fa-id-badge w-8 text-rose-500"></i> สร้างบัตร QR Code ประจำตัว</button>
+            <div class="px-6 mb-3 text-sm font-black text-slate-500 tracking-widest uppercase">เมนูหลัก</div>
+            <button onclick="navigate('dashboard')" class="w-full flex items-center px-6 py-3.5 bg-menu-dashboard nav-sidebar-item active" data-tab="dashboard"><i class="fas fa-home w-8 text-secondary"></i> สแกนเข้าเรียน / ส่งงาน</button>
+            <button onclick="navigate('manualcheck')" class="w-full flex items-center px-6 py-3.5 bg-menu-manual nav-sidebar-item" data-tab="manualcheck"><i class="fas fa-tasks w-8 text-orange-500"></i> เช็คชื่อด้วยมือ</button>
+            <button onclick="navigate('activities')" class="w-full flex items-center px-6 py-3.5 bg-menu-act nav-sidebar-item" data-tab="activities"><i class="fas fa-book-open w-8 text-blue-500"></i> กิจกรรม / รายวิชา</button>
+            <button onclick="navigate('classes')" class="w-full flex items-center px-6 py-3.5 bg-menu-cls nav-sidebar-item" data-tab="classes"><i class="fas fa-layer-group w-8 text-purple-500"></i> การจัดการชั้นเรียน</button>
+            <button onclick="navigate('students')" class="w-full flex items-center px-6 py-3.5 bg-menu-std nav-sidebar-item" data-tab="students"><i class="fas fa-users w-8 text-emerald-500"></i> ทะเบียนนักเรียน</button>
+            <button onclick="navigate('qrmaker')" class="w-full flex items-center px-6 py-3.5 bg-menu-qr nav-sidebar-item" data-tab="qrmaker"><i class="fas fa-id-badge w-8 text-rose-500"></i> สร้างบัตร QR Code</button>
             
-            <div class="px-6 mt-6 mb-3 text-sm font-bold text-slate-600 tracking-wide">ผลการเรียน & สุขภาพ</div>
-            <button onclick="navigate('scores')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="scores"><i class="fas fa-star w-8 text-amber-400"></i> บันทึกคะแนน / ตรวจงาน</button>
-            <button onclick="navigate('grades')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="grades"><i class="fas fa-graduation-cap w-8 text-indigo-500"></i> คำนวณและตัดเกรด</button>
-            <button onclick="navigate('health')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="health"><i class="fas fa-weight-scale w-8 text-pink-500"></i> บันทึกน้ำหนัก/ส่วนสูง</button>
-            <button onclick="navigate('milk')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="milk"><i class="fas fa-glass-water w-8 text-sky-400"></i> บันทึกการดื่มนม</button>
-            <button onclick="navigate('report')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="report"><i class="fas fa-file-invoice-dollar w-8 text-teal-500"></i> ระบบรายงานผล</button>
+            <div class="px-6 mt-8 mb-3 text-sm font-black text-slate-500 tracking-widest uppercase">ผลการเรียน & สุขภาพ</div>
+            <button onclick="navigate('scores')" class="w-full flex items-center px-6 py-3.5 bg-menu-score nav-sidebar-item" data-tab="scores"><i class="fas fa-star w-8 text-amber-500"></i> บันทึกคะแนน / ตรวจงาน</button>
+            <button onclick="navigate('grades')" class="w-full flex items-center px-6 py-3.5 bg-menu-grade nav-sidebar-item" data-tab="grades"><i class="fas fa-graduation-cap w-8 text-indigo-500"></i> คำนวณและตัดเกรด</button>
+            <button onclick="navigate('health')" class="w-full flex items-center px-6 py-3.5 bg-menu-health nav-sidebar-item" data-tab="health"><i class="fas fa-weight-scale w-8 text-pink-500"></i> บันทึกน้ำหนัก/ส่วนสูง</button>
+            <button onclick="navigate('milk')" class="w-full flex items-center px-6 py-3.5 bg-menu-milk nav-sidebar-item" data-tab="milk"><i class="fas fa-glass-water w-8 text-sky-500"></i> บันทึกการดื่มนม</button>
+            <button onclick="navigate('report')" class="w-full flex items-center px-6 py-3.5 bg-menu-report nav-sidebar-item" data-tab="report"><i class="fas fa-file-invoice-dollar w-8 text-teal-500"></i> ระบบรายงานผล</button>
 
-            <div class="px-6 mt-6 mb-3 text-sm font-bold text-slate-600 tracking-wide">การตั้งค่า</div>
-            <button onclick="navigate('settings')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="settings"><i class="fas fa-cog w-8 text-slate-500"></i> ตั้งค่าแอปพลิเคชัน</button>
+            <div class="px-6 mt-8 mb-3 text-sm font-black text-slate-500 tracking-widest uppercase">การตั้งค่า</div>
+            <button onclick="navigate('settings')" class="w-full flex items-center px-6 py-3.5 bg-menu-setting nav-sidebar-item" data-tab="settings"><i class="fas fa-cog w-8 text-slate-600"></i> ตั้งค่าแอปพลิเคชัน</button>
         </div>
     </aside>
 
@@ -214,15 +355,10 @@
 
                 <h3 class="text-lg font-bold text-primary mb-4">ภาพรวมวันนี้</h3>
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                    <div class="glass-card !p-4 !rounded-2xl border-l-4 border-l-blue-500"><div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">นักเรียนทั้งหมด</div><div class="flex items-end gap-1"><h3 class="text-3xl font-black text-slate-800 leading-none" id="dashTotalStd">0</h3><span class="text-xs font-medium text-slate-500 mb-1">คน</span></div></div>
+                    <div class="glass-card !p-4 !rounded-2xl border-l-4 border-l-blue-500"><div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">นักเรียนที่จะต้องมาเรียนวันนี้</div><div class="flex items-end gap-1"><h3 class="text-3xl font-black text-slate-800 leading-none" id="dashTotalStd">0</h3><span class="text-xs font-medium text-slate-500 mb-1">คน</span></div></div>
                     <div class="glass-card !p-4 !rounded-2xl border-l-4 border-l-emerald-500"><div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">มาเรียน/สาย</div><div class="flex items-end gap-1"><h3 class="text-3xl font-black text-emerald-600 leading-none" id="dashPresent">0</h3><span class="text-xs font-medium text-slate-500 mb-1">คน</span></div><div class="text-[10px] font-bold text-emerald-500 mt-1 bg-emerald-50 inline-block px-2 py-0.5 rounded" id="dashPresentPct">0%</div></div>
                     <div class="glass-card !p-4 !rounded-2xl border-l-4 border-l-rose-500"><div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">ขาด/ลา</div><div class="flex items-end gap-1"><h3 class="text-3xl font-black text-rose-600 leading-none" id="dashAbsent">0</h3><span class="text-xs font-medium text-slate-500 mb-1">คน</span></div></div>
                     <div class="glass-card !p-4 !rounded-2xl border-l-4 border-l-purple-500"><div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">ชั้นเรียนทั้งหมด</div><div class="flex items-end gap-1"><h3 class="text-3xl font-black text-purple-600 leading-none" id="dashClasses">0</h3><span class="text-xs font-medium text-slate-500 mb-1">ห้อง</span></div></div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="glass-card"><h3 class="font-bold text-slate-700 text-sm mb-4"><i class="fas fa-chart-bar text-slate-400 mr-2"></i>นักเรียนแยกตามห้อง</h3><div class="h-60 w-full"><canvas id="barChart"></canvas></div></div>
-                    <div class="glass-card"><h3 class="font-bold text-slate-700 text-sm mb-4"><i class="fas fa-chart-pie text-slate-400 mr-2"></i>สัดส่วนการมาเรียนรวม</h3><div class="h-60 w-full flex justify-center"><canvas id="pieChart"></canvas></div></div>
                 </div>
             </div>
 
@@ -328,7 +464,7 @@
                     <button id="tabRepHealth" onclick="switchReportTab('health')" class="px-6 py-3 font-bold text-sm text-slate-400 border-b-2 border-transparent transition-all whitespace-nowrap"><i class="fas fa-weight-scale mr-1"></i> น้ำหนัก/ส่วนสูง (BMI)</button>
                 </div>
 
-                <!-- พื้นที่รายงาน 1: เวลาเรียน -->
+                <!-- พื้นที่รายงาน 1: เวลาเรียน (ของเดิม) -->
                 <div id="repAttArea">
                     <div class="glass-card mb-6 no-print max-w-4xl">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -354,11 +490,10 @@
                     </div>
                     <div id="repResult" class="hidden">
                         <div class="mb-4 no-print flex justify-end">
-                            <button onclick="printReport('attendance')" class="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-print"></i> พิมพ์เอกสาร PDF</button>
+                            <button onclick="printReport()" class="bg-primary text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-print"></i> พิมพ์เอกสาร PDF</button>
                         </div>
                         <div class="glass-card !p-0 overflow-hidden shadow-lg border border-slate-200" id="printContentAtt">
                             <div class="p-6 text-center border-b-2 border-primary bg-white relative">
-                                <!-- ส่วนโลโก้ในรายงาน (ดึงจากตั้งค่า) -->
                                 <img src="" class="school-logo-report absolute left-6 top-6 h-16 w-16 object-contain" style="display:none;" onerror="this.style.display='none'">
                                 <h1 class="text-xl font-bold text-primary mb-1 school-name-report">โรงเรียน</h1>
                                 <h2 class="text-lg font-bold text-slate-700 mb-2">รายงานบันทึกเวลาเรียน</h2>
@@ -372,7 +507,7 @@
                             </div>
                             <div class="overflow-x-auto bg-white p-4">
                                 <table class="w-full text-left table-custom whitespace-nowrap min-w-[600px]"><thead id="repHead"></thead><tbody id="repBody"></tbody></table>
-                                <!-- ลายเซ็นครู -->
+                                <!-- ลายเซ็นครู (ปพ.5) -->
                                 <div class="mt-16 mb-8 flex justify-end text-center no-print-break" style="page-break-inside: avoid;">
                                     <div class="w-64">
                                         <p class="mb-8 text-slate-800 text-sm">ลงชื่อ...................................................</p>
@@ -418,6 +553,7 @@
                                     <tbody id="repBodyWork"></tbody>
                                     <tfoot id="repFootWork" class="bg-slate-50 font-bold text-sm"></tfoot>
                                 </table>
+                                <!-- ลายเซ็นครู (ชิ้นงาน) -->
                                 <div class="mt-16 mb-8 flex justify-end text-center no-print-break" style="page-break-inside: avoid;">
                                     <div class="w-64">
                                         <p class="mb-8 text-slate-800 text-sm">ลงชื่อ...................................................</p>
@@ -476,6 +612,7 @@
                                     </thead>
                                     <tbody id="repBodyMilk"></tbody>
                                 </table>
+                                <!-- ลายเซ็นครู (การดื่มนม) -->
                                 <div class="mt-16 mb-8 flex justify-end text-center no-print-break" style="page-break-inside: avoid;">
                                     <div class="w-64">
                                         <p class="mb-8 text-slate-800 text-sm">ลงชื่อ...................................................</p>
@@ -524,6 +661,7 @@
                                     </thead>
                                     <tbody id="repBodyHealth"></tbody>
                                 </table>
+                                <!-- ลายเซ็นครู (น้ำหนักส่วนสูง) -->
                                 <div class="mt-16 mb-8 flex justify-end text-center no-print-break" style="page-break-inside: avoid;">
                                     <div class="w-64">
                                         <p class="mb-8 text-slate-800 text-sm">ลงชื่อ...................................................</p>
@@ -693,7 +831,7 @@
                     <h3 class="font-bold text-primary text-lg">เมนูแอปพลิเคชัน</h3>
                     <button onclick="document.getElementById('mobileMenuOverlay').classList.add('hidden')" class="w-8 h-8 bg-slate-100 text-slate-500 rounded-full"><i class="fas fa-times"></i></button>
                 </div>
-                <div class="grid grid-cols-3 gap-y-6 gap-x-2">
+                <div class="grid grid-cols-4 gap-y-6 gap-x-2">
                     <button onclick="navigate('dashboard'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-sky-50 text-sky-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-home"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">สแกน/ส่งงาน</span></button>
                     <button onclick="navigate('manualcheck'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-tasks"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">เช็คชื่อมือ</span></button>
                     <button onclick="navigate('activities'); document.getElementById('mobileMenuOverlay').classList.add('hidden');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-book-open"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">กิจกรรม/วิชา</span></button>
@@ -822,9 +960,15 @@
             document.getElementById('cfgTeacherName').value=appConfig.teacherName || '';
             const colorPicker = document.getElementById('qrHeaderColor'); if(colorPicker) colorPicker.value = appConfig.theme;
             
-            // อัปเดตชื่อครู และโลโก้ ในทุกหน้ารายงาน
-            document.querySelectorAll('.teacher-name-display').forEach(e => { e.innerText = appConfig.teacherName || '...................................................'; });
-            document.querySelectorAll('.school-name-report').forEach(e => { e.innerText = appConfig.school1 || 'โรงเรียน'; });
+            // อัปเดตชื่อครูประจำชั้นในทุกหน้ารายงาน
+            document.querySelectorAll('.teacher-name-display').forEach(e => { 
+                e.innerText = appConfig.teacherName || '...................................................'; 
+            });
+            // อัปเดตชื่อโรงเรียนในรายงาน
+            document.querySelectorAll('.school-name-report').forEach(e => { 
+                e.innerText = appConfig.school1 || 'โรงเรียน'; 
+            });
+            // อัปเดตโลโก้ในรายงาน
             document.querySelectorAll('.school-logo-report').forEach(e => { 
                 if(appConfig.logo) { e.src = appConfig.logo; e.style.display = 'block'; } 
                 else { e.style.display = 'none'; }
@@ -975,18 +1119,51 @@
 
         // --- Dashboard ---
         function updateDashboard() {
-            const today = new Date().toISOString().split('T')[0]; let pres = 0, abs = 0;
-            Object.keys(DB.attendance).forEach(k => {
-                const p = k.split('|'); if(p[1] === today) {
-                    const clsStds = DB.students.filter(s=>String(s.class||'').trim() === String(p[2]||'').trim()).length;
-                    const atts = Object.values(DB.attendance[k]).filter(r => r.status !== 'absent').length;
-                    pres += atts; abs += Math.max(0, clsStds - atts);
+            const act = document.getElementById('selMainAct').value;
+            const cls = document.getElementById('selMainClass').value;
+            const today = document.getElementById('inpMainDate').value || new Date().toISOString().split('T')[0]; 
+            
+            let pres = 0, abs = 0, targetStdsCount = 0;
+            
+            // หาจำนวนเด็กทั้งหมดในห้องที่เลือก (หรือถ้าไม่เลือกห้อง ให้นับเด็กที่อยู่ในคลาสที่มีเรียนวันนี้)
+            let studentsInClass = [];
+            if (cls) {
+                studentsInClass = DB.students.filter(s => String(s.class||'').trim() === String(cls||'').trim());
+                targetStdsCount = studentsInClass.length;
+            } else {
+                targetStdsCount = DB.students.length;
+            }
+
+            // คำนวณยอดการเข้าเรียนเฉพาะวิชาและห้องที่เลือก (ถ้ามี)
+            if (act && cls && today) {
+                const checkKeyToCalc = `${act}|${today}|${cls}`;
+                if (DB.attendance[checkKeyToCalc]) {
+                    const attRecords = Object.values(DB.attendance[checkKeyToCalc]);
+                    pres = attRecords.filter(r => r.status === 'present' || r.status === 'late').length;
+                    abs = Math.max(0, targetStdsCount - pres); // ขาด คือ จำนวนเด็กห้องนี้ - จำนวนคนที่มา
+                } else {
+                    pres = 0;
+                    abs = targetStdsCount; // ยังไม่เช็คชื่อ ถือว่าขาดทั้งหมดชั่วคราว
                 }
-            });
+            } else {
+                // ถ้ายังไม่ได้เจาะจงวิชา/ห้อง ให้แสดงยอดรวมแบบภาพกว้างของวันนี้ทั้งหมด
+                Object.keys(DB.attendance).forEach(k => {
+                    const p = k.split('|'); 
+                    if(p[1] === today) {
+                        const atts = Object.values(DB.attendance[k]).filter(r => r.status !== 'absent').length;
+                        pres += atts; 
+                    }
+                });
+                abs = 0; // ในภาพรวมจะไม่แสดงยอดขาดที่ชัดเจนจนกว่าจะเลือกห้อง
+            }
+
             const pct = (pres+abs)>0 ? Math.round((pres/(pres+abs))*100) : 0;
-            document.getElementById('dashTotalStd').innerText = DB.students.length;
-            document.getElementById('dashPresent').innerText = pres; document.getElementById('dashAbsent').innerText = abs;
-            document.getElementById('dashClasses').innerText = DB.classes.length; document.getElementById('dashPresentPct').innerText = `คิดเป็น ${pct}%`;
+            
+            document.getElementById('dashTotalStd').innerText = targetStdsCount;
+            document.getElementById('dashPresent').innerText = pres; 
+            document.getElementById('dashAbsent').innerText = abs;
+            document.getElementById('dashClasses').innerText = DB.classes.length; 
+            document.getElementById('dashPresentPct').innerText = `คิดเป็น ${pct}%`;
             
             let cStats = {}; DB.classes.forEach(c=>cStats[String(c.name||'').trim()]=0); DB.students.forEach(s=>{ let cl = String(s.class||'').trim(); if(cStats[cl]!==undefined) cStats[cl]++;});
             if(charts.bar) charts.bar.destroy();
@@ -1007,7 +1184,6 @@
             selAct.innerHTML = a; 
             selClass.innerHTML = c;
             
-            // ให้จดจำตัวเลือกเดิมที่เลือกค้างไว้
             if(currentAct) selAct.value = currentAct;
             if(currentClass) selClass.value = currentClass;
 
@@ -1019,7 +1195,7 @@
             const act = document.getElementById('selMainAct').value; const cls = document.getElementById('selMainClass').value; const selWork = document.getElementById('selMainWork');
             const currentWork = selWork.value; // เก็บค่าชิ้นงานเดิม
             
-            if(!act || !cls) { selWork.innerHTML = '<option value="">-- เลือกวิชาและห้องก่อน --</option>'; return; }
+            if(!act || !cls) { selWork.innerHTML = '<option value="">-- เลือกวิชาและห้องก่อน --</option>'; updateDashboard(); return; }
             let topics = new Set();
             Object.keys(DB.works).forEach(k => { const parts = k.split('|'); if(parts.length === 3 && parts[0] === act && parts[2] === cls) { topics.add(parts[1]); } });
             
@@ -1028,6 +1204,8 @@
                 if(currentWork) selWork.value = currentWork; // คืนค่าชิ้นงานเดิม
             } 
             else { selWork.innerHTML = '<option value="">-- ไม่มีชิ้นงาน (ไปเพิ่มในเมนูกิจกรรม) --</option>'; }
+            
+            updateDashboard(); // คำนวณ Dashboard ใหม่เมื่อเลือกห้อง/วิชา
         }
 
         function switchScanMode(mode) {
@@ -1073,13 +1251,24 @@
             const act = document.getElementById('selMainAct').value; const cls = document.getElementById('selMainClass').value; const area = document.getElementById('mainScanArea');
             if(currentScanMode === 'attendance') {
                 const dt = document.getElementById('inpMainDate').value;
-                if(act && cls && dt) { area.classList.remove('opacity-50','pointer-events-none'); checkKey = `${act}|${dt}|${cls}`; currentSess = []; updateMainLogTable(); } 
+                if(act && cls && dt) { 
+                    area.classList.remove('opacity-50','pointer-events-none'); 
+                    if(checkKey !== `${act}|${dt}|${cls}`) currentSess = []; // ล้างประวัติเฉพาะเมื่อเปลี่ยนห้อง/วิชา
+                    checkKey = `${act}|${dt}|${cls}`;  
+                    updateMainLogTable(); 
+                } 
                 else { area.classList.add('opacity-50','pointer-events-none'); checkKey = ''; }
             } else {
                 const wName = document.getElementById('selMainWork').value;
-                if(act && cls && wName) { area.classList.remove('opacity-50','pointer-events-none'); submitWorkKey = `${act}|${wName}|${cls}`; currentWorkSess = []; updateMainLogTable(); } 
+                if(act && cls && wName) { 
+                    area.classList.remove('opacity-50','pointer-events-none'); 
+                    if(submitWorkKey !== `${act}|${wName}|${cls}`) currentWorkSess = []; // ล้างประวัติเฉพาะเมื่อเปลี่ยนชิ้นงาน
+                    submitWorkKey = `${act}|${wName}|${cls}`;  
+                    updateMainLogTable(); 
+                } 
                 else { area.classList.add('opacity-50','pointer-events-none'); submitWorkKey = ''; }
             }
+            updateDashboard();
         }
 
         function openScannerOverlay() {
@@ -1388,19 +1577,12 @@
 
         // --- HEALTH (น้ำหนักส่วนสูง) ---
         function prepHealthPage() {
-            const selClass = document.getElementById('selClassHealth');
-            const currentClass = selClass.value;
-            
-            selClass.innerHTML = '<option value="">- เลือกห้อง -</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
-            if(currentClass) selClass.value = currentClass;
-            
+            document.getElementById('selClassHealth').innerHTML = '<option value="">- เลือกห้อง -</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
             if(!document.getElementById('inpMonthHealth').value) {
                 const now = new Date();
                 document.getElementById('inpMonthHealth').value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
             }
-            
-            if(currentClass) loadHealthData();
-            else document.getElementById('healthTableArea').classList.add('hidden');
+            document.getElementById('healthTableArea').classList.add('hidden');
         }
 
         function loadHealthData() {
@@ -1468,16 +1650,9 @@
 
         // --- MILK (การดื่มนม) ---
         function prepMilkPage() {
-            const selClass = document.getElementById('selClassMilk');
-            const currentClass = selClass.value;
-            
-            selClass.innerHTML = '<option value="">- เลือกห้อง -</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
-            if(currentClass) selClass.value = currentClass;
-
+            document.getElementById('selClassMilk').innerHTML = '<option value="">- เลือกห้อง -</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
             if(!document.getElementById('inpDateMilk').value) document.getElementById('inpDateMilk').value = new Date().toISOString().split('T')[0];
-            
-            if(currentClass) loadMilkData();
-            else document.getElementById('milkTableArea').classList.add('hidden');
+            document.getElementById('milkTableArea').classList.add('hidden');
         }
 
         function loadMilkData() {
@@ -1916,22 +2091,14 @@
             document.getElementById('repResultMilk').classList.remove('hidden');
         }
 
-        function printReport(type) {
+        // --- 🖨️ ฟังก์ชันสั่งพิมพ์รายงานต่างๆ ---
+        function printReport() {
             showLoad(true);
-            
-            let targetId = 'repResult';
-            if (type === 'health') targetId = 'repResultHealth';
-            if (type === 'work') targetId = 'repResultWork';
-            if (type === 'milk') targetId = 'repResultMilk';
-            
-            const repResultNode = document.getElementById(targetId).cloneNode(true);
+            const repResultNode = document.getElementById('repResult').cloneNode(true);
             const noPrintElements = repResultNode.querySelectorAll('.no-print');
             noPrintElements.forEach(el => el.parentNode.removeChild(el));
 
             const printContent = repResultNode.innerHTML;
-            
-            // ใช้กระดาษแนวนอนสำหรับรายงานชิ้นงาน (คอลัมน์เยอะ) นอกนั้นใช้แนวตั้ง
-            const orientation = type === 'work' ? 'landscape' : 'portrait';
 
             let iframe = document.createElement('iframe');
             iframe.style.position = 'fixed'; iframe.style.right = '0'; iframe.style.bottom = '0';
@@ -1943,13 +2110,149 @@
             doc.write(`
                 <html>
                 <head>
-                    <title>พิมพ์เอกสาร</title>
+                    <title>รายงานเวลาเรียน</title>
                     <script src="https://cdn.tailwindcss.com"><\/script>
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
                     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
                     <style>
                         body { font-family: 'Kanit', sans-serif; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                        @page { size: A4 ${orientation}; margin: 10mm; }
+                        @page { size: A4 portrait; margin: 10mm; }
+                        table { width: 100%; border-collapse: collapse; font-size: 10pt; page-break-inside: auto; }
+                        tr { page-break-inside: avoid; page-break-after: auto; }
+                        th, td { border: 1px solid #cbd5e1; padding: 4px; color: black; }
+                    </style>
+                </head>
+                <body class="p-8">
+                    ${printContent}
+                </body>
+                </html>
+            `);
+            doc.close();
+
+            setTimeout(() => {
+                showLoad(false);
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+                setTimeout(() => document.body.removeChild(iframe), 2000);
+            }, 1500);
+        }
+
+        function printHealthReport() {
+            showLoad(true);
+            const repResultNode = document.getElementById('repResultHealth').cloneNode(true);
+            const noPrintElements = repResultNode.querySelectorAll('.no-print');
+            noPrintElements.forEach(el => el.parentNode.removeChild(el));
+
+            const printContent = repResultNode.innerHTML;
+
+            let iframe = document.createElement('iframe');
+            iframe.style.position = 'fixed'; iframe.style.right = '0'; iframe.style.bottom = '0';
+            iframe.style.width = '0'; iframe.style.height = '0'; iframe.style.border = '0';
+            document.body.appendChild(iframe);
+
+            let doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(`
+                <html>
+                <head>
+                    <title>รายงานน้ำหนักส่วนสูง</title>
+                    <script src="https://cdn.tailwindcss.com"><\/script>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+                    <style>
+                        body { font-family: 'Kanit', sans-serif; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                        @page { size: A4 portrait; margin: 10mm; }
+                        table { width: 100%; border-collapse: collapse; font-size: 10pt; page-break-inside: auto; }
+                        tr { page-break-inside: avoid; page-break-after: auto; }
+                        th, td { border: 1px solid #cbd5e1; padding: 4px; color: black; }
+                    </style>
+                </head>
+                <body class="p-8">
+                    ${printContent}
+                </body>
+                </html>
+            `);
+            doc.close();
+
+            setTimeout(() => {
+                showLoad(false);
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+                setTimeout(() => document.body.removeChild(iframe), 2000);
+            }, 1500);
+        }
+
+        function printWorkReport() {
+            showLoad(true);
+            const repResultNode = document.getElementById('repResultWork').cloneNode(true);
+            const noPrintElements = repResultNode.querySelectorAll('.no-print');
+            noPrintElements.forEach(el => el.parentNode.removeChild(el));
+
+            const printContent = repResultNode.innerHTML;
+
+            let iframe = document.createElement('iframe');
+            iframe.style.position = 'fixed'; iframe.style.right = '0'; iframe.style.bottom = '0';
+            iframe.style.width = '0'; iframe.style.height = '0'; iframe.style.border = '0';
+            document.body.appendChild(iframe);
+
+            let doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(`
+                <html>
+                <head>
+                    <title>รายงานคะแนนชิ้นงาน</title>
+                    <script src="https://cdn.tailwindcss.com"><\/script>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+                    <style>
+                        body { font-family: 'Kanit', sans-serif; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                        /* ใช้กระดาษแนวนอน เพราะคอลัมน์อาจจะเยอะ */
+                        @page { size: A4 landscape; margin: 10mm; }
+                        table { width: 100%; border-collapse: collapse; font-size: 9pt; page-break-inside: auto; }
+                        tr { page-break-inside: avoid; page-break-after: auto; }
+                        th, td { border: 1px solid #cbd5e1 !important; padding: 4px !important; color: black !important; }
+                    </style>
+                </head>
+                <body class="p-8">
+                    ${printContent}
+                </body>
+                </html>
+            `);
+            doc.close();
+
+            setTimeout(() => {
+                showLoad(false);
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+                setTimeout(() => document.body.removeChild(iframe), 2000);
+            }, 1500);
+        }
+
+        function printMilkReport() {
+            showLoad(true);
+            const repResultNode = document.getElementById('repResultMilk').cloneNode(true);
+            const noPrintElements = repResultNode.querySelectorAll('.no-print');
+            noPrintElements.forEach(el => el.parentNode.removeChild(el));
+
+            const printContent = repResultNode.innerHTML;
+
+            let iframe = document.createElement('iframe');
+            iframe.style.position = 'fixed'; iframe.style.right = '0'; iframe.style.bottom = '0';
+            iframe.style.width = '0'; iframe.style.height = '0'; iframe.style.border = '0';
+            document.body.appendChild(iframe);
+
+            let doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(`
+                <html>
+                <head>
+                    <title>รายงานการดื่มนม</title>
+                    <script src="https://cdn.tailwindcss.com"><\/script>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+                    <style>
+                        body { font-family: 'Kanit', sans-serif; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                        @page { size: A4 portrait; margin: 10mm; }
                         table { width: 100%; border-collapse: collapse; font-size: 10pt; page-break-inside: auto; }
                         tr { page-break-inside: avoid; page-break-after: auto; }
                         th, td { border: 1px solid #cbd5e1; padding: 4px; color: black; }
@@ -2036,12 +2339,7 @@
 
         // --- QR Maker ---
         function prepQRMakerPage() {
-            const selClass = document.getElementById('selClassQRMaker');
-            const currentClass = selClass.value;
-            
-            selClass.innerHTML = '<option value="">-- กรุณาเลือกห้อง --</option><option value="ALL">-- ดึงรายชื่อทั้งหมด --</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
-            if(currentClass) selClass.value = currentClass;
-            
+            document.getElementById('selClassQRMaker').innerHTML = '<option value="">-- กรุณาเลือกห้อง --</option><option value="ALL">-- ดึงรายชื่อทั้งหมด --</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
             const cp = document.getElementById('qrHeaderColor'); if (cp) cp.value = appConfig.theme;
         }
         
@@ -2079,12 +2377,13 @@
             setTimeout(() => { stds.forEach((s, i) => { document.getElementById('qr-'+i).innerHTML = ""; new QRCode(document.getElementById('qr-'+i), { text: s.id.toString(), width: 100, height: 100, correctLevel: QRCode.CorrectLevel.M }); }); }, 300);
         }
 
+        // --- 🖨️ ฟังก์ชันสั่งพิมพ์บัตรนักเรียน (หน่วงเวลาให้ CSS ทำงาน) ---
         function printQRCards() { 
             showLoad(true);
             const container = document.getElementById('cardContainer');
             const clone = container.cloneNode(true);
             
-            // ดึงข้อมูล Canvas แปลงเป็นไฟล์รูปภาพ
+            // ดึงข้อมูล Canvas แปลงเป็นไฟล์รูปภาพ (เพื่อป้องกันบัตรปริ้นออกมาแล้ว QR Code หาย)
             const originalQrContainers = container.querySelectorAll('.qr-code');
             const clonedQrContainers = clone.querySelectorAll('.qr-code');
             
@@ -2095,6 +2394,7 @@
                     img.src = canvas.toDataURL('image/png');
                     img.style.width = '100%'; img.style.height = '100%'; img.style.objectFit = 'contain';
                     
+                    // ล้างเนื้อหาเดิมทั้งหมด (ทั้ง canvas และ img ซ่อนที่ไลบรารีแถมมา) ป้องกันรูปเบิ้ลและบีบอัด
                     clonedQrContainers[i].innerHTML = ''; 
                     clonedQrContainers[i].appendChild(img);
                 }
