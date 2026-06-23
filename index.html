@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ระบบเช็คชื่อและส่งงาน Web App (Supabase)</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://img2.pic.in.th/pic/-161baf06cd7f44fd8.png" id="dynamic-favicon">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -701,6 +703,12 @@
             document.querySelectorAll('#appLogoDesktop, #appLogoMobile, #logoPreview').forEach(e=>{e.src=appConfig.logo; e.style.display='block';});
             document.getElementById('cfgSysName').value=appConfig.sysName; document.getElementById('cfgSchool1').value=appConfig.school1; document.getElementById('cfgSchool2').value=appConfig.school2; document.getElementById('cfgTheme').value=appConfig.theme; document.getElementById('cfgLogo').value=appConfig.logo;
             const colorPicker = document.getElementById('qrHeaderColor'); if(colorPicker) colorPicker.value = appConfig.theme;
+            
+            // เปลี่ยน Favicon อัตโนมัติตามโลโก้
+            let faviconLink = document.getElementById('dynamic-favicon');
+            if (faviconLink && appConfig.logo) {
+                faviconLink.href = appConfig.logo;
+            }
         }
         function saveConfig() {
             appConfig.sysName=document.getElementById('cfgSysName').value; appConfig.school1=document.getElementById('cfgSchool1').value; appConfig.school2=document.getElementById('cfgSchool2').value; appConfig.theme=document.getElementById('cfgTheme').value; appConfig.logo=document.getElementById('cfgLogo').value; localStorage.setItem('myAppCfgV2', JSON.stringify(appConfig)); applyConfig(); Swal.fire({toast:true, position:'top', icon:'success', title:'บันทึกสำเร็จ', timer:1500, showConfirmButton:false});
