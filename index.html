@@ -8,7 +8,7 @@
     <link rel="icon" type="image/png" href="https://img2.pic.in.th/pic/-161baf06cd7f44fd8.png" id="dynamic-favicon">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->โ
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -110,8 +110,6 @@
         </div>
         
         <div class="flex-1 overflow-y-auto custom-scroll py-4">
-            
-            <!-- เปลี่ยนการตกแต่งหัวข้อเมนูให้เด่นชัด สวยงามขึ้น -->
             <div class="px-4 py-2 mx-4 mb-2 text-[12px] font-extrabold text-blue-800 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg tracking-widest uppercase shadow-sm">เมนูหลัก</div>
             <button onclick="navigate('dashboard')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item active" data-tab="dashboard"><i class="fas fa-home w-8 text-secondary"></i> สแกนเข้าเรียน / ส่งงาน</button>
             <button onclick="navigate('manualcheck')" class="w-full flex items-center px-6 py-3 text-[14px] font-medium nav-sidebar-item" data-tab="manualcheck"><i class="fas fa-tasks w-8 text-orange-500"></i> เช็คชื่อด้วยมือ</button>
@@ -147,7 +145,6 @@
             </button>
         </header>
 
-        <!-- เปลี่ยน Main ให้เป็น Flex Column เพื่อดัน Footer ลงล่าง -->
         <main class="flex-1 flex flex-col overflow-y-auto custom-scroll p-4 md:p-8 relative z-10 w-full max-w-6xl mx-auto overflow-x-hidden">
             
             <div class="flex-1 w-full">
@@ -367,9 +364,9 @@
                                     <p id="printInfo" class="text-slate-600 text-sm font-medium"></p>
                                 </div>
                                 <div class="grid grid-cols-4 gap-0 text-center bg-slate-50 border-b border-slate-200 divide-x divide-slate-200">
-                                    <div class="p-3"><p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">ทั้งหมด</p><span id="statTotal" class="text-lg font-black text-blue-600">0</span></div>
-                                    <div class="p-3"><p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">มา/สาย</p><span id="statP" class="text-lg font-black text-green-600">0</span></div>
-                                    <div class="p-3"><p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">ขาด</p><span id="statA" class="text-lg font-black text-red-600">0</span></div>
+                                    <div class="p-3"><p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">ทั้งหมด (วัน)</p><span id="statTotal" class="text-lg font-black text-blue-600">0</span></div>
+                                    <div class="p-3"><p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">มา/สาย (ครั้ง)</p><span id="statP" class="text-lg font-black text-green-600">0</span></div>
+                                    <div class="p-3"><p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">ขาด (ครั้ง)</p><span id="statA" class="text-lg font-black text-red-600">0</span></div>
                                     <div class="p-3"><p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">เปอร์เซ็นต์</p><span id="statPct" class="text-lg font-black text-teal-600">0%</span></div>
                                 </div>
                                 <div class="overflow-x-auto bg-white p-4">
@@ -543,100 +540,6 @@
 
                 </div>
 
-                <!-- --- PAGE: SCORES --- -->
-                <div id="page-scores" class="page-content">
-                    <h2 class="text-2xl font-bold text-primary mb-6">บันทึกคะแนน / ตรวจงาน</h2>
-                    <div class="glass-card mb-6 max-w-3xl">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">วิชา</label><select id="selActScore" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-amber-400 transition-all font-medium" onchange="populateScoreWorkTopics(); renderScoreTable();"></select></div>
-                            <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">ชั้นเรียน</label><select id="selClassScore" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-amber-400 transition-all font-medium" onchange="populateScoreWorkTopics(); renderScoreTable();"></select></div>
-                        </div>
-                        <div class="border-t border-slate-100 pt-4 mt-2">
-                            <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">ตรวจและให้คะแนนชิ้นงานที่สแกนส่ง (ตัวเลือก)</label>
-                            <select id="selWorkScore" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-green-500 transition-all font-medium text-green-600" onchange="renderScoreTable()">
-                                <option value="">-- ไม่เลือก (กรอกคะแนนรวมปกติ) --</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="scoreTableArea" class="hidden max-w-4xl">
-                        <div class="flex justify-between items-end mb-4">
-                            <h3 class="font-bold text-slate-700">รายชื่อนักเรียน <span id="scoreWorkBadge" class="hidden text-xs bg-green-100 text-green-700 px-2 py-1 rounded-md ml-2 font-medium"></span></h3>
-                        </div>
-                        <div id="scoreList" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"></div>
-                        <div class="sticky bottom-4 z-20 w-full flex justify-center">
-                            <button onclick="saveScores()" class="w-full md:max-w-md bg-amber-500 hover:bg-amber-600 text-white py-4 rounded-2xl font-bold shadow-[0_8px_30px_rgba(245,158,11,0.3)] transition-transform active:scale-95 text-lg"><i class="fas fa-save mr-2"></i> บันทึกคะแนนทั้งหมด</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- --- PAGE: GRADES --- -->
-                <div id="page-grades" class="page-content">
-                    <h2 class="text-2xl font-bold text-primary mb-6">คำนวณและตัดเกรด</h2>
-                    <div class="glass-card mb-6 no-print max-w-3xl">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">วิชา</label><select id="selActGrade" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-indigo-400" onchange="renderGradeTable()"></select></div>
-                            <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">ชั้นเรียน</label><select id="selClassGrade" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-indigo-400" onchange="renderGradeTable()"></select></div>
-                        </div>
-                        <button onclick="renderGradeTable()" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl py-3 text-sm font-bold shadow-md transition-colors"><i class="fas fa-magic mr-2"></i> ประมวลผลเกรดอัตโนมัติ</button>
-                    </div>
-                    <div id="gradeTableArea" class="hidden max-w-5xl mx-auto">
-                        <div id="gradeList" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"></div>
-                    </div>
-                </div>
-
-                <!-- --- PAGE: CLASSES --- -->
-                <div id="page-classes" class="page-content">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-primary">การจัดการชั้นเรียน</h2>
-                        <button onclick="addClass()" class="bg-purple-500 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md hover:bg-purple-600"><i class="fas fa-plus mr-1"></i> เพิ่มห้อง</button>
-                    </div>
-                    <div id="classesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
-                </div>
-
-                <!-- --- PAGE: QR MAKER --- -->
-                <div id="page-qrmaker" class="page-content qr-maker-container">
-                    <div class="flex justify-between items-center mb-6 no-print">
-                        <h2 class="text-xl md:text-2xl font-bold text-primary flex items-center gap-2"><i class="fas fa-id-card text-blue-600"></i> พิมพ์บัตรนักเรียน</h2>
-                        <button onclick="printQRCards()" id="btnMakerPrint" class="hidden bg-slate-900 text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-md hover:bg-slate-800 transition-colors"><i class="fas fa-print mr-1"></i> สั่งพิมพ์</button>
-                    </div>
-
-                    <div class="glass-card mb-6 no-print max-w-xl mx-auto">
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-bold text-slate-600 mb-1"><i class="fas fa-edit text-slate-400 mr-1"></i> ข้อความหัวบัตร</label>
-                                <input type="text" id="qrHeaderText" value="บัตรประจำตัวนักเรียน" placeholder="เช่น บัตรประจำตัวนักเรียน" class="w-full border-2 border-slate-200 rounded-xl p-3 text-sm outline-none focus:border-blue-500 transition-colors">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold text-slate-600 mb-1"><i class="fas fa-palette text-slate-400 mr-1"></i> สีแถบบัตร</label>
-                                <div class="w-full border-2 border-slate-200 rounded-xl p-1 bg-white flex items-center focus-within:border-blue-500 transition-colors h-12">
-                                    <input type="color" id="qrHeaderColor" class="w-full h-full cursor-pointer rounded-lg border-none outline-none bg-transparent">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold text-slate-600 mb-1"><i class="fas fa-users text-slate-400 mr-1"></i> เลือกห้องเรียน</label>
-                                <select id="selClassQRMaker" class="w-full border-2 border-slate-200 rounded-xl p-3 text-sm bg-white outline-none focus:border-blue-500 transition-colors cursor-pointer appearance-none"></select>
-                            </div>
-                            <button onclick="generateQRFromDB()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl text-sm font-bold shadow-md transition-colors mt-4">สร้างตัวอย่างบัตร (แนวนอน)</button>
-                        </div>
-                        
-                        <div class="mt-6 pt-4 border-t border-slate-100">
-                            <p class="text-[10px] text-center text-slate-400 mb-2">หรือสร้างจากไฟล์ Excel นอกระบบ</p>
-                            <div class="flex gap-2">
-                                <button onclick="downloadExcelTemplate()" class="flex-1 bg-slate-100 text-slate-600 py-2.5 rounded-lg text-xs font-bold hover:bg-slate-200"><i class="fas fa-download mr-1"></i> โหลดเทมเพลต</button>
-                                <button onclick="document.getElementById('fileInputExcel').click()" class="flex-1 bg-emerald-50 text-emerald-600 py-2.5 rounded-lg text-xs font-bold hover:bg-emerald-100"><i class="fas fa-file-excel mr-1"></i> เลือกไฟล์ Excel</button>
-                                <input type="file" id="fileInputExcel" accept=".xlsx, .xls" class="hidden" onchange="handleExcelUpload(this)">
-                            </div>
-                            <div id="qrMakerStatus" class="hidden text-[11px] text-center font-medium mt-2"></div>
-                        </div>
-                    </div>
-
-                    <div id="preview-container" class="hidden bg-slate-200 p-4 md:p-8 rounded-2xl w-full overflow-x-auto custom-scroll">
-                        <div class="bg-white p-4 md:p-8 rounded shadow-sm min-w-max mx-auto min-h-[297mm]">
-                            <div id="cardContainer" class="card-grid"></div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- --- PAGE: SETTINGS --- -->
                 <div id="page-settings" class="page-content no-print">
                     <h2 class="text-2xl font-bold text-primary mb-6">ตั้งค่าแอปพลิเคชัน</h2>
@@ -666,8 +569,8 @@
             <!-- ส่วนแสดงเครดิต (Footer) จะอยู่ด้านล่างสุดของหน้าจอเสมอ -->
             <footer class="mt-auto pt-8 pb-4 text-center no-print flex-shrink-0">
                 <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Developer & Credits</p>
-        
-                <p class="text-xs text-slate-400 mt-1">ระบบบริหารจัดการเรียนการสอนและติดตามผู้เรียน V.2  BY Krutom(ครูต้อม)</p>
+                <p class="text-sm font-bold text-slate-600">พัฒนาโดย นายไพโรจน์ รุ่งเรืองคุณารักษ์ (ครูต้อม)</p>
+                <p class="text-xs text-slate-400 mt-1">ระบบบริหารจัดการเรียนการสอนและติดตามผู้เรียน V.2</p>
             </footer>
 
         </main>
@@ -834,6 +737,11 @@
             document.getElementById('cfgTeacherName').value=appConfig.teacherName || '';
             const colorPicker = document.getElementById('qrHeaderColor'); if(colorPicker) colorPicker.value = appConfig.theme;
             
+            // อัปเดตชื่อครูประจำชั้นในทุกหน้ารายงาน
+            document.querySelectorAll('.teacher-name-display').forEach(e => { 
+                e.innerText = appConfig.teacherName || '...................................................'; 
+            });
+
             // เปลี่ยน Favicon อัตโนมัติตามโลโก้
             let faviconLink = document.getElementById('dynamic-favicon');
             if (faviconLink && appConfig.logo) {
@@ -1006,49 +914,50 @@
             const clsId = document.getElementById('selMainClass').value;
             const dateVal = document.getElementById('inpMainDate').value || new Date().toISOString().split('T')[0];
 
-            let pres = 0;
-            let expectedStudents = 0;
-            let classListToday = new Set();
+            let presentStudentIds = new Set();
+            let classesTaughtToday = new Set();
 
-            if (actId && clsId) {
-                const key = `${actId}|${dateVal}|${clsId}`;
-                if(DB.attendance[key]) {
-                    classListToday.add(clsId);
-                    const records = Object.values(DB.attendance[key]);
-                    pres += records.filter(r => r.status !== 'absent').length;
-                }
-            } else {
-                Object.keys(DB.attendance).forEach(k => {
-                    const p = k.split('|');
-                    if(p[1] === dateVal) {
-                        if ((!actId || p[0] === actId) && (!clsId || p[2] === clsId)) {
-                            classListToday.add(p[2]);
-                            const records = Object.values(DB.attendance[k]);
-                            pres += records.filter(r => r.status !== 'absent').length;
-                        }
+            Object.keys(DB.attendance).forEach(k => {
+                const p = k.split('|'); 
+                if(p[1] === dateVal) {
+                    if ((!actId || p[0] === actId) && (!clsId || p[2] === clsId)) {
+                        classesTaughtToday.add(p[2]); 
+                        Object.keys(DB.attendance[k]).forEach(stdId => {
+                            if (DB.attendance[k][stdId].status !== 'absent') {
+                                presentStudentIds.add(String(stdId));
+                            }
+                        });
                     }
-                });
-            }
-
-            classListToday.forEach(cName => {
-                expectedStudents += DB.students.filter(s => String(s.class||'').trim() === String(cName).trim()).length;
+                }
             });
 
-            let abs = Math.max(0, expectedStudents - pres);
-            let displayTotalStd = 0;
-
+            let expectedStudentIds = new Set();
             if (actId && clsId) {
-                displayTotalStd = DB.students.filter(s => String(s.class||'').trim() === String(clsId).trim()).length;
-                if (classListToday.size > 0) {
-                    abs = Math.max(0, displayTotalStd - pres);
-                } else {
-                    abs = 0; 
-                }
+                DB.students.filter(s => String(s.class||'').trim() === String(clsId).trim())
+                           .forEach(s => expectedStudentIds.add(String(s.id)));
             } else {
-                displayTotalStd = DB.students.length;
+                if (classesTaughtToday.size > 0) {
+                    DB.students.forEach(s => {
+                        if (classesTaughtToday.has(String(s.class||'').trim())) {
+                            expectedStudentIds.add(String(s.id));
+                        }
+                    });
+                } else {
+                    DB.students.forEach(s => expectedStudentIds.add(String(s.id)));
+                }
             }
 
-            const pct = (pres + abs) > 0 ? Math.round((pres / (pres + abs)) * 100) : 0;
+            let validPresentCount = 0;
+            presentStudentIds.forEach(id => {
+                if(expectedStudentIds.has(id)) {
+                    validPresentCount++;
+                }
+            });
+
+            const displayTotalStd = expectedStudentIds.size;
+            const pres = validPresentCount;
+            const abs = Math.max(0, displayTotalStd - pres);
+            const pct = displayTotalStd > 0 ? Math.round((pres / displayTotalStd) * 100) : 0;
 
             document.getElementById('dashTotalStd').innerText = displayTotalStd;
             document.getElementById('dashPresent').innerText = pres; 
@@ -1769,7 +1678,16 @@
                     if(rec) { if(rec.status === 'late') { rL++; html+=`<td class="text-center text-orange-400 font-black" title="${rec.time}">ส</td>`; } else { rP++; html+=`<td class="text-center text-green-500 font-black"><i class="fas fa-check"></i></td>`; } } else { rA++; html+=`<td class="text-center text-red-400 font-black"><i class="fas fa-times"></i></td>`; }
                 }); tP+=rP; tL+=rL; tA+=rA; return html + `<td class="text-center font-black text-green-600 bg-green-50/50">${rP}</td><td class="text-center font-black text-orange-500 bg-orange-50/50">${rL}</td><td class="text-center font-black text-red-500 bg-red-50/50">${rA}</td></tr>`;
             }).join('');
-            document.getElementById('repHead').innerHTML = head; document.getElementById('repBody').innerHTML = body; document.getElementById('statTotal').innerText = stds.length; document.getElementById('statP').innerText = tP + tL; document.getElementById('statA').innerText = tA; document.getElementById('statPct').innerText = Math.round(((tP+tL)/(((tP+tL)+tA)||1))*100) + '%';
+            document.getElementById('repHead').innerHTML = head; 
+            document.getElementById('repBody').innerHTML = body; 
+            
+            // อัปเดตการคำนวณด้านบนใหม่
+            document.getElementById('statTotal').innerText = sortedDates.length; 
+            document.getElementById('statP').innerText = tP + tL; 
+            document.getElementById('statA').innerText = tA; 
+            const totalChecks = tP + tL + tA;
+            document.getElementById('statPct').innerText = totalChecks > 0 ? Math.round(((tP+tL)/totalChecks)*100) + '%' : '0%';
+            
             let dateRangeText = "";
             if(repType === 'monthly') { const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"]; dateRangeText = `ประจำเดือน ${monthNames[startDate.getMonth()]} ${startDate.getFullYear() + 543}`; } else { dateRangeText = `ระหว่างวันที่ ${startDate.getDate()}/${startDate.getMonth()+1}/${startDate.getFullYear()+543} ถึง ${endDate.getDate()}/${endDate.getMonth()+1}/${endDate.getFullYear()+543}`; }
             document.getElementById('printInfo').innerHTML = `วิชา: <b>${escapeHTML(DB.activities.find(a=>a.id===act).name)}</b> | ชั้น: <b>${escapeHTML(cls)}</b><br><span class="text-xs text-slate-500">${dateRangeText}</span>`; document.getElementById('repResult').classList.remove('hidden');
@@ -1799,7 +1717,6 @@
                         bmiText = res.bmi;
                         evalText = res.text;
                         
-                        // กำหนดสีของข้อความสำหรับหน้าปริ้นท์
                         if (res.bmi < 18.5) evalColor = 'text-blue-600';
                         else if (res.bmi >= 18.5 && res.bmi <= 22.9) evalColor = 'text-green-600';
                         else if (res.bmi >= 23.0 && res.bmi <= 24.9) evalColor = 'text-amber-600';
@@ -2189,177 +2106,3 @@
             document.getElementById('selClassScore').innerHTML = '<option value="">- เลือกชั้นเรียน -</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
             document.getElementById('scoreTableArea').classList.add('hidden');
         }
-        function populateScoreWorkTopics() {
-            const act = document.getElementById('selActScore').value; const cls = document.getElementById('selClassScore').value; const selWork = document.getElementById('selWorkScore');
-            if(!act || !cls) { selWork.innerHTML = '<option value="">-- ไม่เลือก (กรอกคะแนนรวมปกติ) --</option>'; return; }
-            let topics = new Set(); Object.keys(DB.works).forEach(k => { const parts = k.split('|'); if(parts.length === 3 && parts[0] === act && parts[2] === cls) { topics.add(parts[1]); } });
-            if(topics.size > 0) { selWork.innerHTML = '<option value="">-- ไม่เลือก (กรอกคะแนนรวมปกติ) --</option>' + Array.from(topics).map(t => `<option value="${escapeHTML(t)}">${escapeHTML(t)}</option>`).join(''); } 
-            else { selWork.innerHTML = '<option value="">-- ไม่มีประวัติการส่งงานในระบบ --</option>'; }
-        }
-        function renderScoreTable() {
-            const act=document.getElementById('selActScore').value, cls=document.getElementById('selClassScore').value, workTopic = document.getElementById('selWorkScore').value;
-            if(!act||!cls){ document.getElementById('scoreTableArea').classList.add('hidden'); return; } document.getElementById('scoreTableArea').classList.remove('hidden');
-            const stds = DB.students.filter(s=>String(s.class||'').trim() === String(cls||'').trim()).sort((a,b)=>String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
-            if(!DB.scores[act]) DB.scores[act] = {};
-            let workKey = ''; let workData = {};
-            if(workTopic) {
-                workKey = `${act}|${workTopic}|${cls}`; workData = DB.works[workKey] || {};
-                const badge = document.getElementById('scoreWorkBadge'); badge.innerText = `ชิ้นงาน: ${workTopic} (${Object.keys(workData).length}/${stds.length} ส่งแล้ว)`; badge.classList.remove('hidden');
-            } else { document.getElementById('scoreWorkBadge').classList.add('hidden'); }
-            document.getElementById('scoreList').innerHTML = stds.map(s => {
-                let sc = DB.scores[act][s.id] || {c:'',e:''}; let workScoreVal = '';
-                if(workTopic && sc[`w_${workTopic}`] !== undefined) { workScoreVal = escapeHTML(sc[`w_${workTopic}`]); }
-                let statusBadge = '';
-                if(workTopic) {
-                    const isSubmitted = workData[s.id]; statusBadge = isSubmitted ? `<span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[9px] font-bold"><i class="fas fa-check mr-1"></i>ส่งแล้ว</span>` : `<span class="bg-slate-100 text-slate-500 px-2 py-0.5 rounded text-[9px] font-bold">ยังไม่ส่ง</span>`;
-                    return `<div class="glass-card !p-4 border-l-4 ${isSubmitted ? 'border-green-500' : 'border-slate-300'} flex items-center justify-between gap-4"><div class="flex-1 min-w-0"><div class="text-sm font-bold text-slate-700 truncate">${escapeHTML(s.id)} ${escapeHTML(s.name)}</div><div class="mt-1">${statusBadge}</div></div><div class="relative w-24 flex-shrink-0"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนนเต็ม 10</span><input type="number" id="sc_w_${escapeHTML(s.id)}" value="${workScoreVal}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-500 transition-colors bg-blue-50/30"></div></div>`;
-                }
-                return `<div class="glass-card !p-4"><div class="text-sm font-bold text-slate-700 mb-3">${escapeHTML(s.id)} ${escapeHTML(s.name)}</div><div class="flex gap-3"><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-amber-500">คะแนนเก็บ (70)</span><input type="number" id="sc_c_${escapeHTML(s.id)}" value="${escapeHTML(sc.c)}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-amber-400"></div><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">คะแนนสอบ (30)</span><input type="number" id="sc_e_${escapeHTML(s.id)}" value="${escapeHTML(sc.e)}" class="w-full border border-slate-200 rounded-xl p-2 pt-3 text-center text-sm font-bold text-slate-700 outline-none focus:border-blue-400"></div></div></div>`;
-            }).join('');
-        }
-        function saveScores() {
-            const act = document.getElementById('selActScore').value; const cls = document.getElementById('selClassScore').value; const workTopic = document.getElementById('selWorkScore').value;
-            const stds = DB.students.filter(s=>String(s.class||'').trim() === String(cls||'').trim()); 
-            if(!DB.scores[act]) DB.scores[act]={};
-            stds.forEach(s => { 
-                if(!DB.scores[act][s.id]) DB.scores[act][s.id] = {c:'', e:''};
-                if(workTopic) { const wInp = document.getElementById(`sc_w_${s.id}`); if(wInp) DB.scores[act][s.id][`w_${workTopic}`] = wInp.value; } 
-                else { const c = document.getElementById(`sc_c_${s.id}`); const e = document.getElementById(`sc_e_${s.id}`); if(c) DB.scores[act][s.id].c = c.value; if(e) DB.scores[act][s.id].e = e.value; }
-            });
-            save('scores', DB.scores); Swal.fire({toast:true, position:'top', icon:'success', title:'บันทึกคะแนนเรียบร้อย', timer:1500, showConfirmButton:false});
-        }
-
-        // --- Grades ---
-        function prepGradePage() {
-            document.getElementById('selActGrade').innerHTML = '<option value="">- เลือกวิชา -</option>' + DB.activities.map(a=>`<option value="${escapeHTML(a.id)}">${escapeHTML(a.name)}</option>`).join('');
-            document.getElementById('selClassGrade').innerHTML = '<option value="">- เลือกชั้นเรียน -</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
-            document.getElementById('gradeTableArea').classList.add('hidden');
-        }
-        function renderGradeTable() {
-            const act=document.getElementById('selActGrade').value, cls=document.getElementById('selClassGrade').value; if(!act||!cls) return Swal.fire('เตือน','กรุณาเลือกวิชาและชั้นเรียน','warning');
-            document.getElementById('gradeTableArea').classList.remove('hidden');
-            const stds = DB.students.filter(s=>String(s.class||'').trim() === String(cls||'').trim()).sort((a,b)=>String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
-            document.getElementById('gradeList').innerHTML = stds.map(s => {
-                let sc = (DB.scores[act]||{})[s.id] || {c:0,e:0}; const tot = (parseFloat(sc.c)||0) + (parseFloat(sc.e)||0);
-                let g = '0', c = 'bg-red-50 text-red-600 border-red-200';
-                if(tot>=80){g='4';c='bg-green-50 text-green-600 border-green-200';} else if(tot>=75){g='3.5';c='bg-emerald-50 text-emerald-600 border-emerald-200';} else if(tot>=70){g='3';c='bg-teal-50 text-teal-600 border-teal-200';} else if(tot>=65){g='2.5';c='bg-cyan-50 text-cyan-600 border-cyan-200';} else if(tot>=60){g='2';c='bg-blue-50 text-blue-600 border-blue-200';} else if(tot>=55){g='1.5';c='bg-indigo-50 text-indigo-600 border-indigo-200';} else if(tot>=50){g='1';c='bg-violet-50 text-violet-600 border-violet-200';}
-                return `<div class="glass-card !p-3 flex justify-between items-center"><div class="leading-tight"><div class="text-xs font-bold text-slate-700 mb-1">${escapeHTML(s.id)} ${escapeHTML(s.name)}</div><div class="text-[10px] text-slate-500 font-medium bg-slate-100 inline-block px-2 py-1 rounded">เก็บ: <b class="text-slate-700">${escapeHTML(sc.c)||0}</b> | สอบ: <b class="text-slate-700">${escapeHTML(sc.e)||0}</b> | รวม: <b class="text-primary">${tot}</b></div></div><div class="w-12 h-12 ${c} border flex flex-col items-center justify-center rounded-xl shadow-sm"><span class="text-[8px] uppercase font-bold opacity-60 leading-none">เกรด</span><span class="font-black text-xl leading-none">${g}</span></div></div>`;
-            }).join('');
-        }
-
-        // --- QR Maker ---
-        function prepQRMakerPage() {
-            document.getElementById('selClassQRMaker').innerHTML = '<option value="">-- กรุณาเลือกห้อง --</option><option value="ALL">-- ดึงรายชื่อทั้งหมด --</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
-            const cp = document.getElementById('qrHeaderColor'); if (cp) cp.value = appConfig.theme;
-        }
-        
-        function generateQRFromDB() {
-            const cls = document.getElementById('selClassQRMaker').value; if(!cls) return Swal.fire('เตือน','กรุณาเลือกห้องเรียนก่อนครับ','warning');
-            let stds = DB.students; if(cls !== 'ALL') stds = stds.filter(s=>String(s.class||'').trim() === String(cls||'').trim());
-            if(stds.length===0) return Swal.fire('เตือน','ไม่พบข้อมูลนักเรียน','warning');
-            renderQRCards(stds); document.getElementById('btnMakerPrint').classList.remove('hidden'); document.getElementById('preview-container').classList.remove('hidden');
-        }
-        
-        function downloadExcelTemplate() {
-            const ws = XLSX.utils.aoa_to_sheet([ ["รหัส", "ชื่อ-นามสกุล", "ชั้นเรียน"], ["1001", "ด.ช.ตัวอย่าง รักเรียน", "ป.1/1"] ]); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "รายชื่อ"); XLSX.writeFile(wb, "Template_QR.xlsx");
-        }
-        
-        function handleExcelUpload(input) {
-            const file = input.files[0]; if(!file) return;
-            const r = new FileReader(); r.onload = function(e) {
-                const data = new Uint8Array(e.target.result); const wb = XLSX.read(data, {type: 'array'});
-                const stds = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header: 1}).slice(1).map(row => ({id:row[0], name:row[1], class:row[2]})).filter(s=>s.id&&s.name);
-                if(stds.length>0){ renderQRCards(stds); document.getElementById('btnMakerPrint').classList.remove('hidden'); document.getElementById('preview-container').classList.remove('hidden'); document.getElementById('qrMakerStatus').innerHTML=`<span class="text-green-500 font-bold"><i class="fas fa-check-circle"></i> โหลดสำเร็จ ${stds.length} รายการ</span>`; document.getElementById('qrMakerStatus').classList.remove('hidden');}
-                input.value='';
-            }; r.readAsArrayBuffer(file);
-        }
-        
-        function renderQRCards(stds) {
-            const cont = document.getElementById('cardContainer'); cont.innerHTML = '';
-            const headerText = escapeHTML(document.getElementById('qrHeaderText').value.trim()); const headerColor = document.getElementById('qrHeaderColor').value;
-            const schoolName = escapeHTML(appConfig.school1); const logoSrc = appConfig.logo;
-            
-            stds.forEach((s, i) => {
-                const id = 'qr-'+i; const safeName = escapeHTML(s.name); const safeId = escapeHTML(s.id); const safeClass = escapeHTML(s.class || '-');
-                let headerHtml = ''; if(headerText) { headerHtml = `<div class="card-header" style="background-color: ${headerColor};">${headerText}</div>`; }
-                cont.innerHTML += `<div class="card" style="border-color: ${headerColor};">${headerHtml}<div class="card-body"><div class="card-left"><div class="school-header"><img src="${logoSrc}" class="school-logo" onerror="this.style.display='none'"><div class="school-name" style="color: ${headerColor};">${schoolName}</div></div><div class="student-info">รหัส: ${safeId}</div><div class="student-info">ชั้น: ${safeClass}</div><div class="student-name">${safeName}</div></div><div class="card-right"><div id="${id}" class="qr-code"></div></div></div></div>`;
-            });
-            setTimeout(() => { stds.forEach((s, i) => { document.getElementById('qr-'+i).innerHTML = ""; new QRCode(document.getElementById('qr-'+i), { text: s.id.toString(), width: 100, height: 100, correctLevel: QRCode.CorrectLevel.M }); }); }, 300);
-        }
-
-        // --- 🖨️ ฟังก์ชันสั่งพิมพ์บัตรนักเรียน (หน่วงเวลาให้ CSS ทำงาน) ---
-        function printQRCards() { 
-            showLoad(true);
-            const container = document.getElementById('cardContainer');
-            const clone = container.cloneNode(true);
-            
-            const originalQrContainers = container.querySelectorAll('.qr-code');
-            const clonedQrContainers = clone.querySelectorAll('.qr-code');
-            
-            for (let i = 0; i < originalQrContainers.length; i++) {
-                const canvas = originalQrContainers[i].querySelector('canvas');
-                if (canvas) {
-                    const img = document.createElement('img');
-                    img.src = canvas.toDataURL('image/png');
-                    img.style.width = '100%'; img.style.height = '100%'; img.style.objectFit = 'contain';
-                    
-                    clonedQrContainers[i].innerHTML = ''; 
-                    clonedQrContainers[i].appendChild(img);
-                }
-            }
-
-            const printContent = clone.innerHTML;
-            const styles = `
-                @page { size: A4 portrait; margin: 10mm; }
-                * { box-sizing: border-box !important; margin: 0; padding: 0; }
-                body { font-family: 'Kanit', sans-serif; margin: 0; padding: 0; background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                .card-grid { display: grid; grid-template-columns: repeat(2, 86mm); gap: 2mm 6mm; justify-content: center; align-content: flex-start; margin: 0 auto; width: 100%; padding-top: 5mm; }
-                .card { width: 86mm; height: 54mm; border: 1px dashed #94a3b8; border-radius: 4mm; display: flex; flex-direction: column; background-color: #fff; box-sizing: border-box; overflow: hidden; page-break-inside: avoid; margin: 0; }
-                .card-header { width: 100%; height: 8mm; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: bold; flex-shrink: 0; }
-                .card-body { display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 4mm; flex: 1; box-sizing: border-box; gap: 2mm; }
-                .card-left { display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; width: 60%; height: 100%; }
-                .school-header { display: flex; align-items: center; gap: 2mm; margin-bottom: 2mm; width: 100%; }
-                .school-logo { width: 10mm; height: 10mm; object-fit: contain; flex-shrink: 0; }
-                .school-name { font-size: 10px; font-weight: bold; line-height: 1.1; color: #1e293b; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-                .student-info { font-size: 10px; color: #475569; line-height: 1.4; font-weight: 500; }
-                .student-name { font-size: 12px; font-weight: 800; margin-top: auto; padding-top: 1mm; border-top: 1px dashed #cbd5e1; width: 100%; line-height: 1.2; color: #0f172a; white-space: normal; word-wrap: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-                .card-right { width: 35%; height: 100%; display: flex; justify-content: flex-end; align-items: center; }
-                .qr-code { width: 24mm; height: 24mm; background: white; padding: 1mm; border-radius: 2mm; display: flex; justify-content: center; align-items: center; border: 1px solid #e2e8f0; flex-shrink: 0; }
-                .qr-code img { width: 100%; height: 100%; object-fit: contain; display: block; }
-            `;
-
-            let iframe = document.createElement('iframe');
-            iframe.style.position = 'fixed'; iframe.style.right = '0'; iframe.style.bottom = '0';
-            iframe.style.width = '0'; iframe.style.height = '0'; iframe.style.border = '0';
-            document.body.appendChild(iframe);
-
-            let doc = iframe.contentWindow.document;
-            doc.open();
-            doc.write(`
-                <html>
-                <head>
-                    <title>พิมพ์บัตรนักเรียน</title>
-                    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-                    <style>${styles}</style>
-                </head>
-                <body>
-                    <div class="card-grid">
-                        ${printContent}
-                    </div>
-                </body>
-                </html>
-            `);
-            doc.close();
-
-            setTimeout(() => {
-                showLoad(false);
-                iframe.contentWindow.focus();
-                iframe.contentWindow.print();
-                setTimeout(() => document.body.removeChild(iframe), 2000);
-            }, 800);
-        }
-
-        window.onload = () => { applyConfig(); fetchAll(); };
-    </script>
-</body>
-</html>
