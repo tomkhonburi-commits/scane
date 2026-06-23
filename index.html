@@ -996,19 +996,37 @@
         }
 
         function prepDashboardPage() {
+            const selAct = document.getElementById('selMainAct');
+            const selClass = document.getElementById('selMainClass');
+            const currentAct = selAct.value;
+            const currentClass = selClass.value;
+
             const a = '<option value="">-- เลือกวิชา --</option>' + DB.activities.map(x=>`<option value="${escapeHTML(x.id)}">${escapeHTML(x.name)}</option>`).join('');
             const c = '<option value="">-- เลือกห้อง --</option>' + DB.classes.map(x=>`<option value="${escapeHTML(String(x.name||'').trim())}">${escapeHTML(String(x.name||'').trim())}</option>`).join('');
-            document.getElementById('selMainAct').innerHTML = a; document.getElementById('selMainClass').innerHTML = c;
+            
+            selAct.innerHTML = a; 
+            selClass.innerHTML = c;
+            
+            // ให้จดจำตัวเลือกเดิมที่เลือกค้างไว้
+            if(currentAct) selAct.value = currentAct;
+            if(currentClass) selClass.value = currentClass;
+
             if(!document.getElementById('inpMainDate').value) document.getElementById('inpMainDate').value = new Date().toISOString().split('T')[0];
             switchScanMode(currentScanMode); 
         }
 
         function populateDashboardWorkTopics() {
             const act = document.getElementById('selMainAct').value; const cls = document.getElementById('selMainClass').value; const selWork = document.getElementById('selMainWork');
+            const currentWork = selWork.value; // เก็บค่าชิ้นงานเดิม
+            
             if(!act || !cls) { selWork.innerHTML = '<option value="">-- เลือกวิชาและห้องก่อน --</option>'; return; }
             let topics = new Set();
             Object.keys(DB.works).forEach(k => { const parts = k.split('|'); if(parts.length === 3 && parts[0] === act && parts[2] === cls) { topics.add(parts[1]); } });
-            if(topics.size > 0) { selWork.innerHTML = '<option value="">-- เลือกชิ้นงาน --</option>' + Array.from(topics).map(t => `<option value="${escapeHTML(t)}">${escapeHTML(t)}</option>`).join(''); } 
+            
+            if(topics.size > 0) { 
+                selWork.innerHTML = '<option value="">-- เลือกชิ้นงาน --</option>' + Array.from(topics).map(t => `<option value="${escapeHTML(t)}">${escapeHTML(t)}</option>`).join(''); 
+                if(currentWork) selWork.value = currentWork; // คืนค่าชิ้นงานเดิม
+            } 
             else { selWork.innerHTML = '<option value="">-- ไม่มีชิ้นงาน (ไปเพิ่มในเมนูกิจกรรม) --</option>'; }
         }
 
@@ -1370,12 +1388,19 @@
 
         // --- HEALTH (น้ำหนักส่วนสูง) ---
         function prepHealthPage() {
-            document.getElementById('selClassHealth').innerHTML = '<option value="">- เลือกห้อง -</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
+            const selClass = document.getElementById('selClassHealth');
+            const currentClass = selClass.value;
+            
+            selClass.innerHTML = '<option value="">- เลือกห้อง -</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
+            if(currentClass) selClass.value = currentClass;
+            
             if(!document.getElementById('inpMonthHealth').value) {
                 const now = new Date();
                 document.getElementById('inpMonthHealth').value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
             }
-            document.getElementById('healthTableArea').classList.add('hidden');
+            
+            if(currentClass) loadHealthData();
+            else document.getElementById('healthTableArea').classList.add('hidden');
         }
 
         function loadHealthData() {
@@ -1443,9 +1468,16 @@
 
         // --- MILK (การดื่มนม) ---
         function prepMilkPage() {
-            document.getElementById('selClassMilk').innerHTML = '<option value="">- เลือกห้อง -</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
+            const selClass = document.getElementById('selClassMilk');
+            const currentClass = selClass.value;
+            
+            selClass.innerHTML = '<option value="">- เลือกห้อง -</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
+            if(currentClass) selClass.value = currentClass;
+
             if(!document.getElementById('inpDateMilk').value) document.getElementById('inpDateMilk').value = new Date().toISOString().split('T')[0];
-            document.getElementById('milkTableArea').classList.add('hidden');
+            
+            if(currentClass) loadMilkData();
+            else document.getElementById('milkTableArea').classList.add('hidden');
         }
 
         function loadMilkData() {
@@ -2004,7 +2036,12 @@
 
         // --- QR Maker ---
         function prepQRMakerPage() {
-            document.getElementById('selClassQRMaker').innerHTML = '<option value="">-- กรุณาเลือกห้อง --</option><option value="ALL">-- ดึงรายชื่อทั้งหมด --</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
+            const selClass = document.getElementById('selClassQRMaker');
+            const currentClass = selClass.value;
+            
+            selClass.innerHTML = '<option value="">-- กรุณาเลือกห้อง --</option><option value="ALL">-- ดึงรายชื่อทั้งหมด --</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
+            if(currentClass) selClass.value = currentClass;
+            
             const cp = document.getElementById('qrHeaderColor'); if (cp) cp.value = appConfig.theme;
         }
         
