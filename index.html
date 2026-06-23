@@ -568,7 +568,6 @@
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">สีธีมบัตร QR Code</label><input type="color" id="cfgTheme" class="w-full h-12 border border-slate-200 rounded-xl p-1 bg-white cursor-pointer"></div>
                         <div>
                             <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">URL โลโก้ (ไฟล์รูปภาพ)</label>
-                            <!-- แก้ไขจุดนี้ ป้องกัน Infinite Error Loop -->
                             <input type="text" id="cfgLogo" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none mb-2" oninput="document.getElementById('logoPreview').src=this.value">
                             <div class="bg-slate-100 p-4 rounded-xl border border-slate-200 flex justify-center items-center">
                                 <img id="logoPreview" src="" class="max-h-20 object-contain drop-shadow-sm" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='block';">
@@ -1060,12 +1059,80 @@
             }
         }
 
+        // --- เพิ่มฟังก์ชันแก้ไขนักเรียน ---
+        async function editStudent(id) {
+            const std = DB.students.find(s => String(s.id) === String(id));
+            if (!std) return;
+
+            const clsOpts = DB.classes.map(c => `<option value="${escapeHTML(String(c.name || '').trim())}" ${String(c.name).trim() === String(std.class).trim() ? 'selected' : ''}>${escapeHTML(String(c.name || '').trim())}</option>`).join('');
+            
+            const html = `
+                <div class="text-left mb-3">
+                    <label class="block text-xs font-bold text-slate-500 mb-1">รหัสประจำตัว <span class="text-rose-500 text-[10px] font-normal">(ไม่อนุญาตให้แก้ไขรหัส)</span></label>
+                    <input class="w-full border border-slate-200 rounded-lg p-3 text-sm bg-slate-100 text-slate-500 outline-none cursor-not-allowed" value="${escapeHTML(std.id)}" readonly>
+                </div>
+                <div class="text-left mb-3">
+                    <label class="block text-xs font-bold text-slate-500 mb-1">ชื่อ - นามสกุล</label>
+                    <input id="edit-std-name" class="w-full border border-slate-200 rounded-lg p-3 text-sm outline-none focus:border-blue-500" value="${escapeHTML(std.name)}">
+                </div>
+                <div class="text-left">
+                    <label class="block text-xs font-bold text-slate-500 mb-1">ชั้นเรียน</label>
+                    <select id="edit-std-cls" class="w-full border border-slate-200 rounded-lg p-3 text-sm outline-none focus:border-blue-500">
+                        <option value="">- เลือกห้องเรียน -</option>
+                        ${clsOpts}
+                    </select>
+                </div>
+            `;
+
+            const {value} = await Swal.fire({
+                title: 'แก้ไขข้อมูลนักเรียน',
+                html: html,
+                showCancelButton: true,
+                confirmButtonText: 'บันทึก',
+                cancelButtonText: 'ยกเลิก',
+                confirmButtonColor: '#0ea5e9',
+                preConfirm: () => {
+                    const name = document.getElementById('edit-std-name').value.trim();
+                    const cls = document.getElementById('edit-std-cls').value;
+                    if(!name || !cls) { Swal.showValidationMessage('กรุณากรอกข้อมูลให้ครบถ้วน'); return false; }
+                    return {name, class: cls};
+                }
+            });
+
+            if (value) {
+                let newData = [...DB.students];
+                const idx = newData.findIndex(s => String(s.id) === String(id));
+                if (idx > -1) {
+                    newData[idx].name = value.name;
+                    newData[idx].class = value.class;
+                    save('students', newData);
+                    Swal.fire({toast:true, position:'top', icon:'success', title:'แก้ไขสำเร็จ', timer:1500, showConfirmButton:false});
+                }
+            }
+        }
+
         function renderStudents() {
             const f = document.getElementById('filterStudentClass'); const opts = '<option value="">-- ทุกชั้นเรียน --</option>' + DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
             if(f.innerHTML !== opts) { let curr=f.value; f.innerHTML=opts; f.value=curr; }
             let d = DB.students; if(f.value) d = d.filter(s=>String(s.class||'').trim() === String(f.value||'').trim()); d.sort((a,b)=>String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
-            document.getElementById('tblStudents').innerHTML = d.map((s,i) => `<div class="glass-card flex justify-between items-center p-3"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-[10px] font-bold text-slate-500">${escapeHTML(s.id)}</div><div class="leading-tight"><div class="text-sm font-bold text-slate-700">${escapeHTML(s.name)}</div><div class="text-[10px] text-slate-400 font-bold">${escapeHTML(s.class||'-')}</div></div></div><button onclick="delStudent('${escapeHTML(s.id)}')" class="text-rose-400 hover:text-rose-600 bg-rose-50 w-8 h-8 rounded-full flex justify-center items-center transition-colors"><i class="fas fa-trash text-xs"></i></button></div>`).join('');
+            
+            // เพิ่มปุ่มแก้ไข (Edit) ลงในส่วนของการแสดงผลรายชื่อนักเรียน
+            document.getElementById('tblStudents').innerHTML = d.map((s,i) => `
+            <div class="glass-card flex justify-between items-center p-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-[10px] font-bold text-slate-500">${escapeHTML(s.id)}</div>
+                    <div class="leading-tight">
+                        <div class="text-sm font-bold text-slate-700">${escapeHTML(s.name)}</div>
+                        <div class="text-[10px] text-slate-400 font-bold">${escapeHTML(s.class||'-')}</div>
+                    </div>
+                </div>
+                <div class="flex gap-1">
+                    <button onclick="editStudent('${escapeHTML(s.id)}')" class="text-amber-500 hover:text-amber-600 bg-amber-50 w-8 h-8 rounded-full flex justify-center items-center transition-colors" title="แก้ไขข้อมูล"><i class="fas fa-edit text-xs"></i></button>
+                    <button onclick="delStudent('${escapeHTML(s.id)}')" class="text-rose-400 hover:text-rose-600 bg-rose-50 w-8 h-8 rounded-full flex justify-center items-center transition-colors" title="ลบนักเรียน"><i class="fas fa-trash text-xs"></i></button>
+                </div>
+            </div>`).join('');
         }
+        
         async function addActivity() { 
             const clsOpts = DB.classes.map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join('');
             const html = `<div class="mb-3 text-left"><label class="block text-xs font-bold text-slate-500 mb-1">ชื่อวิชา</label><input id="sw-act-name" class="w-full border border-slate-200 rounded-lg p-3 text-sm outline-none focus:border-blue-500" placeholder="เช่น คณิตศาสตร์, ลูกเสือ"></div><div class="text-left"><label class="block text-xs font-bold text-slate-500 mb-1">สำหรับชั้นเรียน (ตัวเลือก)</label><select id="sw-act-cls" class="w-full border border-slate-200 rounded-lg p-3 text-sm outline-none focus:border-blue-500"><option value="">- ใช้กับทุกชั้นเรียน (ส่วนกลาง) -</option>${clsOpts}</select></div>`;
