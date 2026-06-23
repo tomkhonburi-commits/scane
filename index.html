@@ -420,6 +420,14 @@
                             </div>
                             <div class="overflow-x-auto bg-white p-4">
                                 <table class="w-full text-left table-custom whitespace-nowrap min-w-[600px]"><thead id="repHead"></thead><tbody id="repBody"></tbody></table>
+                                <!-- ลายเซ็นครู (ปพ.5) -->
+                                <div class="mt-16 mb-8 flex justify-end text-center no-print-break" style="page-break-inside: avoid;">
+                                    <div class="w-64">
+                                        <p class="mb-8 text-slate-800 text-sm">ลงชื่อ...................................................</p>
+                                        <p class="text-slate-800 font-bold text-sm">( <span class="teacher-name-display"></span> )</p>
+                                        <p class="text-xs text-slate-500 mt-1">ครูประจำชั้น / ผู้รายงาน</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -469,6 +477,14 @@
                                     </thead>
                                     <tbody id="repBodyMilk"></tbody>
                                 </table>
+                                <!-- ลายเซ็นครู (การดื่มนม) -->
+                                <div class="mt-16 mb-8 flex justify-end text-center no-print-break" style="page-break-inside: avoid;">
+                                    <div class="w-64">
+                                        <p class="mb-8 text-slate-800 text-sm">ลงชื่อ...................................................</p>
+                                        <p class="text-slate-800 font-bold text-sm">( <span class="teacher-name-display"></span> )</p>
+                                        <p class="text-xs text-slate-500 mt-1">ครูประจำชั้น / ผู้รายงาน</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -508,6 +524,14 @@
                                     </thead>
                                     <tbody id="repBodyHealth"></tbody>
                                 </table>
+                                <!-- ลายเซ็นครู (น้ำหนักส่วนสูง) -->
+                                <div class="mt-16 mb-8 flex justify-end text-center no-print-break" style="page-break-inside: avoid;">
+                                    <div class="w-64">
+                                        <p class="mb-8 text-slate-800 text-sm">ลงชื่อ...................................................</p>
+                                        <p class="text-slate-800 font-bold text-sm">( <span class="teacher-name-display"></span> )</p>
+                                        <p class="text-xs text-slate-500 mt-1">ครูประจำชั้น / ผู้รายงาน</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -618,6 +642,7 @@
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">ชื่อโรงเรียน (แสดงในบัตร/ปพ.5)</label><input type="text" id="cfgSchool1" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none"></div>
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">สังกัด (แสดงในบัตร/ปพ.5)</label><input type="text" id="cfgSchool2" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none"></div>
                         <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">สีธีมบัตร QR Code</label><input type="color" id="cfgTheme" class="w-full h-12 border border-slate-200 rounded-xl p-1 bg-white cursor-pointer"></div>
+                        <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">ชื่อครูประจำชั้น (ลงนามในรายงาน)</label><input type="text" id="cfgTeacherName" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none" placeholder="เช่น นายไพโรจน์ รุ่งเรืองคุณารักษ์"></div>
                         <div>
                             <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">URL โลโก้ (ไฟล์รูปภาพ)</label>
                             <input type="text" id="cfgLogo" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none mb-2" oninput="document.getElementById('logoPreview').src=this.value">
@@ -748,49 +773,21 @@
             return (str || '').toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         };
 
-        // --- ระบบคำนวณ BMI อัตโนมัติ ---
-        function calculateBMI(weight, heightCm) {
-            if (!weight || !heightCm || weight <= 0 || heightCm <= 0) return { bmi: 0, text: '-', colorClass: 'bg-slate-100 text-slate-500' };
-            const heightM = heightCm / 100;
-            const bmi = (weight / (heightM * heightM)).toFixed(1);
-            
-            let text = ''; let colorClass = '';
-            if (bmi < 18.5) { text = 'ผอม (น้ำหนักน้อย)'; colorClass = 'bg-blue-100 text-blue-700'; }
-            else if (bmi >= 18.5 && bmi <= 22.9) { text = 'ปกติ (สมส่วน)'; colorClass = 'bg-green-100 text-green-700'; }
-            else if (bmi >= 23.0 && bmi <= 24.9) { text = 'ท้วม (น้ำหนักเกิน)'; colorClass = 'bg-amber-100 text-amber-700'; }
-            else if (bmi >= 25.0 && bmi <= 29.9) { text = 'อ้วน'; colorClass = 'bg-orange-100 text-orange-700'; }
-            else { text = 'อ้วนมาก (อันตราย)'; colorClass = 'bg-red-100 text-red-700'; }
-            
-            return { bmi, text, colorClass };
-        }
-
-        function updateBMIUI(studentId) {
-            const wInput = document.getElementById(`hlth_w_${studentId}`);
-            const hInput = document.getElementById(`hlth_h_${studentId}`);
-            const badgeDiv = document.getElementById(`bmi_badge_${studentId}`);
-            
-            if(wInput && hInput && badgeDiv) {
-                const w = parseFloat(wInput.value);
-                const h = parseFloat(hInput.value);
-                const result = calculateBMI(w, h);
-                
-                if(result.bmi > 0) {
-                    badgeDiv.innerHTML = `<span class="px-2 py-1 rounded text-[10px] font-bold ${result.colorClass}">BMI: ${result.bmi} - ${result.text}</span>`;
-                } else {
-                    badgeDiv.innerHTML = '';
-                }
-            }
-        }
-
-        let appConfig = JSON.parse(localStorage.getItem('myAppCfgV2')) || { sysName: 'ระบบจัดการเรียนการสอน', school1: 'โรงเรียนบ้านซับก้านเหลือง', school2: 'สพป.นครราชสีมา เขต 3', theme: '#0ea5e9', logo: 'https://img2.pic.in.th/pic/-161baf06cd7f44fd8.png' };
+        let appConfig = JSON.parse(localStorage.getItem('myAppCfgV2')) || { sysName: 'ระบบจัดการเรียนการสอน', school1: 'โรงเรียนบ้านซับก้านเหลือง', school2: 'สพป.นครราชสีมา เขต 3', theme: '#0ea5e9', logo: 'https://img2.pic.in.th/pic/-161baf06cd7f44fd8.png', teacherName: '' };
         
         function applyConfig() {
             document.querySelectorAll('#appTitleDesktop, #appTitleMobile').forEach(e=>e.innerText=appConfig.sysName);
             document.getElementById('appSchoolDesktop').innerText=appConfig.school1;
             document.querySelectorAll('#appLogoDesktop, #appLogoMobile, #logoPreview').forEach(e=>{e.src=appConfig.logo; e.style.display='block';});
             document.getElementById('cfgSysName').value=appConfig.sysName; document.getElementById('cfgSchool1').value=appConfig.school1; document.getElementById('cfgSchool2').value=appConfig.school2; document.getElementById('cfgTheme').value=appConfig.theme; document.getElementById('cfgLogo').value=appConfig.logo;
+            document.getElementById('cfgTeacherName').value=appConfig.teacherName || '';
             const colorPicker = document.getElementById('qrHeaderColor'); if(colorPicker) colorPicker.value = appConfig.theme;
             
+            // อัปเดตชื่อครูประจำชั้นในทุกหน้ารายงาน
+            document.querySelectorAll('.teacher-name-display').forEach(e => { 
+                e.innerText = appConfig.teacherName || '...................................................'; 
+            });
+
             // เปลี่ยน Favicon อัตโนมัติตามโลโก้
             let faviconLink = document.getElementById('dynamic-favicon');
             if (faviconLink && appConfig.logo) {
@@ -798,7 +795,7 @@
             }
         }
         function saveConfig() {
-            appConfig.sysName=document.getElementById('cfgSysName').value; appConfig.school1=document.getElementById('cfgSchool1').value; appConfig.school2=document.getElementById('cfgSchool2').value; appConfig.theme=document.getElementById('cfgTheme').value; appConfig.logo=document.getElementById('cfgLogo').value; localStorage.setItem('myAppCfgV2', JSON.stringify(appConfig)); applyConfig(); Swal.fire({toast:true, position:'top', icon:'success', title:'บันทึกสำเร็จ', timer:1500, showConfirmButton:false});
+            appConfig.sysName=document.getElementById('cfgSysName').value; appConfig.school1=document.getElementById('cfgSchool1').value; appConfig.school2=document.getElementById('cfgSchool2').value; appConfig.theme=document.getElementById('cfgTheme').value; appConfig.logo=document.getElementById('cfgLogo').value; appConfig.teacherName=document.getElementById('cfgTeacherName').value; localStorage.setItem('myAppCfgV2', JSON.stringify(appConfig)); applyConfig(); Swal.fire({toast:true, position:'top', icon:'success', title:'บันทึกสำเร็จ', timer:1500, showConfirmButton:false});
         }
 
         // --- Navigation ---
