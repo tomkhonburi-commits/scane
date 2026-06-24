@@ -338,6 +338,45 @@
                     </div>
                 </div>
 
+                <!-- --- PAGE: SCORES --- -->
+                <div id="page-scores" class="page-content">
+                    <h2 class="text-2xl font-bold text-primary mb-6">บันทึกคะแนน / ตรวจงาน</h2>
+                    <div class="glass-card mb-6 max-w-4xl">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">วิชา</label><select id="selActScore" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-amber-400" onchange="populateScoreWorkTopics(); renderScoreTable();"></select></div>
+                            <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">ห้องเรียน</label><select id="selClassScore" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-amber-400" onchange="populateScoreWorkTopics(); renderScoreTable();"></select></div>
+                            <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">เลือกชิ้นงาน (ออปชัน)</label><select id="selWorkScore" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-amber-400" onchange="renderScoreTable()"><option value="">-- ไม่เลือก (กรอกคะแนนรวมปกติ) --</option></select></div>
+                        </div>
+                    </div>
+                    <div id="scoreTableArea" class="hidden">
+                        <div class="flex justify-between items-center mb-4 px-2">
+                            <h3 class="font-bold text-slate-700 text-lg">รายชื่อนักเรียน</h3>
+                            <div id="scoreWorkBadge" class="hidden text-xs bg-green-100 text-green-700 font-bold px-3 py-1 rounded-full shadow-sm"></div>
+                        </div>
+                        <div id="scoreList" class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6"></div>
+                        <div class="sticky bottom-4 z-20 w-full flex justify-center">
+                            <button onclick="saveScores()" class="w-full md:max-w-md bg-amber-500 hover:bg-amber-600 text-white py-4 rounded-2xl font-bold shadow-[0_8px_30px_rgba(245,158,11,0.3)] transition-transform active:scale-95 text-lg"><i class="fas fa-save mr-2"></i> บันทึกคะแนน</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- --- PAGE: GRADES --- -->
+                <div id="page-grades" class="page-content">
+                    <h2 class="text-2xl font-bold text-primary mb-6">คำนวณและตัดเกรด</h2>
+                    <div class="glass-card mb-6 max-w-3xl">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">เลือกวิชา</label><select id="selActGrade" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-indigo-500" onchange="renderGradeTable()"></select></div>
+                            <div><label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">เลือกห้องเรียน</label><select id="selClassGrade" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none focus:border-indigo-500" onchange="renderGradeTable()"></select></div>
+                        </div>
+                    </div>
+                    <div id="gradeTableArea" class="hidden">
+                        <div class="flex justify-between items-center mb-4 px-2">
+                            <h3 class="font-bold text-slate-700 text-lg">ผลการเรียน</h3>
+                        </div>
+                        <div id="gradeList" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+                    </div>
+                </div>
+
                 <!-- --- PAGE: HEALTH (น้ำหนัก/ส่วนสูง & BMI) --- -->
                 <div id="page-health" class="page-content">
                     <h2 class="text-2xl font-bold text-primary mb-6">บันทึกน้ำหนักและส่วนสูง</h2>
@@ -2280,6 +2319,7 @@
             }, 1500);
         }
 
+        // --- QR Maker ---
         function prepQRMakerPage() {
             const currentClass = getValue('selClassQRMaker');
             setHTML('selClassQRMaker', '<option value="">-- กรุณาเลือกห้อง --</option><option value="ALL">-- ดึงรายชื่อทั้งหมด --</option>' + (DB.classes || []).map(c=>`<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`).join(''));
