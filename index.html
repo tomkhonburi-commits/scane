@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -24,13 +25,6 @@
                 extend: { 
                     fontFamily: { sans: ['Kanit', 'sans-serif'] }, 
                     colors: { primary: '#0f172a', secondary: '#3b82f6', background: '#f8fafc' },
-                    animation: { 'blob': 'blob 10s infinite alternate' },
-                    keyframes: {
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '100%': { transform: 'translate(20px, -40px) scale(1.05)' }
-                        }
-                    }
                 } 
             } 
         }
@@ -41,7 +35,8 @@
         .custom-scroll::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
         .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
         
-        .page-content { display: none; opacity: 0; } .page-content.active { display: block; opacity: 1; animation: fadeUp 0.3s ease-out forwards; }
+        .page-content { display: none; opacity: 0; } 
+        .page-content.active { display: block; opacity: 1; animation: fadeUp 0.3s ease-out forwards; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         
         /* Base UI Styles */
@@ -73,13 +68,8 @@
         .qr-maker-container .qr-code { width: 24mm !important; height: 24mm !important; background: white; padding: 1mm; border-radius: 2mm; display: flex !important; justify-content: center; align-items: center; border: 1px solid #e2e8f0; flex-shrink: 0; }
         .qr-maker-container .qr-code img, .qr-maker-container .qr-code canvas { width: 100% !important; height: 100% !important; object-fit: contain !important; }
 
-        /* ====================================================
-           ✨ LOGIN SCREEN UI ✨
-           ==================================================== */
+        /* Login Glass Panel */
         .glass-panel { background: linear-gradient(180deg, #0f172a 0%, #1e3a8a 100%); position: relative; }
-        .glass-panel::before { content: ''; position: absolute; top: -10%; left: -10%; width: 200px; height: 200px; background: rgba(59, 130, 246, 0.3); filter: blur(50px); border-radius: 50%; pointer-events: none; }
-        .glass-panel::after { content: ''; position: absolute; bottom: -10%; right: -10%; width: 250px; height: 250px; background: rgba(139, 92, 246, 0.2); filter: blur(60px); border-radius: 50%; pointer-events: none; }
-        .input-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #9ca3af; }
 
         /* --- Print CSS --- */
         @media print {
@@ -107,15 +97,13 @@
 </head>
 <body class="h-screen w-screen overflow-hidden flex bg-background text-slate-800">
 
-    <!-- Loading Overlay -->
+    <!-- 1. Loading Overlay -->
     <div id="loadingOverlay" class="fixed inset-0 bg-white/95 z-[9999] flex-col justify-center items-center" style="display: flex;">
         <i class="fas fa-circle-notch fa-spin fa-3x text-blue-600 mb-4"></i>
         <p class="font-bold text-slate-600 tracking-wide mt-2" id="loadingText">กำลังเตรียมระบบ...</p>
     </div>
 
-    <!-- ==========================================
-         LOGIN SCREEN
-         ========================================== -->
+    <!-- 2. LOGIN SCREEN (SIMPLIFIED INPUTS) -->
     <div id="loginScreen" class="fixed inset-0 z-[500] flex-col items-center justify-center p-4 sm:p-6 md:p-8" style="background-color: #e0e7ff; background-image: radial-gradient(circle at 50% 100%, #c7d2fe, #e0e7ff); display: none;">
         <div class="max-w-5xl w-full bg-white rounded-3xl lg:rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col lg:flex-row z-10 relative">
             
@@ -123,61 +111,31 @@
             <div class="glass-panel w-full lg:w-5/12 p-8 md:p-10 lg:p-12 text-white flex flex-col justify-between relative overflow-hidden">
                 <div class="relative z-10">
                     <div class="mb-6 lg:mb-8 text-center lg:text-left">
-                        <img id="loginLogo2" src="https://img2.pic.in.th/pic/-161baf06cd7f44fd8.png" alt="Logo" class="w-20 h-20 lg:w-24 lg:h-24 object-contain drop-shadow-lg mx-auto lg:mx-0 mb-4 lg:mb-6">
+                        <img id="loginLogo" src="https://img2.pic.in.th/pic/-161baf06cd7f44fd8.png" alt="Logo" class="w-20 h-20 lg:w-24 lg:h-24 object-contain drop-shadow-lg mx-auto lg:mx-0 mb-4 lg:mb-6">
                     </div>
                     <div class="text-center lg:text-left">
                         <h1 id="loginSchool1" class="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-2">โรงเรียนบ้านซับก้านเหลือง</h1>
                         <h2 id="loginSchool2" class="text-lg md:text-xl lg:text-2xl font-medium text-blue-200 mb-2 lg:mb-4">สพป.นม.3</h2>
-                        <p class="text-[10px] md:text-xs text-blue-300 tracking-widest uppercase mb-6 lg:mb-10 font-mono">
-                            Smart Classroom App
-                        </p>
-                    </div>
-                    <div class="flex flex-col items-center lg:items-start space-y-3">
-                        <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 backdrop-blur-md px-4 py-2 rounded-full text-sm font-medium">
-                            <i class="fas fa-user-check text-blue-300"></i> ระบบเช็คชื่อเข้าเรียน
-                        </div>
-                        <div class="inline-flex items-center gap-2 bg-blue-600/40 border border-blue-400/30 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold tracking-wider mt-2">
-                            ATTENDANCE SYSTEM 2.0
-                        </div>
-                    </div>
-                </div>
-                <div class="relative z-10 mt-10 lg:mt-16">
-                    <div class="bg-black/20 backdrop-blur-md rounded-2xl p-4 lg:p-5 border border-white/10 text-center lg:text-left">
-                        <div class="flex items-center justify-center lg:justify-start gap-2 mb-2">
-                            <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-                            <span class="text-[10px] lg:text-xs font-bold text-emerald-400 tracking-wider uppercase">Secure Connection</span>
-                        </div>
-                        <p class="text-[9px] lg:text-[10px] text-gray-300 leading-relaxed">
-                            ข้อมูลส่วนบุคคลของท่านถูกจัดเก็บและเข้ารหัสอย่างปลอดภัย<br class="hidden lg:block">
-                            ตามมาตรฐาน พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล (PDPA)
-                        </p>
+                        <p class="text-[10px] md:text-xs text-blue-300 tracking-widest uppercase mb-6 lg:mb-10 font-mono">Smart Classroom App</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Panel (Login Form) -->
+            <!-- Right Panel (Login Form - SIMPLIFIED) -->
             <div class="w-full lg:w-7/12 p-6 sm:p-8 md:p-10 lg:p-14 flex flex-col justify-center bg-white">
                 <div class="mb-8 lg:mb-10 text-center lg:text-left">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">เข้าสู่ระบบ</h2>
-                    <p class="text-gray-500 text-sm">กรุณายืนยันตัวตนเพื่อเข้าใช้งานระบบเช็คชื่อและกิจกรรม</p>
+                    <p class="text-gray-500 text-sm">กรุณายืนยันตัวตนเพื่อเข้าใช้งาน</p>
                 </div>
 
-                <div class="space-y-5 lg:space-y-6 max-w-md mx-auto lg:mx-0 w-full">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">ชื่อผู้ใช้งาน <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <i class="fas fa-user input-icon"></i>
-                            <input type="text" id="inpLoginUser" required class="w-full pl-10 pr-4 py-3 lg:py-3.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none transition-all text-gray-700 font-medium text-sm lg:text-base" placeholder="กรอกชื่อผู้ใช้งาน" onkeypress="if(event.key==='Enter') tryLogin()">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">รหัสผ่าน <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <i class="fas fa-lock input-icon"></i>
-                            <input type="password" id="inpLoginPass" required class="w-full pl-10 pr-4 py-3 lg:py-3.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none transition-all text-gray-700 font-medium font-sans tracking-widest text-sm lg:text-base" placeholder="••••••••" onkeypress="if(event.key==='Enter') tryLogin()">
-                        </div>
-                    </div>
-                    <button onclick="tryLogin()" class="w-full bg-[#0f172a] hover:bg-[#1e293b] active:scale-[0.98] text-white py-3.5 lg:py-4 rounded-xl font-bold text-base lg:text-lg shadow-lg shadow-slate-800/30 transition-all flex justify-center items-center gap-2 mt-2">
+                <div class="max-w-md mx-auto lg:mx-0 w-full">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">ชื่อผู้ใช้งาน <span class="text-red-500">*</span></label>
+                    <input type="text" id="inpLoginUser" required class="w-full p-4 rounded-xl border-2 border-slate-300 bg-slate-50 text-slate-800 font-bold outline-none focus:border-blue-600 focus:bg-white transition-all mb-4" placeholder="กรอกชื่อผู้ใช้งาน" onkeypress="if(event.key==='Enter') tryLogin()">
+                    
+                    <label class="block text-sm font-bold text-gray-700 mb-2">รหัสผ่าน <span class="text-red-500">*</span></label>
+                    <input type="password" id="inpLoginPass" required class="w-full p-4 rounded-xl border-2 border-slate-300 bg-slate-50 text-slate-800 font-bold outline-none focus:border-blue-600 focus:bg-white transition-all mb-6 tracking-widest" placeholder="••••••••" onkeypress="if(event.key==='Enter') tryLogin()">
+                    
+                    <button onclick="tryLogin()" class="w-full bg-[#0f172a] hover:bg-[#1e293b] active:scale-[0.98] text-white py-4 rounded-xl font-bold text-lg shadow-lg transition-all flex justify-center items-center gap-2">
                         เข้าสู่ระบบ (Sign In) <i class="fas fa-arrow-right text-sm"></i>
                     </button>
                     
@@ -185,26 +143,15 @@
                         <p class="text-xs font-medium text-slate-500">ทดสอบระบบด้วย: <span class="font-bold text-blue-600">admin</span> / <span class="font-bold text-blue-600">1234</span></p>
                     </div>
                 </div>
-
-                <div class="flex items-center my-6 lg:my-8 max-w-md mx-auto lg:mx-0 w-full">
-                    <div class="flex-grow border-t border-gray-100"></div>
-                </div>
-
-                <div class="text-center lg:text-left text-sm text-gray-500 max-w-md mx-auto lg:mx-0 w-full">
-                    <p class="mb-2 lg:mb-3 text-xs">ลืมรหัสผ่าน / แจ้งปัญหาการใช้งาน ติดต่อผู้ดูแลระบบ:</p>
-                    <p class="font-bold text-gray-800 mb-4 text-sm lg:text-base" id="loginTeacherName">ผู้ดูแลระบบ</p>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- ==========================================
-         MAIN APP WRAPPER
-         ========================================== -->
-    <div id="mainAppWrapper" class="flex-1 flex flex-col md:flex-row min-w-0 overflow-hidden w-full h-full" style="display: none;">
+    <!-- 3. MAIN APP WRAPPER -->
+    <div id="mainAppWrapper" class="flex-1 flex flex-row min-w-0 overflow-hidden w-full h-full" style="display: none;">
         
         <!-- Sidebar (Desktop) -->
-        <aside class="hidden md:flex flex-col w-[260px] bg-white border-r border-slate-200 shadow-sm z-40 flex-shrink-0">
+        <aside class="hidden lg:flex flex-col w-[260px] bg-white border-r border-slate-200 shadow-sm z-40 flex-shrink-0">
             <div class="h-20 border-b border-slate-100 flex items-center px-6 gap-3 flex-shrink-0">
                 <img id="appLogoDesktop" src="" class="w-10 h-10 object-contain rounded-xl shadow-sm" onerror="this.onerror=null; this.style.display='none';">
                 <div class="overflow-hidden"><h1 id="appTitleDesktop" class="font-bold text-[14px] text-primary truncate">ระบบแอปพลิเคชัน</h1><p id="appSchoolDesktop" class="text-[10px] font-medium text-slate-500 truncate">โรงเรียน</p></div>
@@ -237,7 +184,7 @@
                     <button onclick="navigate('activities')" class="w-full flex items-center px-5 py-2.5 text-[13px] font-medium nav-sidebar-item" data-tab="activities"><i class="fas fa-book-open w-6 text-center text-slate-400"></i> จัดการวิชา/งาน</button>
                     <button onclick="navigate('classes')" class="w-full flex items-center px-5 py-2.5 text-[13px] font-medium nav-sidebar-item" data-tab="classes"><i class="fas fa-layer-group w-6 text-center text-slate-400"></i> จัดการชั้นเรียน</button>
                     <button onclick="navigate('students')" class="w-full flex items-center px-5 py-2.5 text-[13px] font-medium nav-sidebar-item" data-tab="students"><i class="fas fa-users w-6 text-center text-slate-400"></i> ทะเบียนนักเรียน</button>
-                    <button onclick="navigate('users')" class="w-full flex items-center px-5 py-2.5 text-[13px] font-medium nav-sidebar-item" data-tab="users"><i class="fas fa-user-shield w-6 text-center text-slate-400"></i> จัดการผู้ใช้งาน (สิทธิ์)</button>
+                    <button onclick="navigate('users')" class="w-full flex items-center px-5 py-2.5 text-[13px] font-medium nav-sidebar-item" data-tab="users"><i class="fas fa-user-shield w-6 text-center text-slate-400"></i> จัดการผู้ใช้งาน</button>
                     <button onclick="navigate('settings')" class="w-full flex items-center px-5 py-2.5 text-[13px] font-medium nav-sidebar-item" data-tab="settings"><i class="fas fa-cog w-6 text-center text-slate-400"></i> ตั้งค่าแอปพลิเคชัน</button>
                 </div>
             </div>
@@ -247,7 +194,7 @@
         <div class="flex-1 flex flex-col min-w-0 overflow-hidden relative w-full">
             
             <!-- Mobile Header (Visible only on tablets & mobile) -->
-            <header class="md:hidden h-16 bg-white border-b border-slate-200 flex-shrink-0 flex justify-between items-center px-4 shadow-sm z-30">
+            <header class="lg:hidden h-16 bg-white border-b border-blue-100 flex-shrink-0 flex justify-between items-center px-4 shadow-sm z-30">
                 <div class="flex items-center gap-3">
                     <img id="appLogoMobile" src="" class="w-8 h-8 object-contain rounded-lg shadow-sm" onerror="this.onerror=null; this.style.display='none';">
                     <h1 id="appTitleMobile" class="font-bold text-[15px] text-slate-800 truncate max-w-[200px]">ระบบเช็คชื่อ</h1>
@@ -259,7 +206,7 @@
             </header>
 
             <!-- Main Scrollable Content -->
-            <main class="flex-1 overflow-y-auto custom-scroll p-4 md:p-6 relative z-10 w-full mx-auto overflow-x-hidden pb-[80px] md:pb-6">
+            <main class="flex-1 overflow-y-auto custom-scroll p-4 md:p-6 relative z-10 w-full mx-auto overflow-x-hidden bg-[#f8fafc] bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-50/50 via-[#f8fafc] to-indigo-50/30 pb-[80px] md:pb-6">
                 <div class="w-full max-w-6xl mx-auto">
                     
                     <!-- 1. DASHBOARD -->
@@ -393,11 +340,11 @@
                     <!-- 7. REPORT -->
                     <div id="page-report" class="page-content">
                         <h2 class="text-2xl font-bold text-primary mb-4">ระบบรายงานผล</h2>
-                        <div class="flex border-b border-slate-200 mb-6 no-print overflow-x-auto custom-scroll pb-1 gap-2">
-                            <button id="tabRepAtt" onclick="switchReportTab('attendance')" class="px-6 py-2.5 font-bold text-sm text-white bg-blue-600 rounded-full shadow-sm transition-all whitespace-nowrap"><i class="fas fa-clock mr-1"></i> ปพ.5 (รายวัน)</button>
-                            <button id="tabRepWork" onclick="switchReportTab('work')" class="px-6 py-2.5 font-bold text-sm text-slate-500 bg-white border border-slate-200 rounded-full hover:bg-slate-50 transition-all whitespace-nowrap"><i class="fas fa-clipboard-check mr-1"></i> ชิ้นงาน/คะแนน</button>
-                            <button id="tabRepMilk" onclick="switchReportTab('milk')" class="px-6 py-2.5 font-bold text-sm text-slate-500 bg-white border border-slate-200 rounded-full hover:bg-slate-50 transition-all whitespace-nowrap"><i class="fas fa-glass-water mr-1"></i> การดื่มนม</button>
-                            <button id="tabRepHealth" onclick="switchReportTab('health')" class="px-6 py-2.5 font-bold text-sm text-slate-500 bg-white border border-slate-200 rounded-full hover:bg-slate-50 transition-all whitespace-nowrap"><i class="fas fa-weight-scale mr-1"></i> น้ำหนักส่วนสูง (BMI)</button>
+                        <div class="flex border-b border-slate-200 mb-6 no-print overflow-x-auto custom-scroll pb-2 gap-2">
+                            <button id="tabRepAtt" onclick="switchReportTab('attendance')" class="px-6 py-2.5 font-bold text-sm text-white bg-blue-600 rounded-full shadow-md transition-all whitespace-nowrap"><i class="fas fa-clock mr-1"></i> ปพ.5 (รายวัน)</button>
+                            <button id="tabRepWork" onclick="switchReportTab('work')" class="px-6 py-2.5 font-bold text-sm text-slate-500 bg-white border border-slate-200 rounded-full hover:bg-slate-50 hover:text-blue-600 transition-all whitespace-nowrap"><i class="fas fa-clipboard-check mr-1"></i> ชิ้นงาน/คะแนน</button>
+                            <button id="tabRepMilk" onclick="switchReportTab('milk')" class="px-6 py-2.5 font-bold text-sm text-slate-500 bg-white border border-slate-200 rounded-full hover:bg-slate-50 hover:text-blue-600 transition-all whitespace-nowrap"><i class="fas fa-glass-water mr-1"></i> การดื่มนม</button>
+                            <button id="tabRepHealth" onclick="switchReportTab('health')" class="px-6 py-2.5 font-bold text-sm text-slate-500 bg-white border border-slate-200 rounded-full hover:bg-slate-50 hover:text-blue-600 transition-all whitespace-nowrap"><i class="fas fa-weight-scale mr-1"></i> น้ำหนักส่วนสูง (BMI)</button>
                         </div>
 
                         <!-- Report: Att -->
@@ -519,7 +466,7 @@
             </main>
             
             <!-- Mobile Bottom Nav -->
-            <nav class="md:hidden flex-none bg-white border-t border-slate-200 w-full flex justify-around items-center h-[68px] pb-1 z-40 fixed bottom-0 left-0 shadow-[0_-10px_20px_rgba(0,0,0,0.04)]">
+            <nav class="lg:hidden flex-none bg-white border-t border-slate-200 w-full flex justify-around items-center h-[68px] pb-1 z-40 fixed bottom-0 left-0 shadow-[0_-10px_20px_rgba(0,0,0,0.04)]">
                 <button onclick="navigate('students')" class="nav-bottom-item" data-tab="students"><i class="fas fa-users"></i><span class="text-[10px] font-medium">นักเรียน</span></button>
                 <button onclick="navigate('classes')" class="nav-bottom-item" data-tab="classes"><i class="fas fa-layer-group"></i><span class="text-[10px] font-medium">ห้องเรียน</span></button>
                 
@@ -564,6 +511,10 @@
         const showEl = function(id) { const el = document.getElementById(id); if (el) { el.classList.remove('hidden'); el.style.display=''; } };
         const hideEl = function(id) { const el = document.getElementById(id); if (el) el.classList.add('hidden'); };
         const showLoad = function(b) { const el = document.getElementById('loadingOverlay'); if(el) { if(b) { el.classList.remove('hidden'); el.style.display = 'flex'; } else { el.classList.add('hidden'); el.style.display = 'none'; } } };
+        const playSuccessBeep = () => { try { const c=new(window.AudioContext||window.webkitAudioContext)(); const o=c.createOscillator(); const g=c.createGain(); o.connect(g); g.connect(c.destination); o.type='sine'; o.frequency.setValueAtTime(800, c.currentTime); g.gain.setValueAtTime(0.1, c.currentTime); o.start(); o.stop(c.currentTime + 0.1); } catch(e){} };
+        const playErrorBeep = () => { try { const c=new(window.AudioContext||window.webkitAudioContext)(); const o=c.createOscillator(); const g=c.createGain(); o.connect(g); g.connect(c.destination); o.type='sawtooth'; o.frequency.setValueAtTime(200, c.currentTime); g.gain.setValueAtTime(0.1, c.currentTime); o.start(); o.stop(c.currentTime + 0.3); } catch(e){} };
+        function calculateBMI(w, h) { if(!w || !h) return {bmi:0, text:'-', colorClass:''}; const bmi = w / ((h/100) * (h/100)); let t='', c=''; if(bmi < 18.5) { t='ผอมเกินไป'; c='bg-blue-100 text-blue-700'; } else if(bmi < 23) { t='น้ำหนักปกติ'; c='bg-green-100 text-green-700'; } else if(bmi < 25) { t='น้ำหนักเกิน'; c='bg-yellow-100 text-yellow-700'; } else if(bmi < 30) { t='อ้วน'; c='bg-orange-100 text-orange-700'; } else { t='อ้วนมาก'; c='bg-red-100 text-red-700'; } return { bmi: bmi.toFixed(1), text: t, colorClass: c }; }
+        function updateBMIUI(id) { const w=parseFloat(getValue(`hlth_w_${id}`)), h=parseFloat(getValue(`hlth_h_${id}`)); const r=calculateBMI(w,h); setHTML(`bmi_badge_${id}`, r.bmi>0 ? `<span class="px-2 py-1 rounded text-[10px] font-bold ${r.colorClass}">BMI: ${r.bmi} - ${r.text}</span>` : ''); }
 
         // Database variables
         let DB = { students:[], classes:[], activities:[], attendance:{}, scores:{}, works:{}, health:{}, milk:{}, users:[] };
@@ -620,55 +571,91 @@
         async function fetchAll() {
             try {
                 showLoad(true);
-                const getTbl = async function(n) { try { const { data, error } = await supabaseClient.from(n).select('*'); if (error) return []; return data || []; } catch(e){ return []; } };
-                if(supabaseClient) {
-                    const norm = function(arr, t) {
-                        return (arr||[]).map(function(obj, i) {
-                            let nObj = Object.assign({}, obj);
-                            let vs = Object.values(obj || {});
-                            for(let k in obj) { 
-                                let x = String(k).toLowerCase().trim(); 
-                                if (t === 'students') { 
-                                    if(['id','รหัส','รหัสนักเรียน','เลขประจำตัว','เลขที่'].includes(x)) nObj.id = String(obj[k]||'').trim(); 
-                                    if(['name','ชื่อ','ชื่อ-สกุล','ชื่อ-นามสกุล','ชื่อนักเรียน'].includes(x)) nObj.name = String(obj[k]||'').trim(); 
-                                    if(['class','ชั้น','ชั้นเรียน','ห้อง','ห้องเรียน','ระดับชั้น'].includes(x)) nObj.class = String(obj[k]||'').trim(); 
-                                } else if (t === 'classes' || t === 'activities') { 
-                                    if(['id','รหัส'].includes(x)) nObj.id = String(obj[k]||'').trim(); 
-                                    if(['name','ชื่อ','ชั้น','ชั้นเรียน','ห้อง','วิชา','กิจกรรม','รายวิชา'].includes(x)) nObj.name = String(obj[k]||'').trim(); 
-                                } 
-                            }
-                            if (t === 'students') {
-                                if (!nObj.id && vs.length > 0) nObj.id = String(vs[0] || '').trim();
-                                if (!nObj.name && vs.length > 1) nObj.name = String(vs[1] || '').trim();
-                                if (!nObj.class && vs.length > 2) nObj.class = String(vs[2] || '').trim();
-                            } else if (t === 'classes' || t === 'activities') {
-                                if (!nObj.id && vs.length > 0) nObj.id = String(vs[0] || '').trim();
-                                if (!nObj.name && vs.length > 1) nObj.name = String(vs[1] || '').trim();
-                            }
-                            if (t !== 'users' && !nObj.id && nObj.name) nObj.id = t === 'students' ? 'STD-'+(i+1) : nObj.name; 
-                            if (t !== 'users' && !nObj.name && nObj.id) nObj.name = nObj.id; 
-                            return nObj;
-                        });
-                    };
-                    DB.students = norm(await getTbl('students'), 'students').filter(function(i){ return i.id; }); 
-                    DB.classes = norm(await getTbl('classes'), 'classes').filter(function(i){ return i.id; }); 
-                    DB.activities = norm(await getTbl('activities'), 'activities').filter(function(i){ return i.id; }); 
-                    DB.attendance = {}; (await getTbl('attendance')).forEach(function(r) { DB.attendance[r.key] = r.data || {}; });
-                    DB.scores = {}; (await getTbl('scores')).forEach(function(r) { DB.scores[r.key] = r.data || {}; });
-                    DB.works = {}; (await getTbl('works')).forEach(function(r) { DB.works[r.key] = r.data || {}; });
-                    DB.health = {}; (await getTbl('health')).forEach(function(r) { DB.health[r.key] = r.data || {}; });
-                    DB.milk = {}; (await getTbl('milk')).forEach(function(r) { DB.milk[r.key] = r.data || {}; });
-                    DB.users = await getTbl('app_users'); 
-                }
                 
-                try {
-                    const ld = localStorage.getItem('LocalDB_V2');
-                    if (ld) {
-                        const ldb = JSON.parse(ld);
-                        if(DB.users && DB.users.length === 0 && ldb.users && ldb.users.length > 0) DB.users = ldb.users;
-                        if(!supabaseClient || DB.classes.length === 0) { DB = Object.assign({}, DB, ldb); }
+                const processKV = function(arr) {
+                    let result = {};
+                    (arr || []).forEach(function(r) {
+                        if (!r || !r.key) return;
+                        let parsed = r.data;
+                        if (typeof parsed === 'string') {
+                            try { parsed = JSON.parse(parsed); } catch(e) { parsed = {}; }
+                        }
+                        result[r.key] = parsed || {};
+                    });
+                    return result;
+                };
+
+                const fetchDataWithFallback = async function(tableName) {
+                    let result = null;
+                    if(supabaseClient) {
+                        try {
+                            const { data, error } = await supabaseClient.from(tableName).select('*');
+                            if (!error && data) {
+                                result = data;
+                            }
+                        } catch(e) { console.error("Supabase Catch (" + tableName + "):", e); }
                     }
-                } catch(e) {}
+                    
+                    if (result === null) {
+                        try {
+                            const ld = localStorage.getItem('LocalDB_V2');
+                            if (ld) {
+                                const ldb = JSON.parse(ld);
+                                if (ldb && ldb[tableName]) {
+                                    result = ldb[tableName];
+                                } else if (tableName === 'app_users' && ldb.users) {
+                                    result = ldb.users;
+                                }
+                            }
+                        } catch(e) {}
+                    }
+                    return result || [];
+                };
+
+                const norm = function(arr, t) {
+                    return (arr||[]).map(function(obj, i) {
+                        let nObj = Object.assign({}, obj);
+                        
+                        const keys = Object.keys(obj);
+                        const findKey = function(possibleNames) {
+                            return keys.find(function(k) { return possibleNames.includes(String(k).toLowerCase().trim()); });
+                        };
+
+                        if (t === 'students') {
+                            const idKey = findKey(['id', 'รหัส', 'รหัสนักเรียน', 'เลขประจำตัว', 'เลขที่']);
+                            const nameKey = findKey(['name', 'ชื่อ', 'ชื่อ-สกุล', 'ชื่อ-นามสกุล', 'ชื่อนักเรียน', 'fullname']);
+                            const classKey = findKey(['class', 'ชั้น', 'ชั้นเรียน', 'ห้อง', 'ห้องเรียน', 'ระดับชั้น', 'room']);
+                            
+                            if (idKey) nObj.id = String(obj[idKey]).trim();
+                            if (nameKey) nObj.name = String(obj[nameKey]).trim();
+                            if (classKey) nObj.class = String(obj[classKey]).trim();
+                        } else if (t === 'classes' || t === 'activities') {
+                            const idKey = findKey(['id', 'รหัส']);
+                            const nameKey = findKey(['name', 'ชื่อ', 'ชั้น', 'ชั้นเรียน', 'ห้อง', 'วิชา', 'กิจกรรม', 'รายวิชา']);
+                            
+                            if (idKey) nObj.id = String(obj[idKey]).trim();
+                            if (nameKey) nObj.name = String(obj[nameKey]).trim();
+                        }
+
+                        if (t !== 'users' && !nObj.id && nObj.name) nObj.id = t === 'students' ? 'STD-'+(i+1) : nObj.name; 
+                        if (t !== 'users' && !nObj.name && nObj.id) nObj.name = nObj.id; 
+                        
+                        return nObj;
+                    });
+                };
+
+                DB.students = norm(await fetchDataWithFallback('students'), 'students').filter(function(i){ return i.id; }); 
+                DB.classes = norm(await fetchDataWithFallback('classes'), 'classes').filter(function(i){ return i.id; }); 
+                DB.activities = norm(await fetchDataWithFallback('activities'), 'activities').filter(function(i){ return i.id; }); 
+                
+                DB.attendance = processKV(await fetchDataWithFallback('attendance'));
+                DB.scores = processKV(await fetchDataWithFallback('scores'));
+                DB.works = processKV(await fetchDataWithFallback('works'));
+                DB.health = processKV(await fetchDataWithFallback('health'));
+                DB.milk = processKV(await fetchDataWithFallback('milk'));
+                
+                DB.users = await fetchDataWithFallback('app_users');
+                
             } catch(e) { 
                 console.error(e); 
             } finally { 
@@ -755,12 +742,18 @@
             try {
                 if(!currentUser) return [];
                 if(currentUser.role === 'admin') return DB.classes || [];
-                return (DB.classes || []).filter(function(c) { return (currentUser.classes || []).includes(String(c.name).trim()); });
+                let authCls = currentUser.classes || [];
+                if (typeof authCls === 'string') {
+                    try { authCls = JSON.parse(authCls); } catch(e) { authCls = [authCls]; }
+                }
+                if (!Array.isArray(authCls)) authCls = [authCls];
+                
+                return (DB.classes || []).filter(function(c) { return authCls.includes(String(c.name).trim()); });
             } catch(e) { return []; }
         }
         function renderMobileMenu() {
-            let m = `<button onclick="navigate('dashboard'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-sky-50 text-sky-500 rounded-2xl flex items-center justify-center text-xl shadow-sm"><i class="fas fa-home"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">สแกน</span></button><button onclick="navigate('manualcheck'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center text-xl shadow-sm"><i class="fas fa-tasks"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">เช็คชื่อมือ</span></button><button onclick="navigate('scores'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center text-xl shadow-sm"><i class="fas fa-star"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">คะแนน</span></button><button onclick="navigate('grades'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center text-xl shadow-sm"><i class="fas fa-graduation-cap"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">เกรด</span></button><button onclick="navigate('health'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-pink-50 text-pink-500 rounded-2xl flex items-center justify-center text-xl shadow-sm"><i class="fas fa-weight-scale"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">สุขภาพ</span></button><button onclick="navigate('milk'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-sky-50 text-sky-500 rounded-2xl flex items-center justify-center text-xl shadow-sm"><i class="fas fa-glass-water"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">ดื่มนม</span></button><button onclick="navigate('report'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-teal-50 text-teal-500 rounded-2xl flex items-center justify-center text-xl shadow-sm"><i class="fas fa-file-invoice-dollar"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">รายงาน</span></button><button onclick="navigate('qrmaker'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center text-xl shadow-sm"><i class="fas fa-id-badge"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">บัตร QR</span></button>`;
-            if(currentUser && currentUser.role === 'admin') { m += `<button onclick="navigate('activities'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center text-xl shadow-sm"><i class="fas fa-book-open"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">วิชา</span></button><button onclick="navigate('classes'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center text-xl shadow-sm"><i class="fas fa-layer-group"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">ชั้นเรียน</span></button><button onclick="navigate('students'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center text-xl shadow-sm"><i class="fas fa-users"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">นักเรียน</span></button><button onclick="navigate('users'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center text-xl shadow-sm"><i class="fas fa-user-shield"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">ผู้ใช้</span></button>`; }
+            let m = `<button onclick="navigate('dashboard'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-sky-50 text-sky-500 rounded-2xl flex items-center justify-center text-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)]"><i class="fas fa-home"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">สแกน</span></button><button onclick="navigate('manualcheck'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center text-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)]"><i class="fas fa-tasks"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">เช็คชื่อมือ</span></button><button onclick="navigate('scores'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-2xl flex items-center justify-center text-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)]"><i class="fas fa-star"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">คะแนน</span></button><button onclick="navigate('grades'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center text-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)]"><i class="fas fa-graduation-cap"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">เกรด</span></button><button onclick="navigate('health'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-pink-50 text-pink-500 rounded-2xl flex items-center justify-center text-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)]"><i class="fas fa-weight-scale"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">สุขภาพ</span></button><button onclick="navigate('milk'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-sky-50 text-sky-500 rounded-2xl flex items-center justify-center text-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)]"><i class="fas fa-glass-water"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">ดื่มนม</span></button><button onclick="navigate('report'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-teal-50 text-teal-500 rounded-2xl flex items-center justify-center text-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)]"><i class="fas fa-file-invoice-dollar"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">รายงาน</span></button><button onclick="navigate('qrmaker'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center text-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)]"><i class="fas fa-id-badge"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">บัตร QR</span></button>`;
+            if(currentUser && currentUser.role === 'admin') { m += `<button onclick="navigate('activities'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center text-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)]"><i class="fas fa-book-open"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">วิชา</span></button><button onclick="navigate('classes'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center text-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)]"><i class="fas fa-layer-group"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">ชั้นเรียน</span></button><button onclick="navigate('students'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center text-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)]"><i class="fas fa-users"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">นักเรียน</span></button><button onclick="navigate('users'); hideEl('mobileMenuOverlay');" class="flex flex-col items-center gap-2"><div class="w-12 h-12 bg-slate-100 text-slate-600 rounded-2xl flex items-center justify-center text-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.05)]"><i class="fas fa-user-shield"></i></div><span class="text-[10px] font-bold text-slate-600 text-center">ผู้ใช้</span></button>`; }
             setHTML('mobileMenuGrid', m);
         }
 
@@ -785,9 +778,9 @@
             (DB.students || []).forEach(function(s) { let cl = String(s.class||'').trim(); if(cStats[cl] !== undefined) cStats[cl]++; });
             
             const bc = document.getElementById('barChart'), pc = document.getElementById('mainPieChart'), pcc = document.getElementById('pieChart');
-            if(charts.bar && bc) charts.bar.destroy(); if (bc) charts.bar = new Chart(bc, { type: 'bar', data: { labels: Object.keys(cStats), datasets: [{ label: 'นักเรียน', data: Object.values(cStats), backgroundColor: '#3b82f6', borderRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: false, plugins:{legend:{display:false}} } });
-            if(charts.pie && pcc) charts.pie.destroy(); if (pcc) charts.pie = new Chart(pcc, { type: 'doughnut', data: { labels: ['มา', 'ลา/สาย', 'ขาด'], datasets: [{ data: [pres, late, abs], backgroundColor: ['#10b981', '#f97316', '#f43f5e'], borderWidth: 0, cutout: '75%' }] }, options: { responsive: true, maintainAspectRatio: false, plugins:{legend:{position:'right'}} } });
-            if(charts.mainPie && pc) charts.mainPie.destroy(); if(pc) charts.mainPie = new Chart(pc, { type: 'doughnut', data: { labels: ['มา', 'ลา/สาย', 'ขาด'], datasets: [{ data: [pres, late, abs], backgroundColor: ['#10b981', '#f97316', '#f43f5e'], borderWidth: 0, cutout: '80%' }] }, options: { responsive: true, maintainAspectRatio: false, plugins:{legend:{display:false}, tooltip:{enabled:false}} } });
+            if(charts.bar && bc) { charts.bar.destroy(); charts.bar = null; } if (bc) charts.bar = new Chart(bc, { type: 'bar', data: { labels: Object.keys(cStats), datasets: [{ label: 'นักเรียน', data: Object.values(cStats), backgroundColor: '#3b82f6', borderRadius: 8 }] }, options: { responsive: true, maintainAspectRatio: false, plugins:{legend:{display:false}} } });
+            if(charts.pie && pcc) { charts.pie.destroy(); charts.pie = null; } if (pcc) charts.pie = new Chart(pcc, { type: 'doughnut', data: { labels: ['มา', 'ลา/สาย', 'ขาด'], datasets: [{ data: [pres, late, abs], backgroundColor: ['#10b981', '#f97316', '#f43f5e'], borderWidth: 0, cutout: '75%' }] }, options: { responsive: true, maintainAspectRatio: false, plugins:{legend:{position:'right'}} } });
+            if(charts.mainPie && pc) { charts.mainPie.destroy(); charts.mainPie = null; } if(pc) charts.mainPie = new Chart(pc, { type: 'doughnut', data: { labels: ['มา', 'ลา/สาย', 'ขาด'], datasets: [{ data: [pres, late, abs], backgroundColor: ['#10b981', '#f97316', '#f43f5e'], borderWidth: 0, cutout: '80%' }] }, options: { responsive: true, maintainAspectRatio: false, plugins:{legend:{display:false}, tooltip:{enabled:false}} } });
         }
         function prepDashboardPage() {
             const cAct = getValue('selMainAct'), cCls = getValue('selMainClass');
@@ -810,7 +803,7 @@
             const wrk = document.getElementById('tabWork'); if(wrk) wrk.className = `px-6 py-3 font-bold text-sm ${!isAtt?'text-green-500 border-b-[3px] border-green-500':'text-slate-400 border-b-[3px] border-transparent hover:text-green-500'} transition-all w-1/2 md:w-auto`;
             if(isAtt){ showEl('boxDate'); hideEl('boxWork'); }else{ hideEl('boxDate'); showEl('boxWork'); populateDashboardWorkTopics(); }
             const c = document.getElementById('dashboardCardContainer'); if(c) c.className = `glass-card mb-6 border-t-[6px] ${isAtt?'border-t-blue-600':'border-t-green-500'} transition-colors`;
-            const bs = document.getElementById('btnMainScan'); if(bs) bs.className = `w-full ${isAtt?'bg-blue-600 shadow-blue-600/30 hover:bg-blue-700':'bg-green-500 shadow-green-500/30 hover:bg-green-600'} text-white py-5 rounded-2xl font-bold shadow-md flex justify-center items-center gap-3 active:scale-95 transition-all text-lg border border-transparent`;
+            const bs = document.getElementById('btnMainScan'); if(bs) bs.className = `w-full ${isAtt?'bg-gradient-to-r from-blue-500 to-indigo-600 shadow-blue-500/30 hover:shadow-lg':'bg-gradient-to-r from-emerald-400 to-emerald-500 shadow-emerald-500/30 hover:shadow-lg'} text-white py-5 rounded-2xl font-bold shadow-md flex justify-center items-center gap-3 active:scale-95 transition-all text-lg border border-transparent`;
             const bm = document.getElementById('btnMainManualSubmit'); if(bm) bm.className = `text-white w-14 rounded-xl flex justify-center items-center shadow-md active:scale-95 transition-transform ${isAtt?'bg-slate-800 hover:bg-slate-700':'bg-emerald-600 hover:bg-emerald-500'}`;
             const im = document.getElementById('inpMainManual'); if(im) im.className = `w-full border border-slate-200 rounded-xl py-3.5 pl-10 pr-4 text-center font-black tracking-wider text-slate-700 bg-white outline-none shadow-sm focus:ring-4 focus:ring-${isAtt?'blue':'emerald'}-500/20 focus:border-${isAtt?'blue':'emerald'}-500 transition-all`;
             setText('txtMainScan', isAtt ? "เปิดกล้องสแกนเข้าเรียน" : "เปิดกล้องสแกนส่งงาน");
@@ -928,7 +921,7 @@
             const k=`${m}|${c}`; const ex=DB.health[k]||{}; const stds=DB.students.filter(function(s){return String(s.class||'').trim()===String(c).trim();}).sort(function(x,y){return String(x.id).localeCompare(String(y.id),undefined,{numeric:true});});
             setHTML('healthList', stds.map(function(s){
                 const d=ex[s.id]||{w:'',h:''}; let b=''; if(d.w&&d.h){ const r=calculateBMI(parseFloat(d.w),parseFloat(d.h)); if(r.bmi>0) b=`<span class="px-2 py-1 rounded text-[10px] font-bold ${r.colorClass}">BMI: ${r.bmi} - ${r.text}</span>`; }
-                return `<div class="glass-card !p-4 flex flex-col sm:flex-row items-center justify-between gap-4"><div class="flex-1 w-full"><b class="text-sm text-slate-700 block">${escapeHTML(s.id)} ${escapeHTML(s.name)}</b><div id="bmi_badge_${escapeHTML(s.id)}" class="mt-1">${b}</div></div><div class="flex gap-2 w-full sm:w-48"><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-pink-500">น้ำหนัก(กก.)</span><input type="number" id="hlth_w_${escapeHTML(s.id)}" value="${d.w}" step="0.1" oninput="updateBMIUI('${escapeHTML(s.id)}')" class="w-full border border-blue-200 rounded-xl p-2 pt-3 text-center text-sm font-bold outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-inner"></div><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-indigo-500">ส่วนสูง(ซม.)</span><input type="number" id="hlth_h_${escapeHTML(s.id)}" value="${d.h}" step="0.1" oninput="updateBMIUI('${escapeHTML(s.id)}')" class="w-full border border-indigo-200 rounded-xl p-2 pt-3 text-center text-sm font-bold focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all outline-none bg-indigo-50/30 shadow-inner"></div></div></div>`;
+                return `<div class="glass-card !p-4 flex flex-col sm:flex-row items-center justify-between gap-4"><div class="flex-1 w-full"><b class="text-sm text-slate-700 block">${escapeHTML(s.id)} ${escapeHTML(s.name)}</b><div id="bmi_badge_${escapeHTML(s.id)}" class="mt-1">${b}</div></div><div class="flex gap-2 w-full sm:w-48"><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-pink-500">น้ำหนัก(กก.)</span><input type="number" id="hlth_w_${escapeHTML(s.id)}" value="${d.w}" step="0.1" oninput="updateBMIUI('${escapeHTML(s.id)}')" class="w-full border border-blue-200 rounded-xl p-2 pt-3 text-center text-sm font-bold outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-colors shadow-inner"></div><div class="relative flex-1"><span class="absolute -top-2 left-2 bg-white px-1 text-[9px] font-bold text-blue-500">ส่วนสูง(ซม.)</span><input type="number" id="hlth_h_${escapeHTML(s.id)}" value="${d.h}" step="0.1" oninput="updateBMIUI('${escapeHTML(s.id)}')" class="w-full border border-indigo-200 rounded-xl p-2 pt-3 text-center text-sm font-bold outline-none focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-400 transition-colors shadow-inner"></div></div></div>`;
             }).join(''));
         }
         function saveHealthData() { const c=getValue('selClassHealth'), m=getValue('inpMonthHealth'); if(!c||!m) return; const k=`${m}|${c}`; if(!DB.health[k]) DB.health[k]={}; DB.students.filter(function(s){return String(s.class||'').trim()===String(c).trim();}).forEach(function(s){ const w=getValue(`hlth_w_${s.id}`), h=getValue(`hlth_h_${s.id}`); if(w||h) DB.health[k][s.id]={w:w,h:h}; else delete DB.health[k][s.id]; }); let p={}; p[k]=DB.health[k]; save('health', p); Swal.fire({toast:true,position:'top',icon:'success',title:'บันทึกข้อมูลเรียบร้อย',timer:1500,showConfirmButton:false}); }
@@ -981,10 +974,10 @@
         function switchReportTab(tab) {
             ['Att','Work','Milk','Health'].forEach(function(t) { const el=document.getElementById('tabRep'+t); if(el) el.className='px-6 py-2.5 font-bold text-sm text-slate-500 bg-white border border-slate-200 rounded-full hover:bg-slate-50 transition-all whitespace-nowrap'; hideEl('rep'+t+'Area'); });
             ['repResult','repResultWork','repResultMilk','repResultHealth'].forEach(function(id) { hideEl(id); });
-            if(tab==='attendance'){ document.getElementById('tabRepAtt').className=`px-6 py-2.5 font-bold text-sm text-white bg-blue-600 rounded-full shadow-sm transition-all whitespace-nowrap`; showEl('repAttArea'); }
-            else if(tab==='health'){ document.getElementById('tabRepHealth').className=`px-6 py-2.5 font-bold text-sm text-white bg-pink-500 rounded-full shadow-sm transition-all whitespace-nowrap`; showEl('repHealthArea'); setHTML('selClassRepHealth','<option value="">- เลือกห้อง -</option>'+getAuthClasses().map(function(c){return `<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`;}).join('')); const dt=document.getElementById('inpMonthRepHealth'); if(dt&&!dt.value) dt.value=`${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}`; }
-            else if(tab==='work'){ document.getElementById('tabRepWork').className=`px-6 py-2.5 font-bold text-sm text-white bg-green-500 rounded-full shadow-sm transition-all whitespace-nowrap`; showEl('repWorkArea'); setHTML('selActRepWork','<option value="">- เลือกวิชา -</option>'+DB.activities.map(function(a){return `<option value="${escapeHTML(a.id)}">${escapeHTML(a.name)}</option>`;}).join('')); setHTML('selClassRepWork','<option value="">- เลือกห้อง -</option>'+getAuthClasses().map(function(c){return `<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`;}).join('')); }
-            else if(tab==='milk'){ document.getElementById('tabRepMilk').className=`px-6 py-2.5 font-bold text-sm text-white bg-sky-500 rounded-full shadow-sm transition-all whitespace-nowrap`; showEl('repMilkArea'); setHTML('selClassRepMilk','<option value="">- เลือกห้อง -</option>'+getAuthClasses().map(function(c){return `<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`;}).join('')); const n=new Date(); const fw=new Date(n); fw.setDate(n.getDate()-n.getDay()+(n.getDay()===0?-6:1)); const im=document.getElementById('inpMonthRepMilk'); if(im&&!im.value) im.value=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; const iw=document.getElementById('inpWeekRepMilk'); if(iw&&!iw.value) iw.value=fw.toISOString().split('T')[0]; toggleRepMilkInputs(); }
+            if(tab==='attendance'){ document.getElementById('tabRepAtt').className=`px-6 py-2.5 font-bold text-sm text-white bg-blue-600 rounded-full shadow-md transition-all whitespace-nowrap`; showEl('repAttArea'); }
+            else if(tab==='health'){ document.getElementById('tabRepHealth').className=`px-6 py-2.5 font-bold text-sm text-white bg-pink-500 rounded-full shadow-md transition-all whitespace-nowrap`; showEl('repHealthArea'); setHTML('selClassRepHealth','<option value="">- เลือกห้อง -</option>'+getAuthClasses().map(function(c){return `<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`;}).join('')); const dt=document.getElementById('inpMonthRepHealth'); if(dt&&!dt.value) dt.value=`${new Date().getFullYear()}-${String(new Date().getMonth()+1).padStart(2,'0')}`; }
+            else if(tab==='work'){ document.getElementById('tabRepWork').className=`px-6 py-2.5 font-bold text-sm text-white bg-green-500 rounded-full shadow-md transition-all whitespace-nowrap`; showEl('repWorkArea'); setHTML('selActRepWork','<option value="">- เลือกวิชา -</option>'+DB.activities.map(function(a){return `<option value="${escapeHTML(a.id)}">${escapeHTML(a.name)}</option>`;}).join('')); setHTML('selClassRepWork','<option value="">- เลือกห้อง -</option>'+getAuthClasses().map(function(c){return `<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`;}).join('')); }
+            else if(tab==='milk'){ document.getElementById('tabRepMilk').className=`px-6 py-2.5 font-bold text-sm text-white bg-sky-500 rounded-full shadow-md transition-all whitespace-nowrap`; showEl('repMilkArea'); setHTML('selClassRepMilk','<option value="">- เลือกห้อง -</option>'+getAuthClasses().map(function(c){return `<option value="${escapeHTML(String(c.name||'').trim())}">${escapeHTML(String(c.name||'').trim())}</option>`;}).join('')); const n=new Date(); const fw=new Date(n); fw.setDate(n.getDate()-n.getDay()+(n.getDay()===0?-6:1)); const im=document.getElementById('inpMonthRepMilk'); if(im&&!im.value) im.value=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`; const iw=document.getElementById('inpWeekRepMilk'); if(iw&&!iw.value) iw.value=fw.toISOString().split('T')[0]; toggleRepMilkInputs(); }
         }
         function populateRepWorkTopics() {
             const a=getValue('selActRepWork'), c=getValue('selClassRepWork'); if(!a||!c) return setHTML('selWorkRepWork','<option value="ALL">-- รวมทุกชิ้นงาน --</option>');
@@ -1071,6 +1064,13 @@
             showEl('repResultWork');
         }
 
+        function showWorkListAlert() {
+            const act=getValue('selActRepWork'), cls=getValue('selClassRepWork'); if(!act||!cls) return Swal.fire('เตือน','เลือกวิชาและห้อง','warning');
+            let ts=[]; Object.keys(DB.works).forEach(function(k){ const p=k.split('|'); if(p.length===3&&p[0]===act&&p[2]===cls) ts.push(p[1]); });
+            if(ts.length===0) return Swal.fire('ข้อมูล','ยังไม่มีชิ้นงาน','info');
+            Swal.fire({ title:'รายการงานทั้งหมด', html:`<div class="text-left text-sm max-h-60 overflow-y-auto custom-scroll pl-4 space-y-3 mt-4">${ts.map(function(t,i){ return `<div class="flex items-center gap-3"><span class="w-6 h-6 bg-cyan-100 text-cyan-600 rounded-full flex items-center justify-center text-xs font-bold">${i+1}</span> <span class="font-bold text-slate-700">${escapeHTML(t)}</span></div>`; }).join('')}</div>`, confirmButtonColor:'#0ea5e9' });
+        }
+
         function exportWorkExcel() {
             const act=getValue('selActRepWork'), cls=getValue('selClassRepWork'); if(!act||!cls) return Swal.fire('เตือน','เลือกวิชาและห้อง','warning');
             const stds=DB.students.filter(function(s){return String(s.class||'').trim()===String(cls).trim();}).sort(function(a,b){return String(a.id).localeCompare(String(b.id),undefined,{numeric:true});});
@@ -1104,3 +1104,6 @@
     </script>
 </body>
 </html>
+
+
+```
