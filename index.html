@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ระบบเช็คชื่อและส่งงาน Web App</title>
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="" id="dynamic-favicon">
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/BnG3V14b/170.png" id="dynamic-favicon">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -839,6 +839,7 @@
                 e.innerText = appConfig.teacherName || '...................................................'; 
             });
 
+            // อัปเดต Favicon แบบ Real-time
             let faviconLink = document.getElementById('dynamic-favicon');
             if (faviconLink && appConfig.logo) {
                 faviconLink.href = appConfig.logo;
