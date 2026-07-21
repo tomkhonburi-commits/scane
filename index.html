@@ -102,7 +102,7 @@
          ========================================== -->
     <aside class="hidden md:flex flex-col w-[280px] bg-white border-r border-slate-200 shadow-sm z-40 flex-shrink-0">
         <div class="h-20 border-b border-slate-100 flex items-center px-6 gap-3">
-            <img id="appLogoDesktop" src="" class="w-10 h-10 object-contain rounded-xl shadow-sm" onerror="this.onerror=null; this.style.display='none';">
+            <img id="appLogoDesktop" src="" class="w-10 h-10 object-contain rounded-xl shadow-sm bg-slate-100" onerror="this.onerror=null; this.src='https://i.postimg.cc/BnG3V14b/170.png';">
             <div class="overflow-hidden">
                 <h1 id="appTitleDesktop" class="font-bold text-[15px] text-primary truncate leading-tight">ระบบแอปพลิเคชัน</h1>
                 <p id="appSchoolDesktop" class="text-[11px] text-slate-500 truncate">สังกัด</p>
@@ -137,7 +137,7 @@
         
         <header class="md:hidden h-16 bg-white border-b border-slate-200 flex-shrink-0 flex justify-between items-center px-4 shadow-sm z-30">
             <div class="flex items-center gap-3">
-                <img id="appLogoMobile" src="" class="w-8 h-8 object-contain rounded-lg" onerror="this.onerror=null; this.style.display='none';">
+                <img id="appLogoMobile" src="" class="w-8 h-8 object-contain rounded-lg bg-slate-100" onerror="this.onerror=null; this.src='https://i.postimg.cc/BnG3V14b/170.png';">
                 <h1 id="appTitleMobile" class="font-bold text-[15px] text-primary truncate max-w-[200px]">ระบบเช็คชื่อ</h1>
             </div>
             <button onclick="document.getElementById('mobileMenuOverlay').classList.remove('hidden')" class="w-10 h-10 flex justify-center items-center rounded-full bg-slate-50 text-slate-600 hover:bg-slate-100">
@@ -639,8 +639,8 @@
                             <label class="block text-[11px] font-bold text-slate-500 uppercase mb-1">URL โลโก้ (ไฟล์รูปภาพ)</label>
                             <input type="text" id="cfgLogo" class="w-full border border-slate-200 rounded-xl p-3 text-sm bg-slate-50 outline-none mb-2" oninput="document.getElementById('logoPreview').src=this.value">
                             <div class="bg-slate-100 p-4 rounded-xl border border-slate-200 flex justify-center items-center">
-                                <img id="logoPreview" src="" class="max-h-20 object-contain drop-shadow-sm" onerror="this.onerror=null; this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                <span style="display:none" class="text-xs text-slate-400">รูปไม่ถูกต้อง</span>
+                                <img id="logoPreview" src="" class="max-h-20 object-contain drop-shadow-sm" onerror="this.onerror=null; this.src='https://i.postimg.cc/BnG3V14b/170.png'; this.nextElementSibling.style.display='block';">
+                                <span style="display:none" class="text-xs text-slate-400 ml-2">รูปไม่ถูกต้อง (ใช้รูประบบแทน)</span>
                             </div>
                         </div>
 
@@ -751,7 +751,7 @@
         // --- ตั้งค่าระบบเริ่มต้น ---
         let appConfig = JSON.parse(localStorage.getItem('myAppCfgV2')) || { 
             sysName: 'ระบบจัดการเรียนการสอน', school1: 'โรงเรียนบ้านซับก้านเหลือง', school2: 'สพป.นครราชสีมา เขต 3', 
-            theme: '#0ea5e9', logo: 'https://img2.pic.in.th/pic/-161baf06cd7f44fd8.png', teacherName: '',
+            theme: '#0ea5e9', logo: 'https://i.postimg.cc/BnG3V14b/170.png', teacherName: '',
             supabaseUrl: '', supabaseKey: '' // เพิ่ม 2 ตัวนี้
         };
         
@@ -2181,12 +2181,12 @@
         function renderQRCards(stds) {
             const cont = document.getElementById('cardContainer'); cont.innerHTML = '';
             const headerText = escapeHTML(document.getElementById('qrHeaderText').value.trim()); const headerColor = document.getElementById('qrHeaderColor').value;
-            const schoolName = escapeHTML(appConfig.school1); const logoSrc = appConfig.logo;
+            const schoolName = escapeHTML(appConfig.school1); const logoSrc = appConfig.logo || 'https://i.postimg.cc/BnG3V14b/170.png';
             
             stds.forEach((s, i) => {
                 const id = 'qr-'+i; const safeName = escapeHTML(s.name); const safeId = escapeHTML(s.id); const safeClass = escapeHTML(s.class || '-');
                 let headerHtml = ''; if(headerText) { headerHtml = `<div class="card-header" style="background-color: ${headerColor};">${headerText}</div>`; }
-                cont.innerHTML += `<div class="card" style="border-color: ${headerColor};">${headerHtml}<div class="card-body"><div class="card-left"><div class="school-header"><img src="${logoSrc}" class="school-logo" onerror="this.style.display='none'"><div class="school-name" style="color: ${headerColor};">${schoolName}</div></div><div class="student-info">รหัส: ${safeId}</div><div class="student-info">ชั้น: ${safeClass}</div><div class="student-name">${safeName}</div></div><div class="card-right"><div id="${id}" class="qr-code"></div></div></div></div>`;
+                cont.innerHTML += `<div class="card" style="border-color: ${headerColor};">${headerHtml}<div class="card-body"><div class="card-left"><div class="school-header"><img src="${logoSrc}" class="school-logo" onerror="this.onerror=null; this.src='https://i.postimg.cc/BnG3V14b/170.png';"><div class="school-name" style="color: ${headerColor};">${schoolName}</div></div><div class="student-info">รหัส: ${safeId}</div><div class="student-info">ชั้น: ${safeClass}</div><div class="student-name">${safeName}</div></div><div class="card-right"><div id="${id}" class="qr-code"></div></div></div></div>`;
             });
             setTimeout(() => { stds.forEach((s, i) => { document.getElementById('qr-'+i).innerHTML = ""; new QRCode(document.getElementById('qr-'+i), { text: s.id.toString(), width: 100, height: 100, correctLevel: QRCode.CorrectLevel.M }); }); }, 300);
         }
